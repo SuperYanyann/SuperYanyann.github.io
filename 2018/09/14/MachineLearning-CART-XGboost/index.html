@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MachineLearning,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述&amp;emsp;&amp;emsp;前几天参加的一个天池的比赛中，尝试使用了XGboost的方法进行回归预测，效果尚可，单模型当日提交的排名为第二。但是当时对于XGboost的原理还不是很了解，因此利用这几天的时间学习了一下相关的概念和推导,并进行了汇总的工作，用以悉决策树和XGboost。 相关知识决策树&amp;emsp;&amp;emsp;决策树算法是利用样本点的特征属性对样本进行分类或者回归分析，其方式是选择样本">
+<meta name="keywords" content="MachineLearning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MachineLearning-CART&amp;XGboost">
+<meta property="og:url" content="http://yoursite.com/2018/09/14/MachineLearning-CART-XGboost/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="概述&amp;emsp;&amp;emsp;前几天参加的一个天池的比赛中，尝试使用了XGboost的方法进行回归预测，效果尚可，单模型当日提交的排名为第二。但是当时对于XGboost的原理还不是很了解，因此利用这几天的时间学习了一下相关的概念和推导,并进行了汇总的工作，用以悉决策树和XGboost。 相关知识决策树&amp;emsp;&amp;emsp;决策树算法是利用样本点的特征属性对样本进行分类或者回归分析，其方式是选择样本">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/967544-37a15b71dc6f6ca3.png?imageMogr2/auto-orient/">
+<meta property="og:updated_time" content="2018-09-14T11:15:13.133Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MachineLearning-CART&amp;XGboost">
+<meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;前几天参加的一个天池的比赛中，尝试使用了XGboost的方法进行回归预测，效果尚可，单模型当日提交的排名为第二。但是当时对于XGboost的原理还不是很了解，因此利用这几天的时间学习了一下相关的概念和推导,并进行了汇总的工作，用以悉决策树和XGboost。 相关知识决策树&amp;emsp;&amp;emsp;决策树算法是利用样本点的特征属性对样本进行分类或者回归分析，其方式是选择样本">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/967544-37a15b71dc6f6ca3.png?imageMogr2/auto-orient/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/14/MachineLearning-CART-XGboost/">
+
+
+
+
+
+  <title>MachineLearning-CART&XGboost | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/14/MachineLearning-CART-XGboost/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MachineLearning-CART&XGboost</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-14T19:11:01+08:00">
+                2018-09-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MachineLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">MachineLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;前几天参加的一个天池的比赛中，尝试使用了XGboost的方法进行回归预测，效果尚可，单模型当日提交的排名为第二。但是当时对于XGboost的原理还不是很了解，因此利用这几天的时间学习了一下相关的概念和推导,并进行了汇总的工作，用以悉决策树和XGboost。</p>
+<h1 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h1><h2 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h2><p>&emsp;&emsp;决策树算法是利用样本点的特征属性对样本进行分类或者回归分析，其方式是选择样本的特征属性作为树的节点来构成树，目的是希望决策树的分支节点所包含的样本尽可能属于同一类别，即使节点的纯度越来越高。<br>&emsp;&emsp;决策树可以分为分类决策书和回归决策树。回归树与分类树的思路类似，但叶节点的数据类型不是离散型，而是连续型。需要注意的是，回归树节点虽然返回的是非离散的值，但是返回的是“一团”数据的均值，而不是具体的、连续的预测值（即训练数据的标签值虽然是连续的，但回归树的预测值却只能是离散的）。从预测值连续这个意义上严格来说，回归树不能称之为“回归算法”。所以回归树其实也可以算为“分类”算法。详细可见<a href="https://blog.csdn.net/suipingsp/article/details/42264413" target="_blank" rel="noopener">suipingsp:机器学习经典算法详解及Python实现–CART分类决策树、回归树和模型树</a>。<br>&emsp;&emsp;与决策书相关的操作还有预防过拟合的剪枝操作，包括预剪枝和后剪枝，相关介绍详见周志华老师的西瓜书。</p>
+<h2 id="集成学习"><a href="#集成学习" class="headerlink" title="集成学习"></a>集成学习</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>&emsp;&emsp;集成学习（ensemble learning）通过构建并结合多个学习器来完成学习任务，有时被称为多分类器系统。其一般结构是先产生一组“个体学习器”，然后再利用一定的策略将它们结合起来。个体学习器通常由现有的学习算法从训练数据中产生。若集成中仅包含同种类型的个体学习器，这样的集成称为“同质”的，个体学习器称为“基学习算法”；若集成中包含不同类型的个体学习器，这样的集成称为“异质”的，个体学习器称为“组件学习器”。如何产生并结合“好而不同”的个体学习器是集成学习的核心。根据个体学习器的生成方式，目前的集成学习方法大致分为两大类，即个体学习器之间存在强依赖关系的Boosting，和个体学习器之间不存在强依赖关系的Bagging和“随机森林”(Random Forest)。</p>
+<h3 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h3><p>&emsp;&emsp;Boosting是一族可将弱学习器提升为强学习器的算法，其工作机制为：先从初始训练集训练出一个基学习器，在根据学习器的表现对训练样本分布进行调整，使得先前基学习器做错的训练样本在后续受到更多的关注，后基于调整后的样本分布训练出下一个基学习器。最终将所得到的基学习器进行加权结合。Boosting算法最著名的代表是AdaBoost，相关介绍详见西瓜书。需要指出的是，本文所涉及的GBDT算法和XGboost算法都是属于Boosting的。</p>
+<h3 id="Bagging和随机森林"><a href="#Bagging和随机森林" class="headerlink" title="Bagging和随机森林"></a>Bagging和随机森林</h3><p>&emsp;&emsp;Bagging直接基于自助采样法。它从给定的m个样本的数据集中，进行m次随机采样，得到一个样本容量为m的样本集，进行训练。重复此方法T次，从而得到T个基学习器，再进行结合。Bagging对于分类问题采用的方法通常为简单投票法，对于回归问题使用的通常为简单平均法。从偏差-方差的角度来看，Bagging主要关注的问题是减低模型的方差，因此在不剪枝的决策树等易收到样本扰动的学习器上效果更为明显。<br>&emsp;&emsp;随机森林是Bagging的一个扩展。随机森林在Bagging的基础上，进一步在训练的过程中引入了随机属性选择。即从该节点的属性中随机选择出一个包含k个属性的子集，然后从这个子集中选择出一个最优的属性用于划分。其在样本扰动的基础上增加属性扰动，使得最终集成的泛化性能通过个体学习器之间的差异度的增加而进一步增加。</p>
+<h1 id="From-CART-to-XGboost"><a href="#From-CART-to-XGboost" class="headerlink" title="From CART to XGboost"></a>From CART to XGboost</h1><h2 id="ID3-amp-C4-5"><a href="#ID3-amp-C4-5" class="headerlink" title="ID3&amp;C4.5"></a>ID3&amp;C4.5</h2><p>&emsp;&emsp;在介绍CART之前先用两个常见的分类决策树模型来熟悉一下。之前说过，决策树的目的是提升树的结点的“纯度”。我们知道在一个物理系统中，熵用来度量这个系统的混乱程度。“信息熵”则是用来度量样本集合纯度的常用指标。其值越小，则样本集的纯度越高。假定当前样本集合$D$中第$k$类样本所占的比例为$p_k$，则有$D$的信息熵为：<br>$$ Ent(D) = -\sum\limits^{|Y|}<em>{k=1}p_k log_2 p_k $$<br>&emsp;&emsp;为了使得我们模型的结点的纯度最高，选择合适的样本特征作为树的结点就是一个很重要的工作。<br>&emsp;&emsp;ID3决策树算法使用的特征属性选择的标准是“信息增益”，其值越大则证明使用此属性划分所获得的纯度提升越大。属性a对样本集D进行划分所获得的“信息增益”为<br>$$ Gain(D,a) = Ent(D) - \sum\limits^{V}</em>{v=1} \frac{|D^v|}{|D|} Ent(D^v) $$<br>&emsp;&emsp;进行决策树每层结点属性选择的时候，分别计算该属性对样本进行划分的Gain值，然后选择值最大的属性作为结点划分的属性。但是这样做有一个缺点，就是信息增益准侧对于可取数目较多的属性有多偏好。<br>&emsp;&emsp;C4.5决策树模型所使用的增益率对信息增益进行的改进，并利用增益率进行属性的选择，其定义为<br>$$ Gain_raion(D,a) = \frac{Gain(D,a)}{IV(a)}<br>\ IV(a) = - \sum\limits^{V}_{v=1} \frac{|D^v|}{|D|} log_2 \frac{|D^v|}{|D|}$$<br>&emsp;&emsp;需要注意的是，增益率对于可取数目较少的属性有所偏好，因此C4.5不是直接选择增益率最大的候选划分属性，而是使用了一个启发式的策略：先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择信息率最高的属性作为结点属性。</p>
+<h2 id="CART"><a href="#CART" class="headerlink" title="CART"></a>CART</h2><p>&emsp;&emsp;CART决策树可以生成回归树或分类树。</p>
+<h3 id="分类树"><a href="#分类树" class="headerlink" title="分类树"></a>分类树</h3><p>&emsp;&emsp;CART生成分类树的思路与ID3和C4.5相似，只是使用了不同的选择结点属性的判定指标，即基尼指数。对于数据集D，其纯度可用基尼值来度量：<br>$$ Gini(D) = \sum\limits^{|y|}<em>{k=1} \sum\limits</em>{ k’ \neq k} p_k p_{k’} = 1 - \sum\limits^{|y|}<em>{k=1}p_k^2 $$<br>&emsp;&emsp;$Gini(D)$反映了从数据集D中随机抽取两个样本，其类别标记不一致的概率。因此$Gini(D)$越小，则数据集D的纯度越高。属性a对于数据集D的基尼指数定义为：<br>$$ Gini_index(D,a) = \sum\limits</em>{v = 1}^{V} \frac{|D^v|}{|D|} Gini(D^v) $$<br>&emsp;&emsp;我们在候选属性集合A中，选择划分后基尼指数最小的属性作为最优划分属性。</p>
+<h3 id="回归树"><a href="#回归树" class="headerlink" title="回归树"></a>回归树</h3><p>&emsp;&emsp;一个回归树对应着输入空间的一个划分以及在划分的单元上的输出值。假设已将输入空间化为M个单元$R_1,R_2,…R_M$，并且在每个单元$R_m$上有一个固定的输出值$c_m$，于是回归树模型可以表示为：<br>$$ f(x) = \sum\limits^{M}<em>{m=1} c_m I (x \in R_m) $$<br>&emsp;&emsp;用平方误差来表示回归树对于训练数据的预测误差，用平方误差最小的准则求解每个单元上的最优输出值。可以得到单元$R_m$上的$\widehat c_m$的最优值是$R_m$上的所有输入实例$x_i$对应的输出$y_i$的均值，即：<br>$$ \widehat c_m = ave(y_i | x_i \in R_m) $$<br>&emsp;&emsp;现在问题的关键是如何对于输入空间进行划分。这里采用的是启发式的方法。选择第$j$个变量$x^{(j)}$和它的取值$s$，作为切分变量和切分点，并定义两个区域：<br>$$ R_1(j,s) = {x | x^{(j)} \leqslant s }<br>\ R_2(j,s) = {x | x^{(j)} \gt s  }$$<br>&emsp;&emsp;然后寻找最优的切分变量$j$和最优的切分点$s$,即求解：<br>$$ \min</em>{j,s} [ \min_{c_1} \sum\limits_{x_i \in R_1 (j,s)} (y_i - c_1)^2 +  \min_{c_2} \sum\limits_{x_i \in R_2 (j,s)} (y_i - c_2)^2] $$<br>&emsp;&emsp;对固定输入变量$j$ 可以找到最优的切分点$s$:<br>$$ \widehat c_1 = ave(y_i | x_i \in R_1(j,s))<br>\ \widehat c_2 = ave(y_i | x_i \in R_2(j,s))$$<br>&emsp;&emsp;遍历所有的输入变量，从而找到最优的切分变量$j$,构成$(j,s)$。依次将输入空间划分为两个区域。之后对于每个区域重复上述划分过程，直到满足停止条件位置，从而构成回归树，这样构成的回归树称为最小二乘回归树。整理后的算法伪代码可以参考李航的《统计学习方法》。</p>
+<h2 id="Boosting-Decision-Tree"><a href="#Boosting-Decision-Tree" class="headerlink" title="Boosting Decision Tree"></a>Boosting Decision Tree</h2><p>&emsp;&emsp; 提升树通常以决策树作为基学习器，对分类问题决策树是二叉分类树，回归问题就是二叉回归树。提升树是迭代多棵决策树来共同决策。当采用平方误差损失函数时，每一棵回归树学习的是之前所有树的结论和残差，拟合得到一个当前的残差回归树，残差的意义如公式：残差 = 真实值 - 预测值 。提升树即是整个迭代过程生成的回归树的累加。<br>&emsp;&emsp;提升树利用加法模型和前向分步算法实现学习的优化过程。关于加法模型和前向分步算法可以参考 <a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">ScorpioLu : GBDT原理详解</a>，此处不再过多描述。</p>
+<h2 id="Gradient-Boosting-Decision-Tree"><a href="#Gradient-Boosting-Decision-Tree" class="headerlink" title="Gradient Boosting Decision Tree"></a>Gradient Boosting Decision Tree</h2><p>&emsp;&emsp;在处理具体问题时，单一的回归树无法满足准确度。因此利用boosting方法，对回归树进行集成，得到的新模型就是提升树（Boosting Decision Tree），再进一步，可以得到梯度提升树（Gradient Boosting Decision Tree，GBDT）。<br>&emsp;&emsp;提升树使用的优化方法对于平方损失和指数损失函数，每一步的优化很简单。但对于一般的损失函数，往往每一步优化没那么容易。针对这一问题，Freidman提出了梯度提升算法：利用最速下降的近似方法，即利用损失函数的负梯度在当前模型的值，作为回归问题中提升树算法的残差的近似值，拟合一个回归树。<br>&emsp;&emsp;算法描述如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="https://upload-images.jianshu.io/upload_images/967544-37a15b71dc6f6ca3.png?imageMogr2/auto-orient/" alt="photo1"><br>&emsp;&emsp;算法过程推导见：<a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">ScorpioLu : GBDT原理详解</a>。</p>
+<h2 id="XGboost"><a href="#XGboost" class="headerlink" title="XGboost"></a>XGboost</h2><p>&emsp;&emsp;XGboost是对于GBDT的改良算法。首先，XGBoost在目标函数里加入了正则项，用于控制模型的复杂度；其次，传统的GBDT在优化时只用到一阶导数，XGBoost则对目标函数进行了二阶泰勒展开，同时用到了一阶和二阶导数。从这两点出发进行推导，推导过程见<a href="https://blog.csdn.net/legendavid/article/details/78904353" target="_blank" rel="noopener">legendavid : GBDT和XGboost介绍</a>。<br>&emsp;&emsp;对于XGboost和GBDT的区别，参考<a href="https://www.zhihu.com/question/41354392/answer/98658997" target="_blank" rel="noopener">wepon的回答</a>：</p>
+<blockquote>
+<ul>
+<li>传统GBDT以CART作为基分类器，xgboost还支持线性分类器，这个时候xgboost相当于带L1和L2正则化项的逻辑斯蒂回归（分类问题）或者线性回归（回归问题）。</li>
+<li>传统GBDT在优化时只用到一阶导数信息，xgboost则对代价函数进行了二阶泰勒展开，同时用到了一阶和二阶导数。顺便提一下，xgboost工具支持自定义代价函数，只要函数可一阶和二阶求导。</li>
+<li>xgboost在代价函数里加入了正则项，用于控制模型的复杂度。正则项里包含了树的叶子节点个数、每个叶子节点上输出的score的L2模的平方和。从Bias-variance tradeoff角度来讲，正则项降低了模型的variance，使学习出来的模型更加简单，防止过拟合，这也是xgboost优于传统GBDT的一个特性。</li>
+<li>Shrinkage（缩减），相当于学习速率（xgboost中的eta）。xgboost在进行完一次迭代后，会将叶子节点的权重乘上该系数，主要是为了削弱每棵树的影响，让后面有更大的学习空间。实际应用中，一般把eta设置得小一点，然后迭代次数设置得大一点。（补充：传统GBDT的实现也有学习速率）</li>
+<li>列抽样（column subsampling）。xgboost借鉴了随机森林的做法，支持列抽样，不仅能降低过拟合，还能减少计算，这也是xgboost异于传统gbdt的一个特性。</li>
+<li>对缺失值的处理。对于特征的值有缺失的样本，xgboost可以自动学习出它的分裂方向。</li>
+<li>xgboost工具支持并行。boosting不是一种串行的结构吗?怎么并行的？注意xgboost的并行不是tree粒度的并行，xgboost也是一次迭代完才能进行下一次迭代的（第t次迭代的代价函数里包含了前面t-1次迭代的预测值）。xgboost的并行是在特征粒度上的。我们知道，决策树的学习最耗时的一个步骤就是对特征的值进行排序（因为要确定最佳分割点），xgboost在训练之前，预先对数据进行了排序，然后保存为block结构，后面的迭代中重复地使用这个结构，大大减小计算量。这个block结构也使得并行成为了可能，在进行节点的分裂时，需要计算每个特征的增益，最终选增益最大的那个特征去做分裂，那么各个特征的增益计算就可以开多线程进行。</li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;此外还想到一个问题，就是XGboost和神经网络的比较。找到两个我比较赞同的回答，是<a href="https://www.zhihu.com/question/68130282" target="_blank" rel="noopener">微调的回答</a>：</p>
+<blockquote>
+<ul>
+<li>数据量上：神经网络往往需要较大的数量，而小数据集上树模型有明显的优势。常常有人问，多小才算小？这也同时需要取决于特征的数量。但一般来说，几百几十个数据的情况下神经网络很难表现良好。</li>
+<li>调参难度上：集成树模型远低于神经网络。大部分的集成树模型也仅需要：(i)基学习器数量 (ii) 考虑的特征数 (iii) 最大深度 等。神经网络的调参惨剧已经没什么好说的，这点上和树模型差距非常大。</li>
+<li>模型解释上：集成树模型的解释度一般更高，比如可以自动生成特征重要性(feature importance)。神经网络的特征虽然也可以一定程度上进行分析，但不大直观。再早年间，在神经网络上使用包裹式(wrapper)方法，每次加1或者减1个特征进行特征排序也曾存在过，远不如集成树模型的嵌入式(embedded)特征选择来的方便和直观。</li>
+<li>模型预测能力上：：抛去调参的难度差异不提，大中型数据上的表现较为接近。随着数据量增大，神经网络的潜力越来越大</li>
+<li>总结：一般来说，在小数据量多特征下，集成的树模型往往优于神经网络。随着数据量增大，两者表现趋于接近，随着数据量继续上升，神经网络的优势会逐步体现。随着数据量上升，对模型能力的要求增加而过拟合的风险降低，神经网络的优势终于有了用武之地而集成学习的优势降低。综上来看，大部分项目建议使用集成决策树，首推xgboost，速度快效果好用时少。特定的复杂且数据量大的项目，建议还是老老实实的为神经网络调参，拿出debug C++ pointer的精神来。</li>
+</ul>
+</blockquote>
+<p>&emsp;&emsp;以及<a href="https://www.zhihu.com/question/68130282/answer/260086469" target="_blank" rel="noopener">mileistone的回答</a>：</p>
+<blockquote>
+<p>数据挖掘比赛中大部分数据是feature类数据。所谓feature类数据，就是每一维都有明确的含义，比如房价预测的时候，数据里各维分别表示房子大小，楼层，离地铁站距离，是否是学区房等等；与之对应的是raw data数据，比如图像、语音等等，一个像素点和一个波幅的值没有明确的含义。对于feature类数据，用决策树还是一个蛮好的选择，既有非线性拟合能力，又可解释，而且又有比较完整的理论指导你如何调参。神经网络虽然有非线性拟合能力，但是解释性不强，参数不太好调。对于raw data类数据，神经网络有独特的优势，通过data driven的方式可以学习到一些比较好的representation，比如在图像和语音里，神经网络代表着当前最先进的生产力。</p>
+</blockquote>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>&emsp;&emsp;关于未集成的单一决策树代码实现可以参考<a href="https://www.manning.com/books/machine-learning-in-action" target="_blank" rel="noopener">Machine Leaning in Action</a>中第3章和第9章的代码实现。<br>&emsp;&emsp;关于XGboost包的使用，可以参考<a href="http://xgboost.apachecn.org/cn/latest/tutorials/index.html" target="_blank" rel="noopener">XGBoost 教程</a>。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;此篇文章主要是为了梳理从单一决策树到XGboost算法的关系及过程，关于GBDT和XGboost算法的推导以学习现有文章为主。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1] 周志华.机器学习<br>[2] 李航.统计学习方法<br>[3] Peter Harrington. Machine Leaning in Action<br>[4] 王超，陈帅华. xgboost导读和实战<br>[5] <a href="https://blog.csdn.net/suipingsp/article/details/42264413" target="_blank" rel="noopener">suipingsp : 机器学习经典算法详解及Python实现–CART分类决策树、回归树和模型树</a><br>[6] <a href="https://blog.csdn.net/weixin_40604987/article/details/79296427" target="_blank" rel="noopener">一个拉风的名字 : Regression Tree 回归树</a><br>[7] <a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">ScorpioLu : GBDT原理详解</a><br>[8] <a href="https://blog.csdn.net/legendavid/article/details/78904353" target="_blank" rel="noopener">legendavid : GBDT和XGboost介绍</a><br>[9] <a href="https://www.jianshu.com/p/005a4e6ac775" target="_blank" rel="noopener">SiyueLin : GBDT 梯度提升决策树</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MachineLearning/" rel="tag"># MachineLearning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/07/Project-LocatingQRcode/" rel="next" title="Project-LocatingQRcode">
+                <i class="fa fa-chevron-left"></i> Project-LocatingQRcode
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/16/MachineLearning-BayesianDecision/" rel="prev" title="MachineLearning-BayesianDecision">
+                MachineLearning-BayesianDecision <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关知识"><span class="nav-number">2.</span> <span class="nav-text">相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#决策树"><span class="nav-number">2.1.</span> <span class="nav-text">决策树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集成学习"><span class="nav-number">2.2.</span> <span class="nav-text">集成学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">2.2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Boosting"><span class="nav-number">2.2.2.</span> <span class="nav-text">Boosting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bagging和随机森林"><span class="nav-number">2.2.3.</span> <span class="nav-text">Bagging和随机森林</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#From-CART-to-XGboost"><span class="nav-number">3.</span> <span class="nav-text">From CART to XGboost</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ID3-amp-C4-5"><span class="nav-number">3.1.</span> <span class="nav-text">ID3&amp;C4.5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CART"><span class="nav-number">3.2.</span> <span class="nav-text">CART</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分类树"><span class="nav-number">3.2.1.</span> <span class="nav-text">分类树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#回归树"><span class="nav-number">3.2.2.</span> <span class="nav-text">回归树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Boosting-Decision-Tree"><span class="nav-number">3.3.</span> <span class="nav-text">Boosting Decision Tree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gradient-Boosting-Decision-Tree"><span class="nav-number">3.4.</span> <span class="nav-text">Gradient Boosting Decision Tree</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XGboost"><span class="nav-number">3.5.</span> <span class="nav-text">XGboost</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

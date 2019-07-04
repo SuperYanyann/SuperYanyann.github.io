@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Programming,List,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="题目&amp;emsp;&amp;emsp;这个是Noj的一道实验题目，题目描述如下：   限制使用双向链表作存储结构，请根据用户输入的一个整数（该整数表示精确到小数点后的位数，可能要求精确到小数点后500位），高精度计算PI值。可以利用反三角函数幂级展开式来进行计算。 input:输入的一个正整数n output:输出PI的值，精确到小数点后n位，最后输出一个回车。   分析&amp;emsp;&amp;emsp;这道题是一道">
+<meta name="keywords" content="Programming,List">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NOJ-HighPrecisionPI">
+<meta property="og:url" content="http://yoursite.com/2018/03/22/NOJ-HighPrecisionPI/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="题目&amp;emsp;&amp;emsp;这个是Noj的一道实验题目，题目描述如下：   限制使用双向链表作存储结构，请根据用户输入的一个整数（该整数表示精确到小数点后的位数，可能要求精确到小数点后500位），高精度计算PI值。可以利用反三角函数幂级展开式来进行计算。 input:输入的一个正整数n output:输出PI的值，精确到小数点后n位，最后输出一个回车。   分析&amp;emsp;&amp;emsp;这道题是一道">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-22T09:16:54.565Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NOJ-HighPrecisionPI">
+<meta name="twitter:description" content="题目&amp;emsp;&amp;emsp;这个是Noj的一道实验题目，题目描述如下：   限制使用双向链表作存储结构，请根据用户输入的一个整数（该整数表示精确到小数点后的位数，可能要求精确到小数点后500位），高精度计算PI值。可以利用反三角函数幂级展开式来进行计算。 input:输入的一个正整数n output:输出PI的值，精确到小数点后n位，最后输出一个回车。   分析&amp;emsp;&amp;emsp;这道题是一道">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/22/NOJ-HighPrecisionPI/">
+
+
+
+
+
+  <title>NOJ-HighPrecisionPI | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/22/NOJ-HighPrecisionPI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NOJ-HighPrecisionPI</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-22T17:15:31+08:00">
+                2018-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Programming/" itemprop="url" rel="index">
+                    <span itemprop="name">Programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>&emsp;&emsp;这个是Noj的一道实验题目，题目描述如下：</p>
+<blockquote>
+<ul>
+<li>限制使用双向链表作存储结构，请根据用户输入的一个整数（该整数表示精确到小数点后的位数，可能要求精确到小数点后500位），高精度计算PI值。可以利用反三角函数幂级展开式来进行计算。</li>
+<li>input:输入的一个正整数n</li>
+<li>output:输出PI的值，精确到小数点后n位，最后输出一个回车。</li>
+</ul>
+</blockquote>
+<h1 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h1><p>&emsp;&emsp;这道题是一道大数操作题目，虽然存储类型为双向链表，但是重点在大数计算上。目前自己对于这种类型的题不是很擅长，没有想出较好的方法，因此学习的<a href="https://blog.csdn.net/axiqia/article/details/50527788" target="_blank" rel="noopener">Shawn-Xue的博客</a>的一种方法。<br>&emsp;&emsp;核心部分代码如下，实现建立了一个存储精度为小数点后500位的PI的双向链表，</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">500</span>; i ++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//R(n) = R(n-1)*i/(2*i+1)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//乘法</span></span><br><span class="line">    ret = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(rit1 = rn.rbegin(); rit1 != rn.rend(); ++rit1)</span><br><span class="line">    &#123;</span><br><span class="line">        temp = *rit1*i+ret;</span><br><span class="line">        *rit1 = temp%<span class="number">10</span>;</span><br><span class="line">        ret = temp/<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//除法</span></span><br><span class="line">    ret = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(it = rn.begin(); it != rn.end(); ++it)</span><br><span class="line">    &#123;</span><br><span class="line">        temp = (*it+ret*<span class="number">10</span>);</span><br><span class="line">        *it = temp/(<span class="number">2</span>*i+<span class="number">1</span>);</span><br><span class="line">        ret = temp%(<span class="number">2</span>*i+<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//加法,计算sum</span></span><br><span class="line">    ret = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(rit1 = sum.rbegin(), rit2 = rn.rbegin(); rit1 != sum.rend()&amp;&amp; rit2!=rn.rend(); ++rit1, ++rit2)</span><br><span class="line">    &#123;</span><br><span class="line">        temp = *rit1 + *rit2+ret;</span><br><span class="line">        *rit1 = temp%<span class="number">10</span>;</span><br><span class="line">        ret = temp/<span class="number">10</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;一开始的时候，没有太看懂实现的思路，所以打印出了前10次计算的中间结果，打印结果如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">loop: <span class="number">1</span></span><br><span class="line">after mul,rn =  <span class="number">0000000002</span></span><br><span class="line">after div,rn = <span class="number">0666666666</span></span><br><span class="line">after add,sum = <span class="number">6666666662</span></span><br><span class="line">loop: <span class="number">2</span></span><br><span class="line">after mul,rn =  <span class="number">2333333331</span></span><br><span class="line">after div,rn = <span class="number">0266666666</span></span><br><span class="line">after add,sum = <span class="number">2333333392</span></span><br><span class="line">loop: <span class="number">3</span></span><br><span class="line">after mul,rn =  <span class="number">8999999970</span></span><br><span class="line">after div,rn = <span class="number">0114285714</span></span><br><span class="line">after add,sum = <span class="number">6409167403</span></span><br><span class="line">loop: <span class="number">4</span></span><br><span class="line">after mul,rn =  <span class="number">6582417540</span></span><br><span class="line">after div,rn = <span class="number">0050793650</span></span><br><span class="line">after add,sum = <span class="number">6962148903</span></span><br><span class="line">loop: <span class="number">5</span></span><br><span class="line">after mul,rn =  <span class="number">0528693520</span></span><br><span class="line">after div,rn = <span class="number">0023088022</span></span><br><span class="line">after add,sum = <span class="number">8170051213</span></span><br><span class="line">loop: <span class="number">6</span></span><br><span class="line">after mul,rn =  <span class="number">2318258310</span></span><br><span class="line">after div,rn = <span class="number">0010656010</span></span><br><span class="line">after add,sum = <span class="number">8276512313</span></span><br><span class="line">loop: <span class="number">7</span></span><br><span class="line">after mul,rn =  <span class="number">0702954700</span></span><br><span class="line">after div,rn = <span class="number">0004972804</span></span><br><span class="line">after add,sum = <span class="number">2359217313</span></span><br><span class="line">loop: <span class="number">8</span></span><br><span class="line">after mul,rn =  <span class="number">2342879300</span></span><br><span class="line">after div,rn = <span class="number">0002340143</span></span><br><span class="line">after add,sum = <span class="number">5769649313</span></span><br><span class="line">loop: <span class="number">9</span></span><br><span class="line">after mul,rn =  <span class="number">7821601200</span></span><br><span class="line">after div,rn = <span class="number">0001108488</span></span><br><span class="line">after add,sum = <span class="number">3618750413</span></span><br><span class="line">loop: <span class="number">10</span></span><br><span class="line">after mul,rn =  <span class="number">0884801100</span></span><br><span class="line">after div,rn = <span class="number">0000527851</span></span><br><span class="line">after add,sum = <span class="number">4106011413</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;这样一来，具体的实现过程就一目了然了。算法中PI的计算公式如下：<br>$$\pi = 2 * \sum_0^n \frac{n!}{(2n+1)!!}$$<br>&emsp;&emsp;代码中定义了两个链表，为rn和sum,其中rn用于计算每次的相加项,sum用于将每项进行累加，且两个链表每个节点仅存储一位数。代码中的”500”为迭代相加的次数，最终的结果进行了500项的加法运算。每一项的加法运算由三步实现,分别为乘法，除法，加法。乘法实现rn中存储的数乘n，除法实现rn中存储的数除以(2n+1),加法为将新计算出来的rn加入sum中。经过500次循环得到一个500位精度的结果，并进行部分输出。<br>&emsp;&emsp;乘法的运算方法与手动计算乘法的步骤相同，从最低位开始进行乘法，用ret记录进位；除法也与手动计算除法的方法一样，从最高项开始进行除运算，用ret进行余数退位补到下一位上。sum的加法就比较简单，不再赘述了。从输出结果可以看出，对于rn的乘法是逆序遍历rn实现的,对于rn的除法是顺序遍历的，符合刚刚说的计算方法的顺序。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>&emsp;&emsp;对于原代码实现了一次重构，结果如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; epoch;</span><br><span class="line"><span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; sum;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">creatPI</span><span class="params">(<span class="keyword">int</span> num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> len = num;</span><br><span class="line">  <span class="keyword">int</span> temp = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line">  <span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt;::reverse_iterator reverseIt1,reverseIt2;</span><br><span class="line">  <span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt;::iterator it;</span><br><span class="line"></span><br><span class="line">  epoch.push_back(<span class="number">2</span>);</span><br><span class="line">  sum.push_back(<span class="number">2</span>);</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> i =<span class="number">1</span>;i&lt;len;i++)</span><br><span class="line">  &#123;</span><br><span class="line">    epoch.push_back(<span class="number">0</span>);</span><br><span class="line">    sum.push_back(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>;j&lt;<span class="number">100000</span>;j++)</span><br><span class="line">  &#123;</span><br><span class="line">     ret = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">for</span> (reverseIt1 = epoch.rbegin(); reverseIt1!=epoch.rend();reverseIt1++)</span><br><span class="line">     &#123;</span><br><span class="line">       temp = *reverseIt1 * j + ret;</span><br><span class="line">       *reverseIt1 = temp%<span class="number">10</span>;</span><br><span class="line">       ret = temp/<span class="number">10</span>;</span><br><span class="line">     &#125;</span><br><span class="line">     ret = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">for</span> (it = epoch.begin(); it!=epoch.end(); it++)</span><br><span class="line">     &#123;</span><br><span class="line">       temp = *it + ret*<span class="number">10</span>;</span><br><span class="line">       *it = temp/(<span class="number">2</span>*j+<span class="number">1</span>);</span><br><span class="line">       ret = temp%(<span class="number">2</span>*j+<span class="number">1</span>);</span><br><span class="line">     &#125;</span><br><span class="line">     ret = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">for</span> (reverseIt1 = sum.rbegin(),reverseIt2 = epoch.rbegin();</span><br><span class="line">          reverseIt1 != sum.rend()  &amp;&amp; reverseIt2 != epoch.rend();</span><br><span class="line">          reverseIt1++,reverseIt2++)</span><br><span class="line">     &#123;</span><br><span class="line">       temp = *reverseIt1 + *reverseIt2 + ret;</span><br><span class="line">       *reverseIt1 = temp%<span class="number">10</span>;</span><br><span class="line">       ret = temp/<span class="number">10</span>;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> needLen = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">cin</span> &gt;&gt; needLen;</span><br><span class="line">    <span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt;::iterator loop;</span><br><span class="line"></span><br><span class="line">    creatPI(<span class="number">550</span>);</span><br><span class="line"></span><br><span class="line">    loop = sum.begin();</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="number">3</span> &lt;&lt; <span class="string">"."</span> ;</span><br><span class="line">    loop++;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i =<span class="number">0</span>;i&lt;needLen;i++)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">cout</span> &lt;&lt; *loop;</span><br><span class="line">      loop++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;需要注意的是，一开始提交代码之后提示输出错误，再检查格式正确后，想到原因可能是由于迭代次数过少而PI的精度不够，因此输出错误。所以将迭代计算的次数由500提升到100000，就正常AC了。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;对于大数操作类型的题目应该从每次进位退位的角度进行考虑，思考如何一位一位的计算出结果并存储到数组或者链表中。<br>&emsp;&emsp;PS:发现博主是我滴学长╰(￣▽￣)╭</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Programming/" rel="tag"># Programming</a>
+          
+            <a href="/tags/List/" rel="tag"># List</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/18/Leetcode-238/" rel="next" title="Leetcode-238">
+                <i class="fa fa-chevron-left"></i> Leetcode-238
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/25/NOJ-ReversePolishNotation/" rel="prev" title="NOJ-ReversePolishNotation">
+                NOJ-ReversePolishNotation <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#题目"><span class="nav-number">1.</span> <span class="nav-text">题目</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决"><span class="nav-number">3.</span> <span class="nav-text">解决</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

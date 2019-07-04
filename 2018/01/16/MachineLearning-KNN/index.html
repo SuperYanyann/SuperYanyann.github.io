@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MachineLearning,人工智能,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Machine Learning-KNN标签 ： MachineLearning 人工智能  算法概述&amp;emsp;&amp;emsp;k-临近算法(k-Nearest Neighbor)属于有监督算法中分类算法。虽然是机器学习中一个思路简单，直观的分类器，但是其在样本质量良好的基础上，有精度高，对异常值不敏感，无数据输入假定的优点，但是也有计算复杂度高，空间复杂度高的缺点。其适用范围为离散的数值型和均趁型">
+<meta name="keywords" content="MachineLearning,人工智能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MachineLearning-KNN">
+<meta property="og:url" content="http://yoursite.com/2018/01/16/MachineLearning-KNN/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="Machine Learning-KNN标签 ： MachineLearning 人工智能  算法概述&amp;emsp;&amp;emsp;k-临近算法(k-Nearest Neighbor)属于有监督算法中分类算法。虽然是机器学习中一个思路简单，直观的分类器，但是其在样本质量良好的基础上，有精度高，对异常值不敏感，无数据输入假定的优点，但是也有计算复杂度高，空间复杂度高的缺点。其适用范围为离散的数值型和均趁型">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/KNN.png">
+<meta property="og:updated_time" content="2018-01-25T04:15:18.327Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MachineLearning-KNN">
+<meta name="twitter:description" content="Machine Learning-KNN标签 ： MachineLearning 人工智能  算法概述&amp;emsp;&amp;emsp;k-临近算法(k-Nearest Neighbor)属于有监督算法中分类算法。虽然是机器学习中一个思路简单，直观的分类器，但是其在样本质量良好的基础上，有精度高，对异常值不敏感，无数据输入假定的优点，但是也有计算复杂度高，空间复杂度高的缺点。其适用范围为离散的数值型和均趁型">
+<meta name="twitter:image" content="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/KNN.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/16/MachineLearning-KNN/">
+
+
+
+
+
+  <title>MachineLearning-KNN | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/16/MachineLearning-KNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MachineLearning-KNN</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-16T13:03:10+08:00">
+                2018-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MachineLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">MachineLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Machine-Learning-KNN"><a href="#Machine-Learning-KNN" class="headerlink" title="Machine Learning-KNN"></a>Machine Learning-KNN</h1><p>标签 ： MachineLearning 人工智能</p>
+<hr>
+<h2 id="算法概述"><a href="#算法概述" class="headerlink" title="算法概述"></a>算法概述</h2><p>&emsp;&emsp;k-临近算法(k-Nearest Neighbor)属于有监督算法中分类算法。虽然是机器学习中一个思路简单，直观的分类器，但是其在样本质量良好的基础上，有精度高，对异常值不敏感，无数据输入假定的优点，但是也有计算复杂度高，空间复杂度高的缺点。其适用范围为离散的数值型和均趁型数据。</p>
+<h2 id="算法思路"><a href="#算法思路" class="headerlink" title="算法思路"></a>算法思路</h2><p>&emsp;&emsp;KNN的工作机制非常简单，其工作原理是：存在一个样本数据集合（训练样本集），样本集中每个数据都存在标签，即我们知道样本集合每一数据与所属分类的对应关系。对于需要分类处理的新样本，我们将新数据的N维特征与样本集中的对应的N维特征进行比较，基于某种距离量找出训练集中与其最近的k个训练样本，然后基于这k个样本的标签进行预测。预测的通常方法是选择k个样本中样本中出现最多的类别标记作为预测结果；在回归任务中，可使用“平均法”，即将k个样本的实值输出标记的平均值作为预测结果；还可以基于距离远近进行加权平均或加权投票。<br>&emsp;&emsp;需要注意的是，KNN没有显式的训练过程，是“LazyLearning”的代表，此类学习算法仅仅是把样本保存起来，训练时间开销为零，待收到测试样本后再进行处理；而“EagerLearning”则是在训练阶段就对样本进行学习和处理。<br>&emsp;&emsp;最邻近分类器作为KNN的特例，虽然简单，但是其泛化错误率并没有超过贝叶斯最优分类器的错误率的两倍。此部分的简化证明见西瓜书，更严格的证明参阅[cover and hart,1967]。</p>
+<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><p>&emsp;&emsp;KNN算法的实现参考《Machine Learning in Action》.<br>&emsp;&emsp;核心算法分为三步进行处理，首先计算新样本点到各样本集点的距离，然后选择距离最小的k个点，并选择出k个点中标签个数最多的点作为新样本的标签。本文的KNN是基于特征数N=2的样本集实现的，采用了欧式距离，计算两个向量点之间的距离，并采用k=3进行处理。<br>&emsp;&emsp;书中的实现代码使用了几个技巧进行数据的处理。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diffMat = tile(inX,(dataSetSize,<span class="number">1</span>)) - dataSet</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;&emsp;此处使用了”tile( )”函数对新样本进行扩充处理。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sortedClassCount = sorted(classCount.iteritems(),key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;&emsp;此处使用operator.itemgetter函数定义了一个函数，通过该函数作用到对象上才能获取值。对于operator.itemgetter(m,n)，其作用是获取对象的第m个域和第n个的值。sorted函数的函数原型是:<br>sorted(iterable[, cmp[, key[, reverse]]])<br>&emsp;&emsp;第一个参数iterable指定要排序的list或者iterable；<br>&emsp;&emsp;第二个参数cmp为函数，指定排序时进行比较的函数，可以指定一个函数或者lambda函数<br>&emsp;&emsp;key为函数，指定取待排序元素的哪一项进行排序，函数用上面的例子来说明<br>&emsp;&emsp;reverse参数是一个bool变量，表示升序还是降序排列，默认为false（升序排列）<br>&emsp;&emsp;具体核心代码如下:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classify</span><span class="params">(inX,dataSet,labels,k)</span>:</span></span><br><span class="line">    dataSetSize = dataSet.shape[<span class="number">0</span>]</span><br><span class="line">    diffMat = tile(inX,(dataSetSize,<span class="number">1</span>)) - dataSet   <span class="comment"># add one row</span></span><br><span class="line">    sqDiffMAt = diffMat ** <span class="number">2</span></span><br><span class="line">    sqDistance = sqDiffMAt.sum(axis=<span class="number">1</span>)</span><br><span class="line">    distance = sqDistance ** <span class="number">0.5</span></span><br><span class="line">    sortedDistIndicies = distance.argsort()</span><br><span class="line">    classCount=&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(k):</span><br><span class="line">        voteIlabel = labels[sortedDistIndicies[i]]</span><br><span class="line">        classCount[voteIlabel] = classCount.get(voteIlabel,<span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">    sortedClassCount = sorted(classCount.iteritems(),</span><br><span class="line">     key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> sortedClassCount[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;检验代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> KNN_1</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">group,labers=KNN_1.creatDataSet()</span><br><span class="line">test = array([<span class="number">0.8</span>,<span class="number">0.5</span>])</span><br><span class="line">aimLaber=KNN_1.classify(test,group,labers,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> aimLaber</span><br><span class="line">plt.plot(group[:,<span class="number">0</span>],group[:,<span class="number">1</span>],<span class="string">'ro'</span>)</span><br><span class="line">plt.plot(test[<span class="number">0</span>],test[<span class="number">1</span>],<span class="string">'bo'</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>得到输出标签为A，显示图像如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/KNN.png" alt="images"></p>
+<h2 id="算法应用"><a href="#算法应用" class="headerlink" title="算法应用"></a>算法应用</h2><p>&emsp;&emsp;在应用KNN时，由于数据的各维度之间的取值范围有一定的差别，如果直接使用，则可能可能出现某些属性对于距离计算有很大的影响，从而使得预测结果不准确，为了防止此类问题的发生，应该对于各属性进行离散化处理之后在进行合适距离的计算。<br>&emsp;&emsp;《Machine Learning in Action》中对于KNN的进阶算法是利用其进行手写识别，实现方法是将32<em>32的图像转化为1</em>1024的向量进行计算，书中样例的错误率为1.2%.但是同时说明，实现此算法的执行效率并不高，因为数据属性的维度高达1024，并且需要较大的储存空间储存样本。</p>
+<h2 id="算法小结"><a href="#算法小结" class="headerlink" title="算法小结"></a>算法小结</h2><p>&emsp;&emsp;KNN是分类数据最简单最有效的算法，是基于实例的学习，使用是必须有接近实际数据的训练样本数据。此外必须对数据集中的每个数据计算距离值，如果样本属性的维度本来就很高，则会非常耗时；其另一个缺陷是无法给出任何数据的基础结构信息，因此我们也无法知道平均实例样本和典型实例样本具有的特征。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MachineLearning/" rel="tag"># MachineLearning</a>
+          
+            <a href="/tags/人工智能/" rel="tag"># 人工智能</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/01/Introduce-myself/" rel="next" title="Introduce myself">
+                <i class="fa fa-chevron-left"></i> Introduce myself
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/17/MachineLearning-NaiveBayesClassifiers/" rel="prev" title="MachineLearning-NaiveBayesClassifiers">
+                MachineLearning-NaiveBayesClassifiers <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Machine-Learning-KNN"><span class="nav-number">1.</span> <span class="nav-text">Machine Learning-KNN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#算法概述"><span class="nav-number">1.1.</span> <span class="nav-text">算法概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法思路"><span class="nav-number">1.2.</span> <span class="nav-text">算法思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法实现"><span class="nav-number">1.3.</span> <span class="nav-text">算法实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法应用"><span class="nav-number">1.4.</span> <span class="nav-text">算法应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#算法小结"><span class="nav-number">1.5.</span> <span class="nav-text">算法小结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

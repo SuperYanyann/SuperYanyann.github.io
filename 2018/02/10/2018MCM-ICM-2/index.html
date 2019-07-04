@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MCM/ICM,Math,DataMining,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述&amp;emsp;&amp;emsp;在进行完简单的数据分组之后我们发现，一部分数据是重复的仅仅是单位不同。随意我们先进行一步筛选处理，之后再进行一步降维处理，考虑到人工降维的效率比较低，并且效果不一定好，因此采用PCA进行降维，具体实现如下。 代码实现数据筛选&amp;emsp;&amp;emsp;我们发现605个指标中许多指标仅仅是单位不同而所描述的是一个变量，比如下面两个变量分别为第1个2个指标的折线表示：&amp;emsp">
+<meta name="keywords" content="MCM&#x2F;ICM,Math,DataMining">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2018MCM&#x2F;ICM-2">
+<meta property="og:url" content="http://yoursite.com/2018/02/10/2018MCM-ICM-2/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="概述&amp;emsp;&amp;emsp;在进行完简单的数据分组之后我们发现，一部分数据是重复的仅仅是单位不同。随意我们先进行一步筛选处理，之后再进行一步降维处理，考虑到人工降维的效率比较低，并且效果不一定好，因此采用PCA进行降维，具体实现如下。 代码实现数据筛选&amp;emsp;&amp;emsp;我们发现605个指标中许多指标仅仅是单位不同而所描述的是一个变量，比如下面两个变量分别为第1个2个指标的折线表示：&amp;emsp">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/Math/MCM%E7%AC%AC1%E7%A7%8D.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/Math/MCM%E7%AC%AC2%E7%A7%8D.png">
+<meta property="og:updated_time" content="2018-02-09T17:57:03.881Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2018MCM&#x2F;ICM-2">
+<meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;在进行完简单的数据分组之后我们发现，一部分数据是重复的仅仅是单位不同。随意我们先进行一步筛选处理，之后再进行一步降维处理，考虑到人工降维的效率比较低，并且效果不一定好，因此采用PCA进行降维，具体实现如下。 代码实现数据筛选&amp;emsp;&amp;emsp;我们发现605个指标中许多指标仅仅是单位不同而所描述的是一个变量，比如下面两个变量分别为第1个2个指标的折线表示：&amp;emsp">
+<meta name="twitter:image" content="http://p33eqsoxi.bkt.clouddn.com/image/Math/MCM%E7%AC%AC1%E7%A7%8D.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/10/2018MCM-ICM-2/">
+
+
+
+
+
+  <title>2018MCM/ICM-2 | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/10/2018MCM-ICM-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2018MCM/ICM-2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-10T01:56:29+08:00">
+                2018-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MCM-ICM/" itemprop="url" rel="index">
+                    <span itemprop="name">MCM/ICM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;在进行完简单的数据分组之后我们发现，一部分数据是重复的仅仅是单位不同。随意我们先进行一步筛选处理，之后再进行一步降维处理，考虑到人工降维的效率比较低，并且效果不一定好，因此采用PCA进行降维，具体实现如下。</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="数据筛选"><a href="#数据筛选" class="headerlink" title="数据筛选"></a>数据筛选</h2><p>&emsp;&emsp;我们发现605个指标中许多指标仅仅是单位不同而所描述的是一个变量，比如下面两个变量分别为第1个2个指标的折线表示：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/image/Math/MCM%E7%AC%AC1%E7%A7%8D.png" alt="photo1"><br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/image/Math/MCM%E7%AC%AC2%E7%A7%8D.png" alt="photo1"><br>&emsp;&emsp;发现其仅仅是单位的不同。所以我们从全部的单位中选择出9个单位，进行了第一步筛选.实现的时候先进行一个指标的筛选，从第一个表中筛选出所有符合条件的列标，实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># sort the MSN,the num is the kindNum of MSN</span></span><br><span class="line"><span class="comment"># retern is the ArrNum Of the same kind</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getkindArrNum</span><span class="params">(kindNum)</span>:</span></span><br><span class="line">    kindName = getkindName(kindNum)</span><br><span class="line">    kindArr = []</span><br><span class="line">    kindNum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">605</span>):</span><br><span class="line">        kindNum = kindNum + <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> sheet2.cell(i,<span class="number">2</span>).value == kindName:</span><br><span class="line">            kindArr.append(kindNum)</span><br><span class="line">    <span class="keyword">return</span> kindArr</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;之后再利用列标把数据变为一个整体的数组，考虑到之后需要进行PCA处理，但是每组数据的长度不统一，由于长度为50的占85%以上，所以我们仅仅筛选出长度为50的数据进行分析。实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get the kindArrData</span></span><br><span class="line"><span class="comment">#return is the data Arr of the certain kindNum</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getkindArrData</span><span class="params">(kindNum,stateNum)</span>:</span></span><br><span class="line">    kindArr = getkindArrNum(kindNum)</span><br><span class="line">    kindArrData = []</span><br><span class="line">    kindArrSize = len(kindArr)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,kindArrSize<span class="number">-1</span>):</span><br><span class="line">        kindData = getDataArr(stateNum,kindArr[i])</span><br><span class="line">        kindArrData.append(kindData)</span><br><span class="line">    <span class="keyword">return</span> kindArrData</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># int the last fun we get the len of each Arr is defferent,e.g 0 30 40 50</span></span><br><span class="line"><span class="comment">#for PCA,we should screen the Arr in the same len</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">screenKindArrData</span><span class="params">(kindNum,stateNum)</span>:</span></span><br><span class="line">    kindArr = getkindArrNum(kindNum)</span><br><span class="line">    kindArrData = []</span><br><span class="line">    scrKindArrData = []</span><br><span class="line">    kindArrSize = len(kindArr)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,kindArrSize<span class="number">-1</span>):</span><br><span class="line">        kindData = getDataArr(stateNum,kindArr[i])</span><br><span class="line">        kindArrData.append(kindData)</span><br><span class="line">    lenkindArr = len(kindArrData)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,lenkindArr):</span><br><span class="line">        <span class="keyword">if</span> len(kindArrData[i]) == <span class="number">50</span>:</span><br><span class="line">            scrKindArrData.append(kindArrData[i])</span><br><span class="line">    <span class="keyword">return</span> scrKindArrData</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;进行9个指标的筛选原理同上，实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># !!! important def in the Code</span></span><br><span class="line"><span class="comment"># whether is in the Arr to be down</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">whetherIndex</span><span class="params">()</span>:</span></span><br><span class="line">    kindArr = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> kindNum <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">9</span>):</span><br><span class="line">        kindName = getkindName(kindNum)</span><br><span class="line">        kindNum = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">605</span>):</span><br><span class="line">            kindNum = kindNum + <span class="number">1</span></span><br><span class="line">            <span class="keyword">if</span> sheet2.cell(i,<span class="number">2</span>).value == kindName :</span><br><span class="line">                kindArr.append(kindNum)</span><br><span class="line">    <span class="keyword">return</span> kindArr</span><br><span class="line">    </span><br><span class="line"><span class="comment"># important def in the Code</span></span><br><span class="line"><span class="comment"># to screen in the 9 kinds</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">screenKindArrData2</span><span class="params">(stateNum)</span>:</span></span><br><span class="line">    kindArrData = []</span><br><span class="line">    scrKindArrData = []</span><br><span class="line">    <span class="keyword">for</span> kindNum <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">9</span>):</span><br><span class="line">        kindArr = getkindArrNum(kindNum)</span><br><span class="line">        kindArrSize = len(kindArr)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,kindArrSize<span class="number">-1</span>):</span><br><span class="line">            kindData = getDataArr(stateNum,kindArr[i])</span><br><span class="line">            kindArrData.append(kindData)</span><br><span class="line">    lenkindArr = len(kindArrData)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,lenkindArr):</span><br><span class="line">        <span class="keyword">if</span> len(kindArrData[i]) == <span class="number">50</span>:</span><br><span class="line">            scrKindArrData.append(kindArrData[i])</span><br><span class="line">    <span class="keyword">return</span> scrKindArrData</span><br></pre></td></tr></table></figure>
+
+<h2 id="降维"><a href="#降维" class="headerlink" title="降维"></a>降维</h2><p>&emsp;&emsp;采用PCA方法降维，PCA函数如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># use PCA to down the dataset</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pca</span><span class="params">(dataMat,topNfeat = <span class="number">9999999</span>)</span>:</span></span><br><span class="line">    meanVals = numpy.mean(dataMat,axis=<span class="number">0</span>)</span><br><span class="line">    meanRemoved = dataMat - meanVals</span><br><span class="line">    covMat = numpy.cov(meanRemoved,rowvar = <span class="number">0</span>)</span><br><span class="line">    eigVals,eigVects = numpy.linalg.eig(numpy.mat(covMat))</span><br><span class="line">    eigValInd = numpy.argsort(eigVals)</span><br><span class="line">    eigValInd = eigValInd[:-(topNfeat+<span class="number">1</span>):<span class="number">-1</span>]</span><br><span class="line">    redEigVects = eigVects[:,eigValInd]</span><br><span class="line">    lowDDataMat = meanRemoved * redEigVects</span><br><span class="line">    reconMat = (lowDDataMat * redEigVects.T) + meanVals</span><br><span class="line">    <span class="keyword">return</span> lowDDataMat,reconMat</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;运用PCA进行降维处理，并进行绘图。其中在绘图的时候发现，“mat”类型的数据无法绘制为折线图，因此先将“mat”类型转回”list”，再进行折线图的绘制，输出正常，输出的为降维后每个维度的折线图，实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># to down the data</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">downData</span><span class="params">()</span>:</span></span><br><span class="line">    kindArrData1 = numpy.mat(screenKindArrData2(<span class="number">1</span>))</span><br><span class="line">    kindArrData1 = kindArrData1.T</span><br><span class="line">    lowDMat,reconMat = pca(kindArrData1,<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">print</span> numpy.shape(reconMat)</span><br><span class="line">    <span class="keyword">print</span> numpy.shape(lowDMat)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> lowDMat.T</span><br><span class="line"></span><br><span class="line"><span class="comment"># to get the photo of the downData</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPhotoDownData</span><span class="params">()</span>:</span></span><br><span class="line">    xcord1 = numpy.mat(range(<span class="number">0</span>,<span class="number">50</span>))</span><br><span class="line">    xcord1 = xcord1.tolist()   <span class="comment"># to get the line chart</span></span><br><span class="line">    xcord1 = xcord1[<span class="number">0</span>]</span><br><span class="line">    dowmData = downData()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">5</span>):</span><br><span class="line">        ycord1 = dowmData[i]</span><br><span class="line">        ycord1 = ycord1.tolist()</span><br><span class="line">        ycord1 = ycord1[<span class="number">0</span>]</span><br><span class="line">        plt.plot(xcord1,ycord1,<span class="string">'bo-'</span>)</span><br><span class="line">        plt.plot(xcord1, ycord1, marker=<span class="string">'o'</span>, mec=<span class="string">'r'</span>, mfc=<span class="string">'w'</span>,label=<span class="string">u'test1'</span>)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">'第'</span> + str(i) + <span class="string">'种'</span> + <span class="string">'.png'</span></span><br><span class="line">        f_name = <span class="string">'第'</span> + str(i) + <span class="string">'种'</span> + <span class="string">'.png'</span></span><br><span class="line">        f_path = source + f_name</span><br><span class="line">        plt.savefig(f_path)</span><br><span class="line">        plt.close()</span><br></pre></td></tr></table></figure>
+
+<h1 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h1><p>&emsp;&emsp;输出数据我直接输出到了txt文件中，封装了一个函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">writeToTxt</span><span class="params">(list_name,file_path)</span>:</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        fp = open(file_path,<span class="string">"rb+"</span>)</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> list_name:</span><br><span class="line">            fp.write(str(item)+<span class="string">"\n"</span>)</span><br><span class="line">        fp.close()</span><br><span class="line">    <span class="keyword">except</span> IOError:</span><br><span class="line">        print(<span class="string">"fail to open file"</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;在运用PCA的时候一开始维度关系有点弄混了，发现降维后数据维度不正确，原因是数组忘记转置，在数组进行转置后输出正常。一开始将287维的数据降为30维，发现进行5组数据是特征比较明显的，后尝试将维度缩小后发现效果变好。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MCM-ICM/" rel="tag"># MCM/ICM</a>
+          
+            <a href="/tags/Math/" rel="tag"># Math</a>
+          
+            <a href="/tags/DataMining/" rel="tag"># DataMining</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/10/2018MCM-ICM-1/" rel="next" title="2018MCM/ICM-1">
+                <i class="fa fa-chevron-left"></i> 2018MCM/ICM-1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/10/2018MCM-ICM-3/" rel="prev" title="2018MCM/ICM-3">
+                2018MCM/ICM-3 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">2.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据筛选"><span class="nav-number">2.1.</span> <span class="nav-text">数据筛选</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#降维"><span class="nav-number">2.2.</span> <span class="nav-text">降维</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#输出"><span class="nav-number">3.</span> <span class="nav-text">输出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

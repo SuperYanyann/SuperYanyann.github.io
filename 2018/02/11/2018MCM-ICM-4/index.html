@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MCM/ICM,Math,DataMining,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述&amp;emsp;&amp;emsp;在Part1 C中，需要一个评价方法来对四个州的能源结构进行综合评价，通过能源相关文献，我们暂时选择定量化的熵权法对四个州进行评价，其中评价指标暂时为选择的8个MSN值（指标有可能改变），并用python实现。 理论基础&amp;emsp;&amp;emsp;关于熵权法原理的学习参考张敬信对于该方法的介绍,简单介绍如下：    在信息论中，熵是对不确定性的一种度量。信息量越大，不确定性">
+<meta name="keywords" content="MCM&#x2F;ICM,Math,DataMining">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2018MCM&#x2F;ICM-4">
+<meta property="og:url" content="http://yoursite.com/2018/02/11/2018MCM-ICM-4/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="概述&amp;emsp;&amp;emsp;在Part1 C中，需要一个评价方法来对四个州的能源结构进行综合评价，通过能源相关文献，我们暂时选择定量化的熵权法对四个州进行评价，其中评价指标暂时为选择的8个MSN值（指标有可能改变），并用python实现。 理论基础&amp;emsp;&amp;emsp;关于熵权法原理的学习参考张敬信对于该方法的介绍,简单介绍如下：    在信息论中，熵是对不确定性的一种度量。信息量越大，不确定性">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-02-10T23:58:02.624Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2018MCM&#x2F;ICM-4">
+<meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;在Part1 C中，需要一个评价方法来对四个州的能源结构进行综合评价，通过能源相关文献，我们暂时选择定量化的熵权法对四个州进行评价，其中评价指标暂时为选择的8个MSN值（指标有可能改变），并用python实现。 理论基础&amp;emsp;&amp;emsp;关于熵权法原理的学习参考张敬信对于该方法的介绍,简单介绍如下：    在信息论中，熵是对不确定性的一种度量。信息量越大，不确定性">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/11/2018MCM-ICM-4/">
+
+
+
+
+
+  <title>2018MCM/ICM-4 | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/11/2018MCM-ICM-4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2018MCM/ICM-4</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-11T07:56:47+08:00">
+                2018-02-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MCM-ICM/" itemprop="url" rel="index">
+                    <span itemprop="name">MCM/ICM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;在Part1 C中，需要一个评价方法来对四个州的能源结构进行综合评价，通过能源相关文献，我们暂时选择定量化的熵权法对四个州进行评价，其中评价指标暂时为选择的8个MSN值（指标有可能改变），并用python实现。</p>
+<h1 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h1><p>&emsp;&emsp;关于熵权法原理的学习参考<a href="https://zhuanlan.zhihu.com/p/28067337" target="_blank" rel="noopener">张敬信对于该方法的介绍</a>,简单介绍如下：</p>
+<blockquote>
+</blockquote>
+<ul>
+<li>在信息论中，熵是对不确定性的一种度量。信息量越大，不确定性就越小，熵也就越小；信息量越小，不确定性越大，熵也越大。</li>
+<li>根据熵的特性，可以通过计算熵值来判断一个事件的随机性及无序程度，也可以用熵值来判断某个指标的离散程度，指标的离散程度越大，该指标对综合评价的影响（权重）越大。比如样本数据在某指标下取值都相等，则该指标对总体评价的影响为0，权值为0.</li>
+<li>熵权法是一种客观赋权法，因为它仅依赖于数据本身的离散性。</li>
+</ul>
+<p>&emsp;&emsp;具体的计算过程如下：<br>&emsp;&emsp;&emsp;1.对于$n$个对象，$m$个指标，输入$n*m$的矩阵，$x_{ij}$表示第$i$个对象的第$j$个指标的值。<br>&emsp;&emsp;&emsp;2.对数据进行归一化处理：<br>&emsp;&emsp;&emsp;&emsp;对于正向指标：<br>$$x_{ij}=\frac{x_{ij}-min{x_{1j},…,x_{nj}}}{max{x_{1j},…,x_{nj}}-min{x_{1j},…,x_{nj}}} $$<br>&emsp;&emsp;&emsp;&emsp;对于负向指标：<br>$$x_{ij}=\frac{max{x_{1j},…,x_{nj}}-x_{ij}}{max{x_{1j},…,x_{nj}}-min{x_{1j},…,x_{nj}}} $$<br>&emsp;&emsp;&emsp;3.计算第$j$项指标下第$i$个对象的值占该指标的比重：<br>$$p_{ij} =\frac{x_{ij}}{ \sum_{i=1}^n x_{ij}}$$<br>&emsp;&emsp;&emsp;4.计算第$j$项指标的熵值：<br>$$e_j = - \frac{1}{ln(n)}p_{ij}ln(p_{ij}) $$<br>&emsp;&emsp;&emsp;5.计算信息熵的冗余度：<br>$$d_j=1-e_j$$<br>&emsp;&emsp;&emsp;6.计算各项指标的权重：<br>$$w_j = \frac{d_j}{\sum_{j=1}^m d_j} $$<br>&emsp;&emsp;&emsp;7.计算各对象的综合得分<br>$$s_i = \sum_{j=1}^m w_j p_{ij}$$</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>&emsp;&emsp;原文中所给出的算法是利用Matlab实现的，但是由于我的数据是利用python进行筛选和处理的，因此我利用python实现了一遍，并进行改进。原算法中归一化没有考虑“xmax-xmin == 0”的情况，分母可能为0，因此当这种情况发生时，为分母赋一个较小的值，防止分母为0，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># normalize the data</span></span><br><span class="line"><span class="comment"># if type == 1 the diection is positive</span></span><br><span class="line"><span class="comment"># else the dieection is nagetive</span></span><br><span class="line"><span class="comment"># for the data numSample is the num of sample</span></span><br><span class="line"><span class="comment"># numTarget is the num of target</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">normalize</span><span class="params">(oriData,type,ymin,ymax)</span>:</span></span><br><span class="line"></span><br><span class="line">    lenOfData = len(oriData)</span><br><span class="line">    xmax = max(oriData)</span><br><span class="line">    xmin = min(oriData)</span><br><span class="line">    oriData = np.mat(oriData)</span><br><span class="line"></span><br><span class="line">    betweenMaxMIn = xmax-xmin</span><br><span class="line">    <span class="keyword">if</span> betweenMaxMIn == <span class="number">0</span>:</span><br><span class="line">        betweenMaxMIn = <span class="number">0.001</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> type == <span class="number">1</span>:</span><br><span class="line">            yaim = (ymax - ymin)*(oriData - xmin)/betweenMaxMIn+ymin</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">            yaim = (ymax - ymin)*(xmax - oriData)/betweenMaxMIn+ymin</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> yaim</span><br><span class="line"></span><br><span class="line"><span class="comment"># to get the score of samples and the weight of the target</span></span><br><span class="line"><span class="comment"># for the data numSample is the num of sample</span></span><br><span class="line"><span class="comment"># numTarget is the num of target</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getEntropy</span><span class="params">(oriData,types)</span>:</span></span><br><span class="line">    numSample,numTarget = np.shape(oriData)</span><br><span class="line">    proportion = np.zeros((numSample,numTarget))</span><br><span class="line"></span><br><span class="line">    aimEntropy = np.zeros(numTarget)</span><br><span class="line">    aimEntropy = aimEntropy.tolist()</span><br><span class="line"></span><br><span class="line">    oriData = np.mat(oriData)</span><br><span class="line">    x = np.zeros((numSample,numTarget))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># ormalize the data</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,numTarget):</span><br><span class="line">       TData = oriData[:,i].T</span><br><span class="line">       TData = mat2list(TData)</span><br><span class="line">       x[:,i] = normalize(TData,types[i],<span class="number">0.002</span>,<span class="number">0.996</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the proportion[i,j],i is the num of the sample</span></span><br><span class="line">    <span class="comment"># j is the num of the target</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,numSample):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">0</span>,numTarget):</span><br><span class="line">            proportion[i,j] = x[i,j]/sum(x[:,j])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the entropy of each target</span></span><br><span class="line">    logSample = np.log(numSample)</span><br><span class="line">    logSample = <span class="number">1</span>/logSample</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,numTarget):</span><br><span class="line">        tempData1 = np.log(proportion[:,i])</span><br><span class="line">        tempData2 = np.multiply(proportion[:,i],tempData1)</span><br><span class="line">        aimEntropy[i] = -logSample * sum(tempData2)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the redundancy of each target</span></span><br><span class="line">    b = np.ones((<span class="number">1</span>,numTarget))</span><br><span class="line">    b = mat2list(b)</span><br><span class="line">    redundancy = np.mat(b) - np.mat(aimEntropy)</span><br><span class="line">    redundancy = redundancy.tolist()</span><br><span class="line">    redundancy = sum(redundancy,[])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># get the weight of the targets and the score of the samples</span></span><br><span class="line">    aimWeight = np.mat(redundancy)/sum(redundancy)</span><br><span class="line">    proportion = trans(proportion)</span><br><span class="line">    aimScore =  <span class="number">100</span> * np.dot(aimWeight,proportion)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># change the output from mat to list</span></span><br><span class="line">    aimScore = mat2list(aimScore)</span><br><span class="line">    aimWeight = mat2list(aimWeight)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> aimScore,aimWeight</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其中第一个函数用于归一化处理，第二个函数用于计算指标权值和对象得分。<br>&emsp;&emsp;在本题中，先利用两步进行数据处理，得到一年的输入数据，输入矩阵大小为$4*8$，即为4个对象（州），8个指标，处理过程如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># the first step to get the dataset in right style</span></span><br><span class="line"><span class="comment"># just get the dataset of certain one  MSN and one year</span></span><br><span class="line"><span class="comment"># the Arr's standard is 1*4</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getOneMSNDataSty</span><span class="params">(MSNNum,yearNum)</span>:</span></span><br><span class="line">    MSNName = sheet2.cell(MSNNum,<span class="number">0</span>).value</span><br><span class="line">    yearName = getNameOfYear(yearNum)</span><br><span class="line">    stateNameArr = getArrStateName()</span><br><span class="line">    aimData = []</span><br><span class="line"></span><br><span class="line">    oriX = <span class="number">0</span></span><br><span class="line">    oriY = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">105744</span>):</span><br><span class="line">        <span class="keyword">if</span> sheet1.cell(i,<span class="number">0</span>).value == MSNName <span class="keyword">and</span> sheet1.cell(i,<span class="number">2</span>).value == yearName <span class="keyword">and</span> sheet1.cell(i,<span class="number">1</span>).value == stateNameArr[<span class="number">0</span>] :</span><br><span class="line">            oriX = oriX + <span class="number">1</span></span><br><span class="line">            oriY.append(sheet1.cell(i,<span class="number">3</span>).value)</span><br><span class="line">        <span class="keyword">elif</span> sheet1.cell(i,<span class="number">0</span>).value == MSNName <span class="keyword">and</span> sheet1.cell(i,<span class="number">2</span>).value == yearName <span class="keyword">and</span> sheet1.cell(i,<span class="number">1</span>).value == stateNameArr[<span class="number">1</span>] :</span><br><span class="line">            oriX = oriX + <span class="number">1</span></span><br><span class="line">            oriY.append(sheet1.cell(i,<span class="number">3</span>).value)</span><br><span class="line">        <span class="keyword">elif</span> sheet1.cell(i,<span class="number">0</span>).value == MSNName <span class="keyword">and</span> sheet1.cell(i,<span class="number">2</span>).value == yearName <span class="keyword">and</span> sheet1.cell(i,<span class="number">1</span>).value == stateNameArr[<span class="number">2</span>] :</span><br><span class="line">            oriX = oriX + <span class="number">1</span></span><br><span class="line">            oriY.append(sheet1.cell(i,<span class="number">3</span>).value)</span><br><span class="line">        <span class="keyword">elif</span> sheet1.cell(i,<span class="number">0</span>).value == MSNName <span class="keyword">and</span> sheet1.cell(i,<span class="number">2</span>).value == yearName <span class="keyword">and</span> sheet1.cell(i,<span class="number">1</span>).value == stateNameArr[<span class="number">3</span>] :</span><br><span class="line">            oriX = oriX + <span class="number">1</span></span><br><span class="line">            oriY.append(sheet1.cell(i,<span class="number">3</span>).value)</span><br><span class="line">    <span class="keyword">return</span> oriY</span><br><span class="line"></span><br><span class="line"><span class="comment"># the second step to get the dataset in right style</span></span><br><span class="line"><span class="comment"># get the dataset of certain 8 MSNs in one year</span></span><br><span class="line"><span class="comment"># the Arr's standard is 4*8</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getAllMSNDataSty</span><span class="params">(yearNum)</span>:</span></span><br><span class="line">    lenOfMSN = len(MSNNumArr)</span><br><span class="line">    oriYOneMSN = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,lenOfMSN):</span><br><span class="line">        oneMSNData = getOneMSNDataSty(MSNNumArr[i],yearNum)</span><br><span class="line">        oriYOneMSN.append(oneMSNData)</span><br><span class="line"></span><br><span class="line">    oriYOneMSN = trans(oriYOneMSN)</span><br><span class="line">    <span class="keyword">return</span> oriYOneMSN</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试输出"><a href="#测试输出" class="headerlink" title="测试输出"></a>测试输出</h2><p>&emsp;&emsp;以1960年的数据输入为例，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ ==<span class="string">"__main__"</span>:</span><br><span class="line">    MSNStyle = [<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">-1</span>,<span class="number">-1</span>]</span><br><span class="line">    testData = getAllMSNDataSty(<span class="number">1960</span>)</span><br><span class="line">    tempScore,tempWeight = getWeightByEntropy(testData,MSNStyle)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'time is'</span> + <span class="string">'1960'</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'tempScore:'</span></span><br><span class="line">    <span class="keyword">print</span> tempScore</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'tempWeight:'</span></span><br><span class="line">    <span class="keyword">print</span> tempWeight</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;测试输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ python entropy2.py </span><br><span class="line">time is 1960</span><br><span class="line">tempScore:</span><br><span class="line">[8.872975711653167, 69.88616993620298, 7.1637488887983425, 14.077105463345536]</span><br><span class="line">tempWeight:</span><br><span class="line">[0.12051125623791543, 0.2371519637606621, 0.0, 0.13837650119691683, 0.2371519637606621, 0.11704768604685604, 0.06717244234828233, 0.08258818664870525]</span><br></pre></td></tr></table></figure>
+
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;在用python实现的时候，一开始输出的数值不正常，检查后发现一个公式看错了，导致错误。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MCM-ICM/" rel="tag"># MCM/ICM</a>
+          
+            <a href="/tags/Math/" rel="tag"># Math</a>
+          
+            <a href="/tags/DataMining/" rel="tag"># DataMining</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/10/2018MCM-ICM-3/" rel="next" title="2018MCM/ICM-3">
+                <i class="fa fa-chevron-left"></i> 2018MCM/ICM-3
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/11/2018MCM-ICM-5/" rel="prev" title="2018MCM/ICM-5">
+                2018MCM/ICM-5 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#理论基础"><span class="nav-number">2.</span> <span class="nav-text">理论基础</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">3.1.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试输出"><span class="nav-number">3.2.</span> <span class="nav-text">测试输出</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

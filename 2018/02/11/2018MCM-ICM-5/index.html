@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="MCM/ICM,Math,DataMining,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述&amp;emsp;&amp;emsp;在part 1的D问中需要建立一个模型用于预测相关资源关于时间序列的增长趋势。观察部分资源1960年到2009的数据，发现其比较接近生长曲线模型，于是先利用生长曲线相关函数进行一下拟合，观察一下拟合效果。 理论基础生长曲线函数模型&amp;emsp;&amp;emsp;生长曲线函数模型，也被称为 Logistic 函数模型，即为我们高中生物中所学习的“S”型曲线。其一般表达式如下：$$">
+<meta name="keywords" content="MCM&#x2F;ICM,Math,DataMining">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2018MCM&#x2F;ICM-5">
+<meta property="og:url" content="http://yoursite.com/2018/02/11/2018MCM-ICM-5/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="概述&amp;emsp;&amp;emsp;在part 1的D问中需要建立一个模型用于预测相关资源关于时间序列的增长趋势。观察部分资源1960年到2009的数据，发现其比较接近生长曲线模型，于是先利用生长曲线相关函数进行一下拟合，观察一下拟合效果。 理论基础生长曲线函数模型&amp;emsp;&amp;emsp;生长曲线函数模型，也被称为 Logistic 函数模型，即为我们高中生物中所学习的“S”型曲线。其一般表达式如下：$$">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/Math/MCMfitCurve2.png">
+<meta property="og:updated_time" content="2018-02-11T02:28:14.188Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2018MCM&#x2F;ICM-5">
+<meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;在part 1的D问中需要建立一个模型用于预测相关资源关于时间序列的增长趋势。观察部分资源1960年到2009的数据，发现其比较接近生长曲线模型，于是先利用生长曲线相关函数进行一下拟合，观察一下拟合效果。 理论基础生长曲线函数模型&amp;emsp;&amp;emsp;生长曲线函数模型，也被称为 Logistic 函数模型，即为我们高中生物中所学习的“S”型曲线。其一般表达式如下：$$">
+<meta name="twitter:image" content="http://p33eqsoxi.bkt.clouddn.com/image/Math/MCMfitCurve2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/02/11/2018MCM-ICM-5/">
+
+
+
+
+
+  <title>2018MCM/ICM-5 | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/11/2018MCM-ICM-5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">2018MCM/ICM-5</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-11T10:25:26+08:00">
+                2018-02-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MCM-ICM/" itemprop="url" rel="index">
+                    <span itemprop="name">MCM/ICM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;在part 1的D问中需要建立一个模型用于预测相关资源关于时间序列的增长趋势。观察部分资源1960年到2009的数据，发现其比较接近生长曲线模型，于是先利用生长曲线相关函数进行一下拟合，观察一下拟合效果。</p>
+<h1 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h1><h2 id="生长曲线函数模型"><a href="#生长曲线函数模型" class="headerlink" title="生长曲线函数模型"></a>生长曲线函数模型</h2><p>&emsp;&emsp;<a href="https://baike.baidu.com/item/%E7%94%9F%E9%95%BF%E6%9B%B2%E7%BA%BF%E5%87%BD%E6%95%B0/1745363?fr=aladdin&fromid=16590835&fromtitle=%E7%94%9F%E9%95%BF%E5%87%BD%E6%95%B0" target="_blank" rel="noopener">生长曲线函数模型</a>，也被称为 Logistic 函数模型，即为我们高中生物中所学习的“S”型曲线。其一般表达式如下：<br>$$y=\frac{1}{\frac{1}{k}+ab^x} $$<br>&emsp;&emsp;其中$k,a,b,$为模型的参数，实现对于种群初期，中期，末期三个阶段的描述。<br>&emsp;&emsp;</p>
+<h2 id="皮尔模型"><a href="#皮尔模型" class="headerlink" title="皮尔模型"></a>皮尔模型</h2><p>&emsp;&emsp;初期用于研究人口增长规律，也可以用于研究部分经济变量的发展变化规律，一般形式如下：<br>$$y=\frac{K}{1+e^{f(x)}}<br>\ f(x)=a_0+a_1x+a_2x^2…+a_nx^n$$<br>&emsp;&emsp;我们所选择是其中一个常用的模型，表达式如下：<br>$$y=\frac{K}{a+be^{-ax}}$$<br>&emsp;&emsp;其中参数为$K,a,b$。</p>
+<h1 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h1><h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>&emsp;&emsp;利用scipy.optimize的<a href="https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.optimize.curve_fit.html" target="_blank" rel="noopener">curve_fit</a>进行已经确定函数模型的拟合，即函数参数的优化,具体实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- coding: UTF-8 -*-</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> xlrd</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> scipy.optimize <span class="keyword">import</span> curve_fit</span><br><span class="line"></span><br><span class="line"><span class="comment"># get the dataset</span></span><br><span class="line">data = xlrd.open_workbook(<span class="string">'ProblemCData2.xlsx'</span>)</span><br><span class="line">sheet1 = data.sheet_by_index(<span class="number">0</span>) <span class="comment">#获得表格</span></span><br><span class="line">sheet2 = data.sheet_by_index(<span class="number">1</span>) <span class="comment">#获得表格</span></span><br><span class="line">sheet3 = data.sheet_by_index(<span class="number">4</span>) <span class="comment">#获得表格</span></span><br><span class="line">nrows = sheet1.nrows  <span class="comment"># 拿到总共行数</span></span><br><span class="line">ncols = sheet1.ncols</span><br><span class="line">source = <span class="string">'data1/'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># the fun use to fit</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">func</span><span class="params">(x,a,b,k)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> k/(<span class="number">1</span> + b*np.exp(-a*x))</span><br><span class="line"></span><br><span class="line"><span class="comment"># get the data of (stateNum,MSNNum) from 1960 to 2009</span></span><br><span class="line"><span class="comment"># stateNum is the num of state &#123;0:AZ,1:CA,2:NM,3:TX&#125;</span></span><br><span class="line"><span class="comment"># MSNNum is the num of MSN &#123;1:NGTCB,2:NUETN,3:WYTCB,4:HTTCB,5:GETCB,6:BMTCB&#125;</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getDataNeedFit</span><span class="params">(stateNum,MSNNum)</span>:</span></span><br><span class="line">    MSNNum = MSNNum - <span class="number">1</span></span><br><span class="line">    beginNum = <span class="number">1</span> + stateNum*<span class="number">50</span></span><br><span class="line">    endNum = beginNum + <span class="number">49</span></span><br><span class="line">    dataNeedFit = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(beginNum,endNum):</span><br><span class="line">        dataNeedFit.append(sheet3.cell(i,MSNNum).value)</span><br><span class="line">    <span class="keyword">return</span> dataNeedFit</span><br><span class="line"></span><br><span class="line"><span class="comment"># enter the main</span></span><br><span class="line"><span class="keyword">if</span> __name__ ==<span class="string">"__main__"</span>:</span><br><span class="line">   x = np.arange(<span class="number">1</span>, <span class="number">50</span>, <span class="number">1</span>)</span><br><span class="line">   y = getDataNeedFit(<span class="number">3</span>,<span class="number">2</span>)</span><br><span class="line">   y = np.array(y)</span><br><span class="line"></span><br><span class="line">   popt, pcov = curve_fit(func, x, y)</span><br><span class="line">   a=popt[<span class="number">0</span>]</span><br><span class="line">   b=popt[<span class="number">1</span>]</span><br><span class="line">   k=popt[<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">   <span class="keyword">print</span> popt</span><br><span class="line"></span><br><span class="line">   yvals=func(x,a,b,k)</span><br><span class="line">   plot1=plt.plot(x, y, <span class="string">'*'</span>,label=<span class="string">'original values'</span>)</span><br><span class="line">   plot2=plt.plot(x, yvals, <span class="string">'r'</span>,label=<span class="string">'fit values'</span>)</span><br><span class="line">   plt.xlabel(<span class="string">'x axis'</span>)</span><br><span class="line">   plt.ylabel(<span class="string">'y axis'</span>)</span><br><span class="line">   plt.legend(loc=<span class="number">4</span>)</span><br><span class="line">   plt.title(<span class="string">'GETCB'</span>)</span><br><span class="line">   plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其中我把数据的提取封装为一个函数getDataNeedFit(stateNum,MSNNum)，输入对应的州序号stateNum和指标序号MSNNum即可提取需要拟合的数据。拟合的模型即为上述的皮尔模型。<br>&emsp;&emsp;源数据为原始数据稍做修改后得到的。</p>
+<h2 id="拟合效果"><a href="#拟合效果" class="headerlink" title="拟合效果"></a>拟合效果</h2><p>&emsp;&emsp;对于德克萨斯州1960到2009年“GETCB”的拟合参数输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python curveFitting1.py </span><br><span class="line">[  4.78504567e-01   6.24579218e+06   4.06732530e+05]</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;拟合效果如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/Math/MCMfitCurve2.png" alt="photo"></p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;此生长模型函数模型对于筛选后的部分资源数据的拟合效果并不是很好，可能是由于外部因素影响导致的。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MCM-ICM/" rel="tag"># MCM/ICM</a>
+          
+            <a href="/tags/Math/" rel="tag"># Math</a>
+          
+            <a href="/tags/DataMining/" rel="tag"># DataMining</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/11/2018MCM-ICM-4/" rel="next" title="2018MCM/ICM-4">
+                <i class="fa fa-chevron-left"></i> 2018MCM/ICM-4
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/18/Project-OptimizationCounter/" rel="prev" title="Project-OptimizationCounter">
+                Project-OptimizationCounter <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#理论基础"><span class="nav-number">2.</span> <span class="nav-text">理论基础</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#生长曲线函数模型"><span class="nav-number">2.1.</span> <span class="nav-text">生长曲线函数模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#皮尔模型"><span class="nav-number">2.2.</span> <span class="nav-text">皮尔模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实现"><span class="nav-number">3.</span> <span class="nav-text">实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">3.1.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拟合效果"><span class="nav-number">3.2.</span> <span class="nav-text">拟合效果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

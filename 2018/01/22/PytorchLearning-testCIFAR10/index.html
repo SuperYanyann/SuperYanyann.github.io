@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DeepLearning,Pytorch,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="PytorchLearning-testCifar10标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;CIFAR-10是多伦多大学提供的图片数据库，图片分辨率压缩至32x32，为三通道彩色图片，一共有10种图片分类，均进行了标注。每种标注6000张，一共60000个样本，适合监督式学习。&amp;emsp;&amp;emsp;本文借鉴LeNet进行CIFAR-10的进行一个简单的训">
+<meta name="keywords" content="DeepLearning,Pytorch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PytorchLearning-testCIFAR10">
+<meta property="og:url" content="http://yoursite.com/2018/01/22/PytorchLearning-testCIFAR10/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="PytorchLearning-testCifar10标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;CIFAR-10是多伦多大学提供的图片数据库，图片分辨率压缩至32x32，为三通道彩色图片，一共有10种图片分类，均进行了标注。每种标注6000张，一共60000个样本，适合监督式学习。&amp;emsp;&amp;emsp;本文借鉴LeNet进行CIFAR-10的进行一个简单的训">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/CIFAR10.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/CIFAR10_2.png">
+<meta property="og:updated_time" content="2018-01-25T04:35:22.439Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PytorchLearning-testCIFAR10">
+<meta name="twitter:description" content="PytorchLearning-testCifar10标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;CIFAR-10是多伦多大学提供的图片数据库，图片分辨率压缩至32x32，为三通道彩色图片，一共有10种图片分类，均进行了标注。每种标注6000张，一共60000个样本，适合监督式学习。&amp;emsp;&amp;emsp;本文借鉴LeNet进行CIFAR-10的进行一个简单的训">
+<meta name="twitter:image" content="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/CIFAR10.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/22/PytorchLearning-testCIFAR10/">
+
+
+
+
+
+  <title>PytorchLearning-testCIFAR10 | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/22/PytorchLearning-testCIFAR10/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PytorchLearning-testCIFAR10</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-22T14:31:11+08:00">
+                2018-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">DeepLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="PytorchLearning-testCifar10"><a href="#PytorchLearning-testCifar10" class="headerlink" title="PytorchLearning-testCifar10"></a>PytorchLearning-testCifar10</h1><p>标签： DeepLearning Pytorch</p>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;CIFAR-10是多伦多大学提供的图片数据库，图片分辨率压缩至32x32，为三通道彩色图片，一共有10种图片分类，均进行了标注。每种标注6000张，一共60000个样本，适合监督式学习。<br>&emsp;&emsp;本文借鉴LeNet进行CIFAR-10的进行一个简单的训练。</p>
+<h1 id="理论准备"><a href="#理论准备" class="headerlink" title="理论准备"></a>理论准备</h1><p>&emsp;&emsp;LeNet是一个很经典的CNN，在Ng的CNN课程中有过专门的介绍。LeNet一个效果良好的测试集就是手写数字识别。<br>&emsp;&emsp;LeNet的网络结构图如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/CIFAR10.png" alt="Markdown"><br>&emsp;&emsp;LeNet-5一共有七层结构，输入为32<em>32的图像。网络的第一层为C1为卷积层，有6个特征，每个特征为28</em>28，共156个可以训练的参数；第二层S2为一个池化层，将每个特征由28<em>28缩减为14</em>14；第三层C3为卷积层，有16个特征，每个特征为10<em>10；第四层S4为池化层，将特征由10</em>10缩减为5*5，第5层为全连接层，有120个单元，第6层为全连接层，有84个单元，第7层为输出层，输出10个值，作为分类的依据。详细介绍参见《Gradient-Based Learning Applied to Document Recognition》。</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><h2 id="LeNet-5网络建立"><a href="#LeNet-5网络建立" class="headerlink" title="LeNet-5网络建立"></a>LeNet-5网络建立</h2><p>&emsp;&emsp;本文利用pytorch框架重现LeNet-5网络，代码实现参考<a href="https://github.com/chenyuntc/pytorch-book/tree/master/chapter2-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8" target="_blank" rel="noopener">陈云的开源项目</a>。<br>&emsp;&emsp;网络的构建如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Net,self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">3</span>,<span class="number">6</span>,<span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">6</span>,<span class="number">16</span>,<span class="number">5</span>)</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">16</span>*<span class="number">5</span>*<span class="number">5</span>,<span class="number">120</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">120</span>,<span class="number">84</span>)</span><br><span class="line">        self.fc3 = nn.Linear(<span class="number">84</span>,<span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">        x = F.max_pool2d(F.relu(self.conv1(x)),(<span class="number">2</span>,<span class="number">2</span>))</span><br><span class="line">        x = F.max_pool2d(F.relu(self.conv2(x)),<span class="number">2</span>)</span><br><span class="line">        x = x.view(x.size()[<span class="number">0</span>],<span class="number">-1</span>)</span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        x = F.relu(self.fc2(x))</span><br><span class="line">        x = self.fc3(x)</span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其中<strong>conv1</strong>为一个3通道输入，6特征输出，内核为5<em>5的卷基层；*</em>conv2*<em>为一个6通道输入，16特征输出，内核为5</em>5的卷基层；fc1为实现16<em>5</em>5到1×120转换的全连接层；fc2为实现1<em>120到1</em>84转换的全连接层；fc3为实现1<em>84到1</em>10转换的输出层。池化层的定义在forward()函数中，其中对于conv1层的池化采用最大池化方法；对于conv2的池化也采用最大池化。<br>&emsp;&emsp;网络输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Net (</span><br><span class="line">  (conv1): Conv2d(3, 6, kernel_size=(5, 5), stride=(1, 1))</span><br><span class="line">  (conv2): Conv2d(6, 16, kernel_size=(5, 5), stride=(1, 1))</span><br><span class="line">  (fc1): Linear (400 -&gt; 120)</span><br><span class="line">  (fc2): Linear (120 -&gt; 84)</span><br><span class="line">  (fc3): Linear (84 -&gt; 10)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="数据的导入"><a href="#数据的导入" class="headerlink" title="数据的导入"></a>数据的导入</h2><p>&emsp;&emsp;CIFAR-10数据的导入实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">transform = transforms.Compose([transforms.ToTensor(),</span><br><span class="line">  transforms.Normalize((<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0.5</span>),(<span class="number">0.5</span>,<span class="number">0.5</span>,<span class="number">0.5</span>)), ])</span><br><span class="line"></span><br><span class="line">trainset = tv.datasets.CIFAR10(root=<span class="string">'/home/yanwang/下载/dataSet/CIFAR10/'</span>,train = <span class="literal">True</span>,</span><br><span class="line">  download=<span class="literal">True</span>,transform=transform)</span><br><span class="line">trainloader = t.utils.data.DataLoader(trainset,batch_size=<span class="number">4</span>,shuffle=<span class="literal">True</span>,num_workers=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">testset = tv.datasets.CIFAR10(root=<span class="string">'/home/yanwang/下载/dataSet/CIFAR10/'</span>,train = <span class="literal">False</span>,</span><br><span class="line">  download=<span class="literal">True</span>,transform=transform)</span><br><span class="line">testloader = t.utils.data.DataLoader(testset,batch_size=<span class="number">4</span>,shuffle=<span class="literal">False</span>,num_workers=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">classes = (<span class="string">'plane'</span>,<span class="string">'car'</span>,<span class="string">'bird'</span><span class="string">'cat'</span>,<span class="string">'deer'</span>,<span class="string">'dog'</span>,<span class="string">'frog'</span>,<span class="string">'horse'</span>,<span class="string">'ship'</span>,<span class="string">'truck'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;选择4个样本输出标签和图像，实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dataiter = iter(trainloader)</span><br><span class="line">images,labels = dataiter.next()</span><br><span class="line">print(<span class="string">' '</span>.join(<span class="string">'%11s'</span>%classes[labels[j]] <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">4</span>)))</span><br><span class="line">img = imshow(tv.utils.make_grid((images+<span class="number">1</span>)/<span class="number">2</span>)).resize((<span class="number">400</span>,<span class="number">100</span>))</span><br><span class="line">img.show()</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ python testCifar10.py </span><br><span class="line">Files already downloaded and verified</span><br><span class="line">Files already downloaded and verified</span><br><span class="line">truck</span><br><span class="line">    birdcat         dog     birdcat        deer</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/CIFAR10_2.png" alt="Markdown"></p>
+<h2 id="定义损失函数和优化器"><a href="#定义损失函数和优化器" class="headerlink" title="定义损失函数和优化器"></a>定义损失函数和优化器</h2><p>&emsp;&emsp;代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line">optimizer = optim.SGD(net1.parameters(),lr=<span class="number">0.001</span>,momentum=<span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其中，损失函数选择的是交叉熵损失函数。<br>&emsp;&emsp;pytorch已经为我们实现。<br>&emsp;&emsp;优化器选择是常见的随机梯度下降算法（SGD）。</p>
+<h2 id="网络训练"><a href="#网络训练" class="headerlink" title="网络训练"></a>网络训练</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">2</span>):</span><br><span class="line">    running_loss = <span class="number">0.0</span></span><br><span class="line">    <span class="keyword">for</span> i,data <span class="keyword">in</span> enumerate(trainloader,<span class="number">0</span>):</span><br><span class="line">        inputs,labels = data</span><br><span class="line">        inputs,labels = Variable(inputs),Variable(labels)</span><br><span class="line"></span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line"></span><br><span class="line">        outputs = net1(inputs)</span><br><span class="line">        loss = criterion(outputs,labels)</span><br><span class="line">        loss.backward()</span><br><span class="line"></span><br><span class="line">        optimizer.step()</span><br><span class="line"></span><br><span class="line">        running_loss += loss.data[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">2000</span> == <span class="number">1999</span>:</span><br><span class="line">            print(<span class="string">'[%d,%5d] loss:%.3f'</span> \</span><br><span class="line">            %(epoch+<span class="number">1</span>,i+<span class="number">1</span>,running_loss/<span class="number">2000</span>))</span><br><span class="line">            running_loss = <span class="number">0.0</span></span><br><span class="line">print(<span class="string">'Finished Training'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;此处训练轮数为2。</p>
+<h2 id="测试集测试"><a href="#测试集测试" class="headerlink" title="测试集测试"></a>测试集测试</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">correct = <span class="number">0</span></span><br><span class="line">total = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> data <span class="keyword">in</span> testloader:</span><br><span class="line">    images,labels = data</span><br><span class="line">    outputs = net1(Variable(images))</span><br><span class="line">    _,predicted = t.max(outputs.data,<span class="number">1</span>)</span><br><span class="line">    total += labels.size(<span class="number">0</span>)</span><br><span class="line">    correct += (predicted == labels).sum()</span><br><span class="line"></span><br><span class="line">print(<span class="string">'accuracy rate of testSet: %d %%'</span> %(<span class="number">100</span>*correct/total))</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;输出为网络在测试集上的准确率。</p>
+<h1 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h1><p>&emsp;&emsp;训练2个epoch的结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[1, 2000] loss:2.213</span><br><span class="line">[1, 4000] loss:1.878</span><br><span class="line">[1, 6000] loss:1.706</span><br><span class="line">[1, 8000] loss:1.592</span><br><span class="line">[1,10000] loss:1.505</span><br><span class="line">[1,12000] loss:1.441</span><br><span class="line">[2, 2000] loss:1.386</span><br><span class="line">[2, 4000] loss:1.348</span><br><span class="line">[2, 6000] loss:1.311</span><br><span class="line">[2, 8000] loss:1.298</span><br><span class="line">[2,10000] loss:1.278</span><br><span class="line">[2,12000] loss:1.261</span><br><span class="line">Finished Training</span><br><span class="line">accuracy rate of testSet: 57 %</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;训练3个epoch的结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[1, 2000] loss:2.161</span><br><span class="line">[1, 4000] loss:1.851</span><br><span class="line">[1, 6000] loss:1.671</span><br><span class="line">[1, 8000] loss:1.551</span><br><span class="line">[1,10000] loss:1.504</span><br><span class="line">[1,12000] loss:1.440</span><br><span class="line">[2, 2000] loss:1.367</span><br><span class="line">[2, 4000] loss:1.357</span><br><span class="line">[2, 6000] loss:1.318</span><br><span class="line">[2, 8000] loss:1.296</span><br><span class="line">[2,10000] loss:1.275</span><br><span class="line">[2,12000] loss:1.264</span><br><span class="line">[3, 2000] loss:1.164</span><br><span class="line">[3, 4000] loss:1.180</span><br><span class="line">[3, 6000] loss:1.173</span><br><span class="line">[3, 8000] loss:1.158</span><br><span class="line">[3,10000] loss:1.142</span><br><span class="line">[3,12000] loss:1.135</span><br><span class="line">Finished Training</span><br><span class="line">accuracy rate of testSet: 59 %</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;训练5个epoch的结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[5, 2000] loss:1.090</span><br><span class="line">[5, 4000] loss:1.055</span><br><span class="line">[5, 6000] loss:1.095</span><br><span class="line">[5, 8000] loss:1.064</span><br><span class="line">[5,10000] loss:1.076</span><br><span class="line">[5,12000] loss:1.079</span><br><span class="line">Finished Training</span><br><span class="line">accuracy rate of testSet: 58 %</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;训练10个epoch的参数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[10, 2000] loss:0.809</span><br><span class="line">[10, 4000] loss:0.852</span><br><span class="line">[10, 6000] loss:0.847</span><br><span class="line">[10, 8000] loss:0.875</span><br><span class="line">[10,10000] loss:0.891</span><br><span class="line">[10,12000] loss:0.866</span><br><span class="line">Finished Training</span><br><span class="line">accuracy rate of testSet: 62 %</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;由测试结果可以发现，随着训练轮数的增加，熵损失率减小，准确率逐渐增加。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;LeNet是一个比较经典的网络，本次用来训练的电脑是CPU为i5-5200U的thinkpad—X1C.由于本身没有独显，所以使用的CPU进行计算，实际感受是，在没有GPU加速的情况下，即使样本规模不是很大，跑起来也比较吃力。训练3轮的平均用时为4:42,训练10轮的平均时间为12:45。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/21/MachineLearning-PCA/" rel="next" title="MachineLearning-PCA">
+                <i class="fa fa-chevron-left"></i> MachineLearning-PCA
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/23/PytorchLearning-linerRegression/" rel="prev" title="PytorchLearning-linerRegression">
+                PytorchLearning-linerRegression <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PytorchLearning-testCifar10"><span class="nav-number">1.</span> <span class="nav-text">PytorchLearning-testCifar10</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#理论准备"><span class="nav-number">3.</span> <span class="nav-text">理论准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LeNet-5网络建立"><span class="nav-number">4.1.</span> <span class="nav-text">LeNet-5网络建立</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据的导入"><span class="nav-number">4.2.</span> <span class="nav-text">数据的导入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定义损失函数和优化器"><span class="nav-number">4.3.</span> <span class="nav-text">定义损失函数和优化器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络训练"><span class="nav-number">4.4.</span> <span class="nav-text">网络训练</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试集测试"><span class="nav-number">4.5.</span> <span class="nav-text">测试集测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试结果"><span class="nav-number">5.</span> <span class="nav-text">测试结果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

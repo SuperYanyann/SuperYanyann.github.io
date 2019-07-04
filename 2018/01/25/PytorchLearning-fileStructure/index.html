@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DeepLearning,Pytorch,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="PytorchLearning-fileStructure标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;“Dogs vs. Cats”是kaggle平台上4年前的一个比赛，今天学习了陈云实现的猫狗大战的一个开源项目，借鉴一下他的文件组织结构。 比赛简介&amp;emsp;&amp;emsp;“Dogs vs. Cats”是一个传统的二分类问题，要求辨别图片为猫还是狗。kaggle">
+<meta name="keywords" content="DeepLearning,Pytorch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PytorchLearning-fileStructure">
+<meta property="og:url" content="http://yoursite.com/2018/01/25/PytorchLearning-fileStructure/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="PytorchLearning-fileStructure标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;“Dogs vs. Cats”是kaggle平台上4年前的一个比赛，今天学习了陈云实现的猫狗大战的一个开源项目，借鉴一下他的文件组织结构。 比赛简介&amp;emsp;&amp;emsp;“Dogs vs. Cats”是一个传统的二分类问题，要求辨别图片为猫还是狗。kaggle">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-25T03:44:44.240Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PytorchLearning-fileStructure">
+<meta name="twitter:description" content="PytorchLearning-fileStructure标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;“Dogs vs. Cats”是kaggle平台上4年前的一个比赛，今天学习了陈云实现的猫狗大战的一个开源项目，借鉴一下他的文件组织结构。 比赛简介&amp;emsp;&amp;emsp;“Dogs vs. Cats”是一个传统的二分类问题，要求辨别图片为猫还是狗。kaggle">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/25/PytorchLearning-fileStructure/">
+
+
+
+
+
+  <title>PytorchLearning-fileStructure | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/25/PytorchLearning-fileStructure/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PytorchLearning-fileStructure</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-25T11:43:58+08:00">
+                2018-01-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">DeepLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="PytorchLearning-fileStructure"><a href="#PytorchLearning-fileStructure" class="headerlink" title="PytorchLearning-fileStructure"></a>PytorchLearning-fileStructure</h1><p>标签： DeepLearning Pytorch</p>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;<strong>“Dogs vs. Cats”</strong>是kaggle平台上4年前的一个比赛，今天学习了<a href="https://github.com/chenyuntc" target="_blank" rel="noopener">陈云</a>实现的猫狗大战的一个开源项目，借鉴一下他的文件组织结构。</p>
+<h1 id="比赛简介"><a href="#比赛简介" class="headerlink" title="比赛简介"></a>比赛简介</h1><p>&emsp;&emsp;<strong>“Dogs vs. Cats”</strong>是一个传统的二分类问题，要求辨别图片为猫还是狗。kaggle所给数据包括了训练集和测试集，训练集包括25000张图片，测试集包括了12500张图片，参赛者提供的结果为有格式要求的CSV文件。<br>&emsp;&emsp;本文的目的主要是学习和借鉴一下<a href="https://github.com/chenyuntc" target="_blank" rel="noopener">陈云</a>完成这个项目的文件结构。</p>
+<h1 id="代码结构分析"><a href="#代码结构分析" class="headerlink" title="代码结构分析"></a>代码结构分析</h1><h2 id="整体结构"><a href="#整体结构" class="headerlink" title="整体结构"></a>整体结构</h2><p>&emsp;&emsp;首先使用tree工具查看整个工程的结构：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">$ tree</span><br><span class="line">.</span><br><span class="line">├── checkpoints</span><br><span class="line">├── config.py</span><br><span class="line">├── config.pyc</span><br><span class="line">├── data</span><br><span class="line">│   ├── dataset.py</span><br><span class="line">│   ├── dataset.pyc</span><br><span class="line">│   ├── get_data.sh</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   └── __init__.pyc</span><br><span class="line">├── main.py</span><br><span class="line">├── models</span><br><span class="line">│   ├── AlexNet.py</span><br><span class="line">│   ├── AlexNet.pyc</span><br><span class="line">│   ├── BasicModule.py</span><br><span class="line">│   ├── BasicModule.pyc</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── __init__.pyc</span><br><span class="line">│   ├── ResNet34.py</span><br><span class="line">│   └── ResNet34.pyc</span><br><span class="line">├── README.md</span><br><span class="line">├── requirements.txt</span><br><span class="line">└── utils</span><br><span class="line">    ├── __init__.py</span><br><span class="line">    ├── __init__.pyc</span><br><span class="line">    ├── visualize.py</span><br><span class="line">    └── visualize.pyc</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其中包括了如下内容：<br>&emsp;&emsp;&emsp;checkpoints文件夹：用于保存训练好的模型<br>&emsp;&emsp;&emsp;data文件夹：用于进行原始数据的保存以及数据相关的操作<br>&emsp;&emsp;&emsp;models文件夹：用于模型的定义<br>&emsp;&emsp;&emsp;utils文件夹：用于保存所用的工具函数<br>&emsp;&emsp;&emsp;main.py：为主文件，训练和测试程序的入口<br>&emsp;&emsp;&emsp;config.py：配置文件，集中所有可配置的变量</p>
+<h2 id="data"><a href="#data" class="headerlink" title="data"></a>data</h2><p>&emsp;&emsp;dataset.py中主要包括了如下函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def __init__(self,root,transforms=None,train=True,test=False):</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;用于获取所有图片的地址，并根据训练，验证，测试划分数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def __getitem__(self,index):</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;用于返回一张图片的数据</p>
+<h2 id="model"><a href="#model" class="headerlink" title="model"></a>model</h2><p>&emsp;&emsp;model用于模型的定义，文件夹中包含了三个文件，其中BasicModule.py是对于nn.Module的封装，提供了加载和保存模型的接口，在实际使用的时候直接调用其中的save函数和load函数即可实现模型的保存和加载。<br>&emsp;&emsp;AlexNet.py实现了一个AlexNet网络，ResNet.py实现了简化的ResNet34网络。对于模型的选择可以在配置文件中进行相应的配置,配置方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model = &apos;ResNet34&apos; # 使用的模型，名字必须与models/__init__.py中的名字一致</span><br></pre></td></tr></table></figure>
+
+<h2 id="utils"><a href="#utils" class="headerlink" title="utils"></a>utils</h2><p>&emsp;&emsp;visualize.py中主要封装了一些visdom的操作，例如修改visdom配置，相关画图操作等，此处不在细说，可以去参考下他的源码。</p>
+<h2 id="main-py"><a href="#main-py" class="headerlink" title="main.py"></a>main.py</h2><p>&emsp;&emsp;main.py为工程的主文件，在其中定义的了训练，验证，测试网络的步骤，训练的步骤如下：<br>&emsp;&emsp;&emsp;1、定义网络<br>&emsp;&emsp;&emsp;2、定义数据<br>&emsp;&emsp;&emsp;3、定义损失函数和优化器<br>&emsp;&emsp;&emsp;4、计算重要指标<br>&emsp;&emsp;&emsp;5、开始训练<br>&emsp;&emsp;验证的目的是计算模型在交叉验证集上的准确率等信息，之后还需要将模型恢复到训练模型上，利用交叉验证机改进模型。<br>&emsp;&emsp;测试的目的是使用测试集对于训练好的模型进行测试，并将结果输出保存到CSV文件中。<br>&emsp;&emsp;train函数中的训练训练部分如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># train</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(opt.max_epoch):</span><br><span class="line"></span><br><span class="line">    loss_meter.reset()</span><br><span class="line">    confusion_matrix.reset()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> ii,(data,label) <span class="keyword">in</span> enumerate(train_dataloader):</span><br><span class="line"></span><br><span class="line">        <span class="comment"># train model</span></span><br><span class="line">        input = Variable(data)</span><br><span class="line">        target = Variable(label)</span><br><span class="line">        <span class="keyword">if</span> opt.use_gpu:</span><br><span class="line">            input = input.cuda()</span><br><span class="line">            target = target.cuda()</span><br><span class="line"></span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        score = model(input)</span><br><span class="line">        loss = criterion(score,target)</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment"># meters update and visualize</span></span><br><span class="line">        loss_meter.add(loss.data[<span class="number">0</span>])</span><br><span class="line">        confusion_matrix.add(score.data, target.data)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> ii%opt.print_freq==opt.print_freq<span class="number">-1</span>:</span><br><span class="line">            vis.plot(<span class="string">'loss'</span>, loss_meter.value()[<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 进入debug模式</span></span><br><span class="line">            <span class="keyword">if</span> os.path.exists(opt.debug_file):</span><br><span class="line">                <span class="keyword">import</span> ipdb;</span><br><span class="line">                ipdb.set_trace()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    model.save()</span><br><span class="line"></span><br><span class="line">    <span class="comment"># validate and visualize</span></span><br><span class="line">    val_cm,val_accuracy = val(model,val_dataloader)</span><br><span class="line"></span><br><span class="line">    vis.plot(<span class="string">'val_accuracy'</span>,val_accuracy)</span><br><span class="line">    vis.log(<span class="string">"epoch:&#123;epoch&#125;,lr:&#123;lr&#125;,loss:&#123;loss&#125;,train_cm:&#123;train_cm&#125;,val_cm:&#123;val_cm&#125;"</span>.format(</span><br><span class="line">         epoch = epoch,loss = loss_meter.value()[<span class="number">0</span>],val_cm = str(val_cm.value()),train_cm=str(confusion_matrix.value()),lr=lr))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># update learning rate</span></span><br><span class="line">    <span class="keyword">if</span> loss_meter.value()[<span class="number">0</span>] &gt; previous_loss:</span><br><span class="line">        lr = lr * opt.lr_decay</span><br><span class="line">        <span class="comment"># 第二种降低学习率的方法:不会有moment等信息的丢失</span></span><br><span class="line">        <span class="keyword">for</span> param_group <span class="keyword">in</span> optimizer.param_groups:</span><br><span class="line">            param_group[<span class="string">'lr'</span>] = lr</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    previous_loss = loss_meter.value()[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="config-py"><a href="#config-py" class="headerlink" title="config.py"></a>config.py</h2><p>&emsp;&emsp;config.py作为配置文件，其中包含全部需要配置的文件，包括了训练模型，输入数据的规模，网络训练过程中的各种参数，以及是否使用GPU加速等配置。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;虽然这种文件组织方式作者本人认为存在值得商榷的地方，但是他这种分工明确的组织方式仍然值得我去学习和借鉴，在之后的工程中应该注意好各程序部分之间分工和组织。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/24/PytorchLearning-testResNet/" rel="next" title="PytorchLearning-testResNet">
+                <i class="fa fa-chevron-left"></i> PytorchLearning-testResNet
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/26/PytorchLearning-testGAN/" rel="prev" title="PytorchLearning-testGAN">
+                PytorchLearning-testGAN <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PytorchLearning-fileStructure"><span class="nav-number">1.</span> <span class="nav-text">PytorchLearning-fileStructure</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#比赛简介"><span class="nav-number">3.</span> <span class="nav-text">比赛简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码结构分析"><span class="nav-number">4.</span> <span class="nav-text">代码结构分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#整体结构"><span class="nav-number">4.1.</span> <span class="nav-text">整体结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#data"><span class="nav-number">4.2.</span> <span class="nav-text">data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#model"><span class="nav-number">4.3.</span> <span class="nav-text">model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#utils"><span class="nav-number">4.4.</span> <span class="nav-text">utils</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-py"><span class="nav-number">4.5.</span> <span class="nav-text">main.py</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#config-py"><span class="nav-number">4.6.</span> <span class="nav-text">config.py</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

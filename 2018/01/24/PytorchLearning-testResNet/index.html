@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DeepLearning,Pytorch,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="PytorchLearning-testResNet标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;今天在熟悉pytorch中的nn模块和optim模块，之后利用pytroch搭建一个残差网络-ResNet。 torch相关知识torch.nn模块Containers&amp;emsp;&amp;emsp;Containers(容器)中包含了torch.nn.Module，是所有模">
+<meta name="keywords" content="DeepLearning,Pytorch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PytorchLearning-testResNet">
+<meta property="og:url" content="http://yoursite.com/2018/01/24/PytorchLearning-testResNet/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="PytorchLearning-testResNet标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;今天在熟悉pytorch中的nn模块和optim模块，之后利用pytroch搭建一个残差网络-ResNet。 torch相关知识torch.nn模块Containers&amp;emsp;&amp;emsp;Containers(容器)中包含了torch.nn.Module，是所有模">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pic3.zhimg.com/v2-79e9feb7ee38f64c6cc15c501327b7bd_r.jpg">
+<meta property="og:image" content="http://pic2.zhimg.com/v2-5b1730bf08c3599a108551007e264335_b.png">
+<meta property="og:updated_time" content="2018-01-24T03:26:14.846Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PytorchLearning-testResNet">
+<meta name="twitter:description" content="PytorchLearning-testResNet标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;今天在熟悉pytorch中的nn模块和optim模块，之后利用pytroch搭建一个残差网络-ResNet。 torch相关知识torch.nn模块Containers&amp;emsp;&amp;emsp;Containers(容器)中包含了torch.nn.Module，是所有模">
+<meta name="twitter:image" content="http://pic3.zhimg.com/v2-79e9feb7ee38f64c6cc15c501327b7bd_r.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/24/PytorchLearning-testResNet/">
+
+
+
+
+
+  <title>PytorchLearning-testResNet | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/24/PytorchLearning-testResNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PytorchLearning-testResNet</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-24T11:22:45+08:00">
+                2018-01-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">DeepLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="PytorchLearning-testResNet"><a href="#PytorchLearning-testResNet" class="headerlink" title="PytorchLearning-testResNet"></a>PytorchLearning-testResNet</h1><p>标签： DeepLearning Pytorch</p>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;今天在熟悉pytorch中的nn模块和optim模块，之后利用pytroch搭建一个残差网络-ResNet。</p>
+<h1 id="torch相关知识"><a href="#torch相关知识" class="headerlink" title="torch相关知识"></a>torch相关知识</h1><h2 id="torch-nn模块"><a href="#torch-nn模块" class="headerlink" title="torch.nn模块"></a>torch.nn模块</h2><h3 id="Containers"><a href="#Containers" class="headerlink" title="Containers"></a>Containers</h3><p>&emsp;&emsp;Containers(容器)中包含了<strong>torch.nn.Module</strong>，是所有模型需要包含的基类。例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class Model(nn.Module):</span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(Model, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(1, 20, 5)# submodule: Conv2d</span><br><span class="line">        self.conv2 = nn.Conv2d(20, 20, 5)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">       x = F.relu(self.conv1(x))</span><br><span class="line">       return F.relu(self.conv2(x))</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;除此之外，在pytorch的官方文档中这部分还有几个需要牢记的知识点：<br>&emsp;&emsp;&emsp;forward(* input)：定义了每次执行的 计算步骤。 在所有的子类中都需要重写这个函数。<br>&emsp;&emsp;&emsp;modules()：返回一个包含 当前模型 所有模块的迭代器。<br>&emsp;&emsp;&emsp;class torch.nn.Sequential(* args)：一个时序容器，Modules会以他们传入的顺序被添加到容器中。当然，也可以传入一个OrderedDict。<br>&emsp;&emsp;&emsp;其中Sequential()应用举例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">model = nn.Sequential(</span><br><span class="line">          nn.Conv2d(1,20,5),</span><br><span class="line">          nn.ReLU(),</span><br><span class="line">          nn.Conv2d(20,64,5),</span><br><span class="line">          nn.ReLU()</span><br><span class="line">        )</span><br></pre></td></tr></table></figure>
+
+<h3 id="神经网络层"><a href="#神经网络层" class="headerlink" title="神经网络层"></a>神经网络层</h3><p>&emsp;&emsp;图像相关的层主要包括卷积层，池化层，全连接层，具体的参数介绍可以查看官方文档。<br>&emsp;&emsp;&emsp;卷积层包括了1-3维卷积层和1-3维解卷积层，其中二维卷积层函数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class torch.nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride=1, padding=0, output_padding=0, groups=1, bias=True)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;&emsp;池化层包括了1-3维的最大池化，平均池化，自适应池化，其中二维最大池化函数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class torch.nn.MaxPool2d(kernel_size, stride=None, padding=0, dilation=1, return_indices=False, ceil_mode=False)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;&emsp;全连接层对输入数据做线性变换，举例如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">class torch.nn.Linear(in_features, out_features, bias=True)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;除CNN，RNN需要的网络的层之外，这部分还包括了一些激活函数，损失函数，可以看为一种特殊的layer。<br>&emsp;&emsp;除此之外，还有一些其他的网络层，在官网文档中介绍的很详细。</p>
+<h3 id="nn-functional"><a href="#nn-functional" class="headerlink" title="nn.functional"></a>nn.functional</h3><p>&emsp;&emsp;nn中的functional模块包括了许多神经网络用到的函数，nn中大多数layer在此模块中都有一个对应的函数，不同的是，layer定义的函数会自动提取学习的参数，而nn.function中的函数更想平时所说的函数</p>
+<h3 id="nn-init"><a href="#nn-init" class="headerlink" title="nn.init"></a>nn.init</h3><p>&emsp;&emsp;n.init模块专门为初始化设计，实现了常用的初始化策略。以从给定均值和标准差的正态分布N(mean,std)中生成值，填充输入的张量或变量的初始化化方法为例，实现如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.nn.init.normal(tensor, mean=0, std=1)</span><br></pre></td></tr></table></figure>
+
+<h2 id="torch-optim模块"><a href="#torch-optim模块" class="headerlink" title="torch.optim模块"></a>torch.optim模块</h2><p>&emsp;&emsp;torch.optim模块中包含了DeepLearning中常用的优化方法。若使用此模块进行优化，需要先构建一个optimizer对象；然后为每个参数设置选项，之后进行优化迭代。<br>&emsp;&emsp;具体实现的算法参考官方文档。</p>
+<h2 id="残差网络"><a href="#残差网络" class="headerlink" title="残差网络"></a>残差网络</h2><p>&emsp;&emsp;当网络较深的时候，由于存在梯度消失和梯度爆炸等问题，难以训练；所以采用跳远连接的方式，构建可以训练深度网络的ResNets。所谓跳远连接，就是在原来输入的基础上，原始输入数据直接作为后一层的输入进行训练，由于多了这条捷径，实现了跨层连接，来自深层的梯度能直接通过，去到上一层，使得浅层的网络层参数等到有效的训练。这个方法由何凯明等人提出。<br>&emsp;&emsp;其中ResNets由基本结构参差块组成：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://pic3.zhimg.com/v2-79e9feb7ee38f64c6cc15c501327b7bd_r.jpg" alt="Markdown"><br>&emsp;&emsp;其中典型的ResNets网络如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://pic2.zhimg.com/v2-5b1730bf08c3599a108551007e264335_b.png" alt="Markdown"></p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>&emsp;&emsp;利用pytorch构建ResNet34网络，源代码实现参考陈云的实现方法，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">import</span> torch <span class="keyword">as</span> t</span><br><span class="line"><span class="keyword">from</span> torch.nn <span class="keyword">import</span> functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResidualBlock</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,inchannel,outchannel,stride=<span class="number">1</span>,shortcut=None)</span>:</span></span><br><span class="line">        super(ResidualBlock,self).__init__()</span><br><span class="line">        self.left = nn.Sequential(</span><br><span class="line">                 nn.Conv2d(inchannel,outchannel,<span class="number">3</span>,stride,<span class="number">1</span>,bias=<span class="literal">False</span>),</span><br><span class="line">                 nn.BatchNorm2d(outchannel),</span><br><span class="line">                 nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">                 nn.Conv2d(outchannel,outchannel,<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,bias=<span class="literal">False</span>),</span><br><span class="line">                 nn.BatchNorm2d(outchannel))</span><br><span class="line">        self.right = shortcut</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">        out = self.left(x)</span><br><span class="line">        residual = x <span class="keyword">if</span> self.right <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">else</span> self.right(x)</span><br><span class="line">        out += residual</span><br><span class="line">        <span class="keyword">return</span> F.relu(out)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResNet</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, num_classes = <span class="number">1000</span>)</span>:</span></span><br><span class="line">        super(ResNet,self).__init__()</span><br><span class="line">        self.pre = nn.Sequential(</span><br><span class="line">                nn.Conv2d(<span class="number">3</span>,<span class="number">64</span>,<span class="number">7</span>,<span class="number">2</span>,<span class="number">3</span>,bias = <span class="literal">False</span>),</span><br><span class="line">                nn.BatchNorm2d(<span class="number">64</span>),</span><br><span class="line">                nn.ReLU(inplace=<span class="literal">True</span>),</span><br><span class="line">                nn.MaxPool2d(<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>))</span><br><span class="line">        self.layer1 = self._make_layer(<span class="number">64</span>,<span class="number">128</span>,<span class="number">3</span>)</span><br><span class="line">        self.layer2 = self._make_layer(<span class="number">128</span>,<span class="number">256</span>,<span class="number">4</span>,stride = <span class="number">2</span>)</span><br><span class="line">        self.layer3 = self._make_layer(<span class="number">256</span>,<span class="number">512</span>,<span class="number">6</span>,stride = <span class="number">2</span>)</span><br><span class="line">        self.layer4 = self._make_layer(<span class="number">512</span>,<span class="number">512</span>,<span class="number">3</span>,stride = <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">        self.fc = nn.Linear(<span class="number">512</span>,num_classes)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_make_layer</span><span class="params">(self,inchannel,outchannel,block_num,stride = <span class="number">1</span>)</span>:</span></span><br><span class="line">        shortcut = nn.Sequential(</span><br><span class="line">                 nn.Conv2d(inchannel,outchannel,<span class="number">1</span>,stride,bias = <span class="literal">False</span>),</span><br><span class="line">                 nn.BatchNorm2d(outchannel))</span><br><span class="line"></span><br><span class="line">        layers = []</span><br><span class="line">        layers.append(ResidualBlock(inchannel,outchannel,stride,shortcut))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,block_num):</span><br><span class="line">            layers.append(ResidualBlock(outchannel,outchannel))</span><br><span class="line">        <span class="keyword">return</span> nn.Sequential(*layers)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line">        x = self.pre(x)</span><br><span class="line">        x = self.layer1(x)</span><br><span class="line">        x = self.layer2(x)</span><br><span class="line">        x = self.layer3(x)</span><br><span class="line">        x = self.layer4(x)</span><br><span class="line"></span><br><span class="line">        x = F.avg_pool2d(x,<span class="number">7</span>)</span><br><span class="line">        x = x.view(x.size(<span class="number">0</span>),<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">return</span> self.fc(x)</span><br><span class="line"></span><br><span class="line">model = ResNet()</span><br><span class="line">input = t.autograd.Variable(t.randn(<span class="number">1</span>,<span class="number">3</span>,<span class="number">224</span>,<span class="number">224</span>))</span><br><span class="line">o = model(input)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> model</span><br><span class="line"><span class="keyword">print</span> o</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在实现ResNets的过程中，先实现了一个基础的ResidualBlock，之后利用了for循环结构循环了ResidualBlock搭建了_make_layer函数，最后在将各个由_make_layer构成的层连接起来，构成了ResNet34.网络结构输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br></pre></td><td class="code"><pre><span class="line">$ python ResNet.py </span><br><span class="line">ResNet (</span><br><span class="line">  (pre): Sequential (</span><br><span class="line">    (0): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)</span><br><span class="line">    (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    (2): ReLU (inplace)</span><br><span class="line">    (3): MaxPool2d (size=(3, 3), stride=(2, 2), padding=(1, 1), dilation=(1, 1))</span><br><span class="line">  )</span><br><span class="line">  (layer1): Sequential (</span><br><span class="line">    (0): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(64, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">      (right): Sequential (</span><br><span class="line">        (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (1): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (2): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (layer2): Sequential (</span><br><span class="line">    (0): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">      (right): Sequential (</span><br><span class="line">        (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)</span><br><span class="line">        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (1): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (2): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (3): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (layer3): Sequential (</span><br><span class="line">    (0): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">      (right): Sequential (</span><br><span class="line">        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (1): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (2): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (3): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (4): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (5): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (layer4): Sequential (</span><br><span class="line">    (0): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">      (right): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (1): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (2): ResidualBlock (</span><br><span class="line">      (left): Sequential (</span><br><span class="line">        (0): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">        (2): ReLU (inplace)</span><br><span class="line">        (3): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">        (4): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (fc): Linear (512 -&gt; 1000)</span><br><span class="line">)</span><br><span class="line">Variable containing:</span><br><span class="line"> 0.3086 -0.0393 -0.0103  ...   0.5097 -0.1146  0.1722</span><br><span class="line">[torch.FloatTensor of size 1x1000]</span><br></pre></td></tr></table></figure>
+
+<h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>&emsp;&emsp;其实pytorch配备的图像工具包torchvision已经实现了DeepLearning中的许多经典的模型，其中包括了ResNet34，实现如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">from torchvision import models</span><br><span class="line">model1 = models.resnet34()</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;测试输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; print model1</span><br><span class="line">ResNet (</span><br><span class="line">  (conv1): Conv2d(3, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)</span><br><span class="line">  (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">  (relu): ReLU (inplace)</span><br><span class="line">  (maxpool): MaxPool2d (size=(3, 3), stride=(2, 2), padding=(1, 1), dilation=(1, 1))</span><br><span class="line">  (layer1): Sequential (</span><br><span class="line">    (0): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (1): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (2): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (layer2): Sequential (</span><br><span class="line">    (0): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(64, 128, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (downsample): Sequential (</span><br><span class="line">        (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(2, 2), bias=False)</span><br><span class="line">        (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (1): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (2): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (3): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(128, 128, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (layer3): Sequential (</span><br><span class="line">    (0): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(128, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (downsample): Sequential (</span><br><span class="line">        (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(2, 2), bias=False)</span><br><span class="line">        (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (1): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (2): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (3): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (4): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (5): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (layer4): Sequential (</span><br><span class="line">    (0): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(256, 512, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (downsample): Sequential (</span><br><span class="line">        (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(2, 2), bias=False)</span><br><span class="line">        (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      )</span><br><span class="line">    )</span><br><span class="line">    (1): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">    (2): BasicBlock (</span><br><span class="line">      (conv1): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">      (relu): ReLU (inplace)</span><br><span class="line">      (conv2): Conv2d(512, 512, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)</span><br><span class="line">      (bn2): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True)</span><br><span class="line">    )</span><br><span class="line">  )</span><br><span class="line">  (avgpool): AvgPool2d (</span><br><span class="line">  )</span><br><span class="line">  (fc): Linear (512 -&gt; 1000)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;发现实现的ResNet34是参考torchvision的ResNet34并做出简化的版本。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/23/PytorchLearning-linerRegression/" rel="next" title="PytorchLearning-linerRegression">
+                <i class="fa fa-chevron-left"></i> PytorchLearning-linerRegression
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/25/PytorchLearning-fileStructure/" rel="prev" title="PytorchLearning-fileStructure">
+                PytorchLearning-fileStructure <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PytorchLearning-testResNet"><span class="nav-number">1.</span> <span class="nav-text">PytorchLearning-testResNet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#torch相关知识"><span class="nav-number">3.</span> <span class="nav-text">torch相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-nn模块"><span class="nav-number">3.1.</span> <span class="nav-text">torch.nn模块</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Containers"><span class="nav-number">3.1.1.</span> <span class="nav-text">Containers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#神经网络层"><span class="nav-number">3.1.2.</span> <span class="nav-text">神经网络层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nn-functional"><span class="nav-number">3.1.3.</span> <span class="nav-text">nn.functional</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nn-init"><span class="nav-number">3.1.4.</span> <span class="nav-text">nn.init</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#torch-optim模块"><span class="nav-number">3.2.</span> <span class="nav-text">torch.optim模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#残差网络"><span class="nav-number">3.3.</span> <span class="nav-text">残差网络</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#说明"><span class="nav-number">5.</span> <span class="nav-text">说明</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

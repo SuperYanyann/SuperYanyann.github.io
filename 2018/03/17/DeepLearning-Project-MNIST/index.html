@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DeepLearning,Project,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述&amp;emsp;&amp;emsp;这是深度学习选修课的第一次project，样本集是MNIST，代码出处为pytorch官方文档中的一个example。 网络模型样例模型&amp;emsp;&amp;emsp;首先查看定义的Net，得知其为一个基础的CNN模型，代码如下： 1234567891011121314151617class Net(nn.Module):    def __init__(self):">
+<meta name="keywords" content="DeepLearning,Project">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DeepLearning-Project-MNIST">
+<meta property="og:url" content="http://yoursite.com/2018/03/17/DeepLearning-Project-MNIST/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="概述&amp;emsp;&amp;emsp;这是深度学习选修课的第一次project，样本集是MNIST，代码出处为pytorch官方文档中的一个example。 网络模型样例模型&amp;emsp;&amp;emsp;首先查看定义的Net，得知其为一个基础的CNN模型，代码如下： 1234567891011121314151617class Net(nn.Module):    def __init__(self):">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/MNISTMNIST.png">
+<meta property="og:updated_time" content="2018-03-17T07:49:45.007Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DeepLearning-Project-MNIST">
+<meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;这是深度学习选修课的第一次project，样本集是MNIST，代码出处为pytorch官方文档中的一个example。 网络模型样例模型&amp;emsp;&amp;emsp;首先查看定义的Net，得知其为一个基础的CNN模型，代码如下： 1234567891011121314151617class Net(nn.Module):    def __init__(self):">
+<meta name="twitter:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/MNISTMNIST.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/17/DeepLearning-Project-MNIST/">
+
+
+
+
+
+  <title>DeepLearning-Project-MNIST | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/17/DeepLearning-Project-MNIST/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DeepLearning-Project-MNIST</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-17T15:48:37+08:00">
+                2018-03-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">DeepLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;这是深度学习选修课的第一次project，样本集是MNIST，代码出处为pytorch官方文档中的一个example。</p>
+<h1 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h1><h2 id="样例模型"><a href="#样例模型" class="headerlink" title="样例模型"></a>样例模型</h2><p>&emsp;&emsp;首先查看定义的Net，得知其为一个基础的CNN模型，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Net, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">10</span>, kernel_size=<span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">10</span>, <span class="number">20</span>, kernel_size=<span class="number">5</span>)</span><br><span class="line">        self.conv2_drop = nn.Dropout2d()</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">320</span>, <span class="number">50</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">50</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = F.relu(F.max_pool2d(self.conv1(x), <span class="number">2</span>))</span><br><span class="line">        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), <span class="number">2</span>))</span><br><span class="line">        x = x.view(<span class="number">-1</span>, <span class="number">320</span>)</span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        x = F.dropout(x, training=self.training)</span><br><span class="line">        x = self.fc2(x)</span><br><span class="line">        <span class="keyword">return</span> F.log_softmax(x)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;将模型输出结果为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ python project_MNIST.py </span><br><span class="line">Net (</span><br><span class="line">  (conv1): Conv2d(1, 10, kernel_size=(5, 5), stride=(1, 1))</span><br><span class="line">  (conv2): Conv2d(10, 20, kernel_size=(5, 5), stride=(1, 1))</span><br><span class="line">  (conv2_drop): Dropout2d (p=0.5)</span><br><span class="line">  (fc1): Linear (320 -&gt; 50)</span><br><span class="line">  (fc2): Linear (50 -&gt; 10)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;有打印结果可知，CNN由两层卷积层，一个Dropout层和两层全连接组成，其中每次卷积计算之后还包含一次池化操作。</p>
+<h2 id="与LeNet比较"><a href="#与LeNet比较" class="headerlink" title="与LeNet比较"></a>与LeNet比较</h2><p>&emsp;&emsp;LeNet网络对于MNIST数据集有过测试，所以我们用LeNet来与样例中的模型做一个简单的对比，LeNet模型定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">class Net(nn.Module):</span><br><span class="line"></span><br><span class="line">    def __init__(self):</span><br><span class="line">        super(Net, self).__init__()</span><br><span class="line">        # 1 input image channel, 6 output channels, 5x5 square convolution</span><br><span class="line">        # kernel</span><br><span class="line">        self.conv1 = nn.Conv2d(1, 6, 5)</span><br><span class="line">        self.conv2 = nn.Conv2d(6, 16, 5)</span><br><span class="line">        # an affine operation: y = Wx + b</span><br><span class="line">        self.fc1 = nn.Linear(16 * 5 * 5, 120)</span><br><span class="line">        self.fc2 = nn.Linear(120, 84)</span><br><span class="line">        self.fc3 = nn.Linear(84, 10)</span><br><span class="line"></span><br><span class="line">    def forward(self, x):</span><br><span class="line">        # Max pooling over a (2, 2) window</span><br><span class="line">        x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))</span><br><span class="line">        # If the size is a square you can only specify a single number</span><br><span class="line">        x = F.max_pool2d(F.relu(self.conv2(x)), 2)</span><br><span class="line">        x = x.view(-1, self.num_flat_features(x))</span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        x = F.relu(self.fc2(x))</span><br><span class="line">        x = self.fc3(x)</span><br><span class="line">        return x</span><br><span class="line"></span><br><span class="line">    def num_flat_features(self, x):</span><br><span class="line">        size = x.size()[1:]  # all dimensions except the batch dimension</span><br><span class="line">        num_features = 1</span><br><span class="line">        for s in size:</span><br><span class="line">            num_features *= s</span><br><span class="line">        return num_features</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;网络打印如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Net(</span><br><span class="line">  (conv1): Conv2d (1, 6, kernel_size=(5, 5), stride=(1, 1))</span><br><span class="line">  (conv2): Conv2d (6, 16, kernel_size=(5, 5), stride=(1, 1))</span><br><span class="line">  (fc1): Linear(in_features=400, out_features=120)</span><br><span class="line">  (fc2): Linear(in_features=120, out_features=84)</span><br><span class="line">  (fc3): Linear(in_features=84, out_features=10)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;经过对比可以发现，在结构上，LeNet同样为两层卷积层，但是与样例通道数稍有差异。同时LeNet有三层全连接层，并且没有Dropout层。在前向传播的时候，样例模型先进行池化操作，再进行Relu计算，但是LeNet先进行Relu再进行池化操作。</p>
+<h1 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h1><p>&emsp;&emsp;样例程序用argparse模块将可以调节的参数封装了起来，其中参数包括</p>
+<ul>
+<li>batch-size:每轮epoch训练的样本数</li>
+<li>test-batch-size：每次测试所用的样本数</li>
+<li>epochs：训练的轮数</li>
+<li>lr：学习率</li>
+<li>momentum：随机梯度下降方法中的动量值</li>
+<li>no-cuda：时候使用GPU加速</li>
+<li>seed：为GPU设置随机种子</li>
+<li>log-interval：打印训练状态的间隔数</li>
+</ul>
+<p>&emsp;&emsp;其中“momentum”的作用是在进行梯度下降算法时候，给定一个概率，在这个概率的基础上判断更新方向是进行更新，还是保持原方法，其常取的值为[0.5, 0.9, 0.95, 0.99]，一种常见的做法是在迭代开始时将其设为0.5，在一定的迭代次数后，将其值更新为0.99，相比普通的SGD方法，这种配置通常能极大地加快收敛速度。<br>&emsp;&emsp;本次project的主要目的是通过调节这些参数来观察CNN的训练结果。</p>
+<h1 id="参数调整及结果对比"><a href="#参数调整及结果对比" class="headerlink" title="参数调整及结果对比"></a>参数调整及结果对比</h1><h2 id="调节batch-size"><a href="#调节batch-size" class="headerlink" title="调节batch-size"></a>调节batch-size</h2><h3 id="batch-size-50"><a href="#batch-size-50" class="headerlink" title="batch-size = 50"></a>batch-size = 50</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 10 [0/60000 (0%)]	Loss: 0.090874</span><br><span class="line">Train Epoch: 10 [5000/60000 (8%)]	Loss: 0.185704</span><br><span class="line">Train Epoch: 10 [10000/60000 (17%)]	Loss: 0.284757</span><br><span class="line">Train Epoch: 10 [15000/60000 (25%)]	Loss: 0.154577</span><br><span class="line">Train Epoch: 10 [20000/60000 (33%)]	Loss: 0.094958</span><br><span class="line">Train Epoch: 10 [25000/60000 (42%)]	Loss: 0.321375</span><br><span class="line">Train Epoch: 10 [30000/60000 (50%)]	Loss: 0.052121</span><br><span class="line">Train Epoch: 10 [35000/60000 (58%)]	Loss: 0.286187</span><br><span class="line">Train Epoch: 10 [40000/60000 (67%)]	Loss: 0.141594</span><br><span class="line">Train Epoch: 10 [45000/60000 (75%)]	Loss: 0.183933</span><br><span class="line">Train Epoch: 10 [50000/60000 (83%)]	Loss: 0.107566</span><br><span class="line">Train Epoch: 10 [55000/60000 (92%)]	Loss: 0.203557</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0502, Accuracy: 9819/10000 (98.19%)</span><br></pre></td></tr></table></figure>
+
+<h3 id="batch-size-100"><a href="#batch-size-100" class="headerlink" title="batch-size = 100"></a>batch-size = 100</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 10 [0/60000 (0%)]	Loss: 0.191366</span><br><span class="line">Train Epoch: 10 [10000/60000 (17%)]	Loss: 0.208016</span><br><span class="line">Train Epoch: 10 [20000/60000 (33%)]	Loss: 0.146529</span><br><span class="line">Train Epoch: 10 [30000/60000 (50%)]	Loss: 0.063239</span><br><span class="line">Train Epoch: 10 [40000/60000 (67%)]	Loss: 0.205667</span><br><span class="line">Train Epoch: 10 [50000/60000 (83%)]	Loss: 0.131913</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0469, Accuracy: 9831/10000 (98.31%)</span><br></pre></td></tr></table></figure>
+
+<h3 id="batch-size-200"><a href="#batch-size-200" class="headerlink" title="batch-size = 200"></a>batch-size = 200</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 10 [0/60000 (0%)]	Loss: 0.278308</span><br><span class="line">Train Epoch: 10 [20000/60000 (33%)]	Loss: 0.221830</span><br><span class="line">Train Epoch: 10 [40000/60000 (67%)]	Loss: 0.306337</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0882, Accuracy: 9708/10000 (97.08%)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;由对比可得，当batch-size较小的时候，每个epoch迭代的次数较多，收敛速度较快；反之则收敛速度降低。</p>
+<h2 id="调节Epoch"><a href="#调节Epoch" class="headerlink" title="调节Epoch"></a>调节Epoch</h2><h3 id="Epoch-10"><a href="#Epoch-10" class="headerlink" title="Epoch = 10"></a>Epoch = 10</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 10 [53760/60000 (90%)]	Loss: 0.316007</span><br><span class="line">Train Epoch: 10 [54400/60000 (91%)]	Loss: 0.107930</span><br><span class="line">Train Epoch: 10 [55040/60000 (92%)]	Loss: 0.115345</span><br><span class="line">Train Epoch: 10 [55680/60000 (93%)]	Loss: 0.107533</span><br><span class="line">Train Epoch: 10 [56320/60000 (94%)]	Loss: 0.162614</span><br><span class="line">Train Epoch: 10 [56960/60000 (95%)]	Loss: 0.139190</span><br><span class="line">Train Epoch: 10 [57600/60000 (96%)]	Loss: 0.201872</span><br><span class="line">Train Epoch: 10 [58240/60000 (97%)]	Loss: 0.102919</span><br><span class="line">Train Epoch: 10 [58880/60000 (98%)]	Loss: 0.329025</span><br><span class="line">Train Epoch: 10 [59520/60000 (99%)]	Loss: 0.173940</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0545, Accuracy: 9824/10000 (98.24%)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Epoch-20"><a href="#Epoch-20" class="headerlink" title="Epoch = 20"></a>Epoch = 20</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 20 [53760/60000 (90%)]	Loss: 0.154205</span><br><span class="line">Train Epoch: 20 [54400/60000 (91%)]	Loss: 0.151837</span><br><span class="line">Train Epoch: 20 [55040/60000 (92%)]	Loss: 0.124796</span><br><span class="line">Train Epoch: 20 [55680/60000 (93%)]	Loss: 0.115554</span><br><span class="line">Train Epoch: 20 [56320/60000 (94%)]	Loss: 0.076441</span><br><span class="line">Train Epoch: 20 [56960/60000 (95%)]	Loss: 0.130018</span><br><span class="line">Train Epoch: 20 [57600/60000 (96%)]	Loss: 0.125328</span><br><span class="line">Train Epoch: 20 [58240/60000 (97%)]	Loss: 0.231644</span><br><span class="line">Train Epoch: 20 [58880/60000 (98%)]	Loss: 0.307199</span><br><span class="line">Train Epoch: 20 [59520/60000 (99%)]	Loss: 0.066124</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0385, Accuracy: 9874/10000 (98.74%)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Epoch-100"><a href="#Epoch-100" class="headerlink" title="Epoch = 100"></a>Epoch = 100</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 100 [53760/60000 (90%)]	Loss: 0.036712</span><br><span class="line">Train Epoch: 100 [54400/60000 (91%)]	Loss: 0.055174</span><br><span class="line">Train Epoch: 100 [55040/60000 (92%)]	Loss: 0.208764</span><br><span class="line">Train Epoch: 100 [55680/60000 (93%)]	Loss: 0.067438</span><br><span class="line">Train Epoch: 100 [56320/60000 (94%)]	Loss: 0.090439</span><br><span class="line">Train Epoch: 100 [56960/60000 (95%)]	Loss: 0.182915</span><br><span class="line">Train Epoch: 100 [57600/60000 (96%)]	Loss: 0.037201</span><br><span class="line">Train Epoch: 100 [58240/60000 (97%)]	Loss: 0.037007</span><br><span class="line">Train Epoch: 100 [58880/60000 (98%)]	Loss: 0.107094</span><br><span class="line">Train Epoch: 100 [59520/60000 (99%)]	Loss: 0.021533</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0283, Accuracy: 9904/10000 (99.04%)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;由对比发现，当学习率合适的情况下，在epoch=10的情况下，参数已经基本收敛，所以再提升epoch的时候，准确率并没有明显的改进。<br>&emsp;&emsp;需要说明的是，此处测试用的学习率为lr=0.01，当学习率为lr=0.001的时候，即学习率过低的情况下，训练10个epoch的时候，还并未完全收敛，此时再加大epoch，准确率会有明显的提高。</p>
+<h2 id="调节lr"><a href="#调节lr" class="headerlink" title="调节lr"></a>调节lr</h2><h3 id="lr-0-001"><a href="#lr-0-001" class="headerlink" title="lr = 0.001"></a>lr = 0.001</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 10 [0/60000 (0%)]	Loss: 0.506689</span><br><span class="line">Train Epoch: 10 [10000/60000 (17%)]	Loss: 0.486579</span><br><span class="line">Train Epoch: 10 [20000/60000 (33%)]	Loss: 0.425447</span><br><span class="line">Train Epoch: 10 [30000/60000 (50%)]	Loss: 0.439384</span><br><span class="line">Train Epoch: 10 [40000/60000 (67%)]	Loss: 0.526765</span><br><span class="line">Train Epoch: 10 [50000/60000 (83%)]	Loss: 0.635956</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.2606, Accuracy: 9251/10000 (93.51%)</span><br></pre></td></tr></table></figure>
+
+<h3 id="lr-0-01"><a href="#lr-0-01" class="headerlink" title="lr = 0.01"></a>lr = 0.01</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 10 [0/60000 (0%)]	Loss: 0.191366</span><br><span class="line">Train Epoch: 10 [10000/60000 (17%)]	Loss: 0.208016</span><br><span class="line">Train Epoch: 10 [20000/60000 (33%)]	Loss: 0.146529</span><br><span class="line">Train Epoch: 10 [30000/60000 (50%)]	Loss: 0.063239</span><br><span class="line">Train Epoch: 10 [40000/60000 (67%)]	Loss: 0.205667</span><br><span class="line">Train Epoch: 10 [50000/60000 (83%)]	Loss: 0.131913</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0469, Accuracy: 9831/10000 (98.31%)</span><br></pre></td></tr></table></figure>
+
+<h3 id="lr-0-05"><a href="#lr-0-05" class="headerlink" title="lr = 0.05"></a>lr = 0.05</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 10 [0/60000 (0%)]	Loss: 0.191366</span><br><span class="line">Train Epoch: 10 [10000/60000 (17%)]	Loss: 0.208016</span><br><span class="line">Train Epoch: 10 [20000/60000 (33%)]	Loss: 0.146529</span><br><span class="line">Train Epoch: 10 [30000/60000 (50%)]	Loss: 0.063239</span><br><span class="line">Train Epoch: 10 [40000/60000 (67%)]	Loss: 0.205667</span><br><span class="line">Train Epoch: 10 [50000/60000 (83%)]	Loss: 0.131913</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0469, Accuracy: 9835/10000 (98.35%)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;由对比发现，当学习率为0.01或者0.05的时候，学习率较大，因此在训练10个epoch的情况下，已经基本收敛，因此效果差别不是很明显；但是当学习率为0.001的时候，由于学习率偏低，所以当训练为10个epoch的时候，还未达到收敛，因此准确度差距较大。由此判断0.01为较合适的学习率参数值。</p>
+<h1 id="隐层输出"><a href="#隐层输出" class="headerlink" title="隐层输出"></a>隐层输出</h1><p>&emsp;&emsp;对于前5个样本，将其两次卷积层的结果进行输出，观察两次卷积层分别学习的情况.<br>&emsp;&emsp;作图所用函数代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">show_images</span><span class="params">(images)</span>:</span></span><br><span class="line">    <span class="comment"># images reshape to (batch_size, D)</span></span><br><span class="line">    images = np.reshape(images, [images.shape[<span class="number">0</span>], <span class="number">-1</span>])</span><br><span class="line">    <span class="comment"># use to get the num of images in every row</span></span><br><span class="line">    sqrtn = int(np.ceil(np.sqrt(images.shape[<span class="number">0</span>])))</span><br><span class="line">    <span class="comment"># use to get the size of the images </span></span><br><span class="line">    sqrtimg = int(np.ceil(np.sqrt(images.shape[<span class="number">1</span>])))</span><br><span class="line"></span><br><span class="line">    fig = plt.figure(figsize=(sqrtn, sqrtn))</span><br><span class="line">    gs = gridspec.GridSpec(sqrtn, sqrtn)</span><br><span class="line">    gs.update(wspace=<span class="number">0.05</span>, hspace=<span class="number">0.05</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i, img <span class="keyword">in</span> enumerate(images):</span><br><span class="line">        ax = plt.subplot(gs[i])</span><br><span class="line">        plt.axis(<span class="string">'off'</span>)</span><br><span class="line">        ax.set_xticklabels([])</span><br><span class="line">        ax.set_yticklabels([])</span><br><span class="line">        ax.set_aspect(<span class="string">'equal'</span>)</span><br><span class="line">        plt.imshow(img.reshape([sqrtimg,sqrtimg]))</span><br><span class="line">    <span class="keyword">return</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;输出隐层结果的方法为在Net的forward函数的相应位置运用上述函数即可。不过需要特别注意的是，forward中传递的x的数据类型为Variable，其没有numpy()方法，需要将x从Variable转为tensor，在用numpy()方法转为函数的输入。具体代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    x = F.relu(F.max_pool2d(self.conv1(x), <span class="number">2</span>))</span><br><span class="line">    <span class="comment"># use to get the photo of hidden_layer</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">5</span>):</span><br><span class="line">        testphoto = x[i].data.numpy()  <span class="comment"># !!! Variable != tensor</span></span><br><span class="line">        show_images(testphoto)</span><br><span class="line">        plt.show()</span><br><span class="line">    x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), <span class="number">2</span>))</span><br><span class="line">    x = x.view(<span class="number">-1</span>, <span class="number">320</span>)</span><br><span class="line">    x = F.relu(self.fc1(x))</span><br><span class="line">    x = F.dropout(x, training=self.training)</span><br><span class="line">    x = self.fc2(x)</span><br><span class="line">    <span class="keyword">return</span> F.log_softmax(x)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;输出结果汇总如下图：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/MNISTMNIST.png" alt="photo1"></p>
+<p>&emsp;&emsp;和学长交流后，还有一种可行的输出隐层的方法，即把一个网络拆成两个网络，然后把第一个网络的结果输出，即可以得到原网络隐层的输出。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;总的来时example程序中原本的参数已经比较合适了，epoch=10的时候已经达到98%的准确率，加大epoch之后准确率达到大约99.0%左右。但是目前MNISt数据集已经可以达到的准确率为99.5%左右，因此想进一步提高准确率的话，可以考虑改变网络模型。第一个project还是比较容易的，主要是想让我们熟悉下环境，不过在尝试输出隐层的时候，还是稍微用了点时间才实现的。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Project/" rel="tag"># Project</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/12/Leetcode-667/" rel="next" title="Leetcode-667">
+                <i class="fa fa-chevron-left"></i> Leetcode-667
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/18/Leetcode-238/" rel="prev" title="Leetcode-238">
+                Leetcode-238 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#网络模型"><span class="nav-number">2.</span> <span class="nav-text">网络模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#样例模型"><span class="nav-number">2.1.</span> <span class="nav-text">样例模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与LeNet比较"><span class="nav-number">2.2.</span> <span class="nav-text">与LeNet比较</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数说明"><span class="nav-number">3.</span> <span class="nav-text">参数说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数调整及结果对比"><span class="nav-number">4.</span> <span class="nav-text">参数调整及结果对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#调节batch-size"><span class="nav-number">4.1.</span> <span class="nav-text">调节batch-size</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#batch-size-50"><span class="nav-number">4.1.1.</span> <span class="nav-text">batch-size = 50</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#batch-size-100"><span class="nav-number">4.1.2.</span> <span class="nav-text">batch-size = 100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#batch-size-200"><span class="nav-number">4.1.3.</span> <span class="nav-text">batch-size = 200</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调节Epoch"><span class="nav-number">4.2.</span> <span class="nav-text">调节Epoch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Epoch-10"><span class="nav-number">4.2.1.</span> <span class="nav-text">Epoch = 10</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Epoch-20"><span class="nav-number">4.2.2.</span> <span class="nav-text">Epoch = 20</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Epoch-100"><span class="nav-number">4.2.3.</span> <span class="nav-text">Epoch = 100</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调节lr"><span class="nav-number">4.3.</span> <span class="nav-text">调节lr</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#lr-0-001"><span class="nav-number">4.3.1.</span> <span class="nav-text">lr = 0.001</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lr-0-01"><span class="nav-number">4.3.2.</span> <span class="nav-text">lr = 0.01</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#lr-0-05"><span class="nav-number">4.3.3.</span> <span class="nav-text">lr = 0.05</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#隐层输出"><span class="nav-number">5.</span> <span class="nav-text">隐层输出</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">6.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DeepLearning,MachineLearning,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述&amp;emsp;&amp;emsp;在今年参加的MCM/ICM的时候，需要利用已知样本来预测一条曲线，一开始打算用神经网络来完成，但是在利用神经网络进行预测的时候，出现了一个问题，就是产生的曲线是一条水平线，完全没有拟合上。当时解决的方法是将输入样本进行了归一化，然后输出结果时候再进行反归一化，这样预处理之后，问题得以解决。由于一直也没有找到归一化可以解决问题的原因，现在我对于这个问题产生了强烈的兴趣，想">
+<meta name="keywords" content="DeepLearning,MachineLearning">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DeepLearning-BadNeuralNetwork">
+<meta property="og:url" content="http://yoursite.com/2018/03/06/DeepLearning-BadNeuralNetwork/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="概述&amp;emsp;&amp;emsp;在今年参加的MCM/ICM的时候，需要利用已知样本来预测一条曲线，一开始打算用神经网络来完成，但是在利用神经网络进行预测的时候，出现了一个问题，就是产生的曲线是一条水平线，完全没有拟合上。当时解决的方法是将输入样本进行了归一化，然后输出结果时候再进行反归一化，这样预处理之后，问题得以解决。由于一直也没有找到归一化可以解决问题的原因，现在我对于这个问题产生了强烈的兴趣，想">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/NormalizationUnNormalization1.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/NormalizationOriProblen.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/Normalization/good.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/Normalization/liner.png">
+<meta property="og:updated_time" content="2018-03-06T07:35:14.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DeepLearning-BadNeuralNetwork">
+<meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;在今年参加的MCM/ICM的时候，需要利用已知样本来预测一条曲线，一开始打算用神经网络来完成，但是在利用神经网络进行预测的时候，出现了一个问题，就是产生的曲线是一条水平线，完全没有拟合上。当时解决的方法是将输入样本进行了归一化，然后输出结果时候再进行反归一化，这样预处理之后，问题得以解决。由于一直也没有找到归一化可以解决问题的原因，现在我对于这个问题产生了强烈的兴趣，想">
+<meta name="twitter:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/NormalizationUnNormalization1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/06/DeepLearning-BadNeuralNetwork/">
+
+
+
+
+
+  <title>DeepLearning-BadNeuralNetwork | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/06/DeepLearning-BadNeuralNetwork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DeepLearning-BadNeuralNetwork</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-06T15:32:28+08:00">
+                2018-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">DeepLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;在今年参加的MCM/ICM的时候，需要利用已知样本来预测一条曲线，一开始打算用神经网络来完成，但是在利用神经网络进行预测的时候，出现了一个问题，就是产生的曲线是一条水平线，完全没有拟合上。当时解决的方法是将输入样本进行了归一化，然后输出结果时候再进行反归一化，这样预处理之后，问题得以解决。由于一直也没有找到归一化可以解决问题的原因，现在我对于这个问题产生了强烈的兴趣，想把这个问题想清楚。</p>
+<h1 id="问题复现"><a href="#问题复现" class="headerlink" title="问题复现"></a>问题复现</h1><p>&emsp;&emsp;当时想预测的是一条不规则的曲线，使用95%的样本点作为训练集，选择5%的样本点作为测试集，当时选择的LSTM模型进行的拟合，具体的网络模型实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LSTMpred</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,input_size,hidden_dim)</span>:</span></span><br><span class="line">        super(LSTMpred,self).__init__()</span><br><span class="line">        self.input_dim = input_size</span><br><span class="line">        self.hidden_dim = hidden_dim</span><br><span class="line">        self.lstm = nn.LSTM(input_size,hidden_dim)</span><br><span class="line">        self.hidden2out = nn.Linear(hidden_dim,<span class="number">1</span>)</span><br><span class="line">        self.hidden = self.init_hidden()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_hidden</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> (Variable(torch.zeros(<span class="number">1</span>, <span class="number">1</span>, self.hidden_dim)),</span><br><span class="line">                Variable(torch.zeros(<span class="number">1</span>, <span class="number">1</span>, self.hidden_dim)))</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,seq)</span>:</span></span><br><span class="line">        lstm_out, self.hidden = self.lstm(</span><br><span class="line">            seq.view(len(seq), <span class="number">1</span>, <span class="number">-1</span>), self.hidden)</span><br><span class="line">        outdat = self.hidden2out(lstm_out.view(len(seq),<span class="number">-1</span>))</span><br><span class="line">        <span class="keyword">return</span> outdat</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;但是实际的训练结果却很差，完全是一条直线。结果如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/NormalizationUnNormalization1.png" alt="photo1"><br>&emsp;&emsp;一开始我判断是LSTM模型复杂，样本点过少的原因，所以迁移到Matlab环境下重新定义了一个简单的网络，并加大了样本数目，进行网络训练，结果还是与一开始的情况类似，只是水平线的位置稍有改变，在进行归一化之后，问题才有了改善。<br>&emsp;&emsp;现在利用<strong>sklearn.neural_network</strong>来把这个问题复现一下：<br>&emsp;&emsp;目标函数是$y=2*(x-1)^2+2$,为了减低训练难度，直接采用函数上的点作为训练样本，先不进行归一化处理，选择样本点数目为700，即x=range(0,700),原始网络定义如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">clf = MLPRegressor(solver=<span class="string">'lbfgs'</span>, alpha=<span class="number">1e-5</span>,hidden_layer_sizes=(<span class="number">20</span>, <span class="number">5</span>, <span class="number">2</span>), random_state=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;果然这个问题就出现了，图中第一个图为原始样本点的输出，第二张图为训练集和测试集预测的结果，第三章图为两者的对比，可以明显的发现，得到的网络输出结果为一条水平线，网络并没有达到预期结果。<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/NormalizationOriProblen.png" alt="photo2"></p>
+<h1 id="实验数据"><a href="#实验数据" class="headerlink" title="实验数据"></a>实验数据</h1><h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><p>&emsp;&emsp;针对这种训练不好的情况，我进行了一些测试，因为参数初始化具有一定的随机性，所以每个模型进行了100次输出，测试模型即此情况出现的次数统计如下，小标中分数为异常情况出现的次数：</p>
+<h3 id="test1-30-100"><a href="#test1-30-100" class="headerlink" title="test1-30/100"></a>test1-30/100</h3><p>soler: ‘lbfgs’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(20,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>num of sample:700 &lt;br&gt;</p>
+<h3 id="test2-40-100"><a href="#test2-40-100" class="headerlink" title="test2-40/100"></a>test2-40/100</h3><p>soler: ‘lbfgs’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(20,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>num of sample:7000 &lt;br&gt;</p>
+<h3 id="test3-100-100"><a href="#test3-100-100" class="headerlink" title="test3-100/100"></a>test3-100/100</h3><p>soler: ‘sgd’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(20,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>learning_rate_init = 0.1 &lt;br&gt;<br>num of sample:700 &lt;br&gt;</p>
+<h3 id="test4-100-100"><a href="#test4-100-100" class="headerlink" title="test4-100/100"></a>test4-100/100</h3><p>soler: ‘sgd’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(20,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>learning_rate_init = 0.001 &lt;br&gt;<br>num of sample:700 &lt;br&gt;</p>
+<h3 id="test5-100-100"><a href="#test5-100-100" class="headerlink" title="test5-100/100"></a>test5-100/100</h3><p>soler: ‘sgd’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(20,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>learning_rate_init = 0.001 &lt;br&gt;<br>num of sample:7000 &lt;br&gt;</p>
+<h3 id="test6-100-100"><a href="#test6-100-100" class="headerlink" title="test6-100/100"></a>test6-100/100</h3><p>soler: ‘sgd’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(20,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>learning_rate_init = 0.1 &lt;br&gt;<br>num of sample:7000 &lt;br&gt;</p>
+<h3 id="test7-100-100"><a href="#test7-100-100" class="headerlink" title="test7-100/100"></a>test7-100/100</h3><p>soler: ‘sgd’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(20,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>learning_rate = constant &lt;br&gt;<br>num of sample:7000 &lt;br&gt;</p>
+<h3 id="test8-41-100"><a href="#test8-41-100" class="headerlink" title="test8-41/100"></a>test8-41/100</h3><p>soler: ‘sgd’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(20,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>learning_rate_init = 0.001 &lt;br&gt;<br>num of sample:7000 &lt;br&gt;</p>
+<h3 id="test9-32-100"><a href="#test9-32-100" class="headerlink" title="test9-32/100"></a>test9-32/100</h3><p>soler: ‘lbfgs’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(10,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>num of sample:700 &lt;br&gt;</p>
+<h3 id="test10-34-100"><a href="#test10-34-100" class="headerlink" title="test10-34/100"></a>test10-34/100</h3><p>soler: ‘lbfgs’ &lt;br&gt;<br>func: ‘relu’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(10,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>num of sample:7000 &lt;br&gt;</p>
+<h3 id="test11-100-100"><a href="#test11-100-100" class="headerlink" title="test11-100/100"></a>test11-100/100</h3><p>soler: ‘lbfgs’ &lt;br&gt;<br>func: ‘tanh’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(10,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>num of sample:700 &lt;br&gt;</p>
+<h3 id="test12-0-100-liner"><a href="#test12-0-100-liner" class="headerlink" title="test12-0/100(liner)"></a>test12-0/100(liner)</h3><p>soler: ‘lbfgs’ &lt;br&gt;<br>func: ‘identity’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(10,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>num of sample:700 &lt;br&gt;</p>
+<h3 id="test13-0-100-liner"><a href="#test13-0-100-liner" class="headerlink" title="test13-0/100(liner)"></a>test13-0/100(liner)</h3><p>soler: ‘lbfgs’ &lt;br&gt;<br>func: ‘identity’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(10,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>num of sample:700 &lt;br&gt;</p>
+<h3 id="test14-100-100"><a href="#test14-100-100" class="headerlink" title="test14-100/100"></a>test14-100/100</h3><p>soler: ‘’ &lt;br&gt;<br>func: ‘Sigmoid’ &lt;br&gt;<br>alpha: ‘1e-5’ &lt;br&gt;<br>hidder_layer:(10,5,2) &lt;br&gt;<br>random_state: 1 &lt;br&gt;<br>num of sample:700 &lt;br&gt;</p>
+<h2 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h2><p>&emsp;&emsp;从test1中选择训练结果较好的情况展示如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/Normalization/good.png" alt="photo3"><br>&emsp;&emsp;从test12中选择线性结果展示如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/Normalization/liner.png" alt="photo3"></p>
+<h1 id="结果分析"><a href="#结果分析" class="headerlink" title="结果分析"></a>结果分析</h1><h2 id="结果描述"><a href="#结果描述" class="headerlink" title="结果描述"></a>结果描述</h2><p>&emsp;&emsp;从结果上来看，对于这个问题来说，影响结果的主要因素是优化方法的选择以及激活函数的选择。<br>&emsp;&emsp;当选择的优化方法为Newton方法的时候，训练结果较好的概率较大；当选择的为梯度下降方法的时候，无论学习率为0.001还是0.1，训练的结果基本都为异常情况，效果不理想。对于激活函数来说，当选择的为’relu’时，训练效果最佳，当选择为’tanh’或’Sigmoid’时，异常情况出现最多，当选择为‘identity’时，训练的结果均为线性模型。</p>
+<h2 id="结果分析-1"><a href="#结果分析-1" class="headerlink" title="结果分析"></a>结果分析</h2><p>&emsp;&emsp;从优化方法的角度来说，Newton方法的确比梯度下降方法收敛快，所以使用Newton方法效果较好符合预期。<br>&emsp;&emsp;首先需要说明的是，在sklearn官网文档中说明，‘activation’参数设置的是隐层感知机的激活函数，而非输出层的激活函数。从激活函数的角度来说，因为’identity’函数即为$y=x$,所以其应用到多层感知器中，感知器只学习到了线性关系，并且输入只有一个，所以最后的模型为线性模型。而’tanh’或’Sigmoid’使用的使用情况应该为二分类输出，在Ng的课中也提到过，在二分类中使用‘Sigmoid’，而在多分类中，输出会使用‘softmax’。需要注意的是，即使在二分类中，隐层感知机一般也会采用’relu’，所以中间层采用这两个函数训练结果不理想也是大概率事件。而使用’relu’函数作为隐层感知机的激活函数基本是比较好的选择，但是也只有部分实验训练出较好的结果。<br>&emsp;&emsp;而MLPRegressor类选择的输出层的激活函数为’identity’。官方描述如下：</p>
+<blockquote>
+<p>Class MLPRegressor implements a multi-layer perceptron (MLP) that trains using backpropagation with no activation function in the output layer, which can also be seen as using the identity function as activation function. Therefore, it uses the square error as the loss function, and the output is a set of continuous values.</p>
+</blockquote>
+<p>&emsp;&emsp;在隐层激活函数选择为’relu’的时候，观察输出为水平线的情况，可以发现水平线一般都与曲线交于曲线中间处，显然这个位置的损失函数虽然不是最优解，但却比水平线在其他位置的损失函数要小，所以这个位置应该是一个局部最优解的情况。造成这种情况发生的原因应该是初始点的位置没有选择恰当。<br>&emsp;&emsp;综合以上分析，我认为输出结果为水平线的异常情况出现的原因有两个，第一是由于没有为隐层选择恰当的激活函数，所以没有有效的学习到样本；第二是由于神经网络存在局部最优解的或者鞍点的情况，初始点选择不理想的时候，使得Newton方法或者梯度下降方法没法继续有效迭代，陷入局部最优解，导致异常。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;通过这次试验发现，想训练好一个用于拟合曲线的神经网络也并非想象中的那么容易，各项超参数的选择以及网络单元的选择也应该仔细考虑。最近在学习一门深度学习的课程，老师也提到现在一般不会有这样的网络去进行函数的拟合，较小样本的神经网络没有太大的意义。<br>&emsp;&emsp;其实本来想再推导下损失函数的表达式，这样对于第二个原因会更有说服力，这个坑日后来填。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/MachineLearning/" rel="tag"># MachineLearning</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/25/Leetcode-121-746/" rel="next" title="Leetcode-121&746">
+                <i class="fa fa-chevron-left"></i> Leetcode-121&746
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/10/DeepLearning-SpatialTransformerNetworks/" rel="prev" title="DeepLearning-SpatialTransformerNetworks">
+                DeepLearning-SpatialTransformerNetworks <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#问题复现"><span class="nav-number">2.</span> <span class="nav-text">问题复现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#实验数据"><span class="nav-number">3.</span> <span class="nav-text">实验数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据"><span class="nav-number">3.1.</span> <span class="nav-text">数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#test1-30-100"><span class="nav-number">3.1.1.</span> <span class="nav-text">test1-30/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test2-40-100"><span class="nav-number">3.1.2.</span> <span class="nav-text">test2-40/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test3-100-100"><span class="nav-number">3.1.3.</span> <span class="nav-text">test3-100/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test4-100-100"><span class="nav-number">3.1.4.</span> <span class="nav-text">test4-100/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test5-100-100"><span class="nav-number">3.1.5.</span> <span class="nav-text">test5-100/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test6-100-100"><span class="nav-number">3.1.6.</span> <span class="nav-text">test6-100/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test7-100-100"><span class="nav-number">3.1.7.</span> <span class="nav-text">test7-100/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test8-41-100"><span class="nav-number">3.1.8.</span> <span class="nav-text">test8-41/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test9-32-100"><span class="nav-number">3.1.9.</span> <span class="nav-text">test9-32/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test10-34-100"><span class="nav-number">3.1.10.</span> <span class="nav-text">test10-34/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test11-100-100"><span class="nav-number">3.1.11.</span> <span class="nav-text">test11-100/100</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test12-0-100-liner"><span class="nav-number">3.1.12.</span> <span class="nav-text">test12-0/100(liner)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test13-0-100-liner"><span class="nav-number">3.1.13.</span> <span class="nav-text">test13-0/100(liner)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test14-100-100"><span class="nav-number">3.1.14.</span> <span class="nav-text">test14-100/100</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可视化"><span class="nav-number">3.2.</span> <span class="nav-text">可视化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结果分析"><span class="nav-number">4.</span> <span class="nav-text">结果分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#结果描述"><span class="nav-number">4.1.</span> <span class="nav-text">结果描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结果分析-1"><span class="nav-number">4.2.</span> <span class="nav-text">结果分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

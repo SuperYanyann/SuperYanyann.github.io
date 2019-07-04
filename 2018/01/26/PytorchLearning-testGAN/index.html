@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DeepLearning,Pytorch,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="PytorchLearning-testGAN标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;今天学习了一个简单的生成对抗网络，这个GAN学习的一个正态分布，具体内容如下。 GAN简介&amp;emsp;&amp;emsp;生成对抗网络(GenerativeAdversarialNet)近年来深度学习中的一个很热门的话题，LeCun曾说过”GAN is the most inter">
+<meta name="keywords" content="DeepLearning,Pytorch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PytorchLearning-testGAN">
+<meta property="og:url" content="http://yoursite.com/2018/01/26/PytorchLearning-testGAN/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="PytorchLearning-testGAN标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;今天学习了一个简单的生成对抗网络，这个GAN学习的一个正态分布，具体内容如下。 GAN简介&amp;emsp;&amp;emsp;生成对抗网络(GenerativeAdversarialNet)近年来深度学习中的一个很热门的话题，LeCun曾说过”GAN is the most inter">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://pic3.zhimg.com/80/v2-5dfe9e846a1ad37160dfdad80f0b784c_hd.jpg">
+<meta property="og:image" content="http://pic2.zhimg.com/v2-1c06594f38b896e8d15154592bae0309_r.jpg">
+<meta property="og:updated_time" content="2018-01-26T03:07:49.945Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PytorchLearning-testGAN">
+<meta name="twitter:description" content="PytorchLearning-testGAN标签： DeepLearning Pytorch  概述&amp;emsp;&amp;emsp;今天学习了一个简单的生成对抗网络，这个GAN学习的一个正态分布，具体内容如下。 GAN简介&amp;emsp;&amp;emsp;生成对抗网络(GenerativeAdversarialNet)近年来深度学习中的一个很热门的话题，LeCun曾说过”GAN is the most inter">
+<meta name="twitter:image" content="http://pic3.zhimg.com/80/v2-5dfe9e846a1ad37160dfdad80f0b784c_hd.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/26/PytorchLearning-testGAN/">
+
+
+
+
+
+  <title>PytorchLearning-testGAN | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/26/PytorchLearning-testGAN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">PytorchLearning-testGAN</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-26T11:07:15+08:00">
+                2018-01-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">DeepLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="PytorchLearning-testGAN"><a href="#PytorchLearning-testGAN" class="headerlink" title="PytorchLearning-testGAN"></a>PytorchLearning-testGAN</h1><p>标签： DeepLearning Pytorch</p>
+<hr>
+<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;今天学习了一个简单的生成对抗网络，这个GAN学习的一个正态分布，具体内容如下。</p>
+<h1 id="GAN简介"><a href="#GAN简介" class="headerlink" title="GAN简介"></a>GAN简介</h1><p>&emsp;&emsp;生成对抗网络(GenerativeAdversarialNet)近年来深度学习中的一个很热门的话题，LeCun曾说过”GAN is the most interesting idea in the last 10 years in machine learning”.GAN解决了这样的问题：给定一批样本，训练一个系统可以生成相似的新样本。<br>&emsp;&emsp;GAN的简单示意图如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://pic3.zhimg.com/80/v2-5dfe9e846a1ad37160dfdad80f0b784c_hd.jpg" alt="GAN1"><br>&emsp;&emsp;GAN主要包括了两个子网络，分别是生成器(generator)和判别器(discriminator)。生成器的输入是一组随机噪声，输出是利用噪声生成的一组数据。判别器则是判断输入的数据是真数据还是假数据。训练判别器时，需要利用生成器生成假数据和来自样本的真数据；训练生成器的时候，只利用噪声生成假数据，判别器用来评估生成的数据的质量。生成器的目标是生成尽可能以假乱真的图片，让判别器误判；判别器的目标是将样本的真数据和生成器生成的假数据分别开；有相反目标的两个网络在训练过程中互相对抗，互相提高，使得最后生成器可以生成与样本相似度很高的数据。<br>&emsp;&emsp;DCGAN是一个采用广泛的的全卷积网络，主要用作图像数据的生成，其输入为100维数据，利用上上卷积扩大输出，最后输出为3<em>64</em>64的图片，其结构示意图如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://pic2.zhimg.com/v2-1c06594f38b896e8d15154592bae0309_r.jpg" alt="GAN2"></p>
+<h1 id="GAN实现"><a href="#GAN实现" class="headerlink" title="GAN实现"></a>GAN实现</h1><h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><p>&emsp;&emsp;将要实现的GAN的目的是让网络学习一个均值和方差已知的正态分布，在输入噪声之后，生成器生成相同维度的符合相同正态分布的一组数据。<br>&emsp;&emsp;主要考虑的有以下方面的内容：<br>&emsp;&emsp;&emsp;R：真实的数据，此模型中为1<em>100的正态分布数据<br>&emsp;&emsp;&emsp;I：进入生成器的随机噪声，此模型中随机噪声为1</em>100<br>&emsp;&emsp;&emsp;G：生成器网络模型<br>&emsp;&emsp;&emsp;D：判别器网络模型<br>&emsp;&emsp;&emsp;train：使得G和D相互竞争<br>&emsp;&emsp;在这个模型中，输入的真实数据是1<em>100的符合正态分布u(4,1.25)的数据，输入的噪声为随机的1</em>100的数据。生成器为一个前馈图，包含了两个隐层和3个全连接(linear),输出为一组1<em>100的数据；判别器有形似的结构，只是每层的输入输出维度不同，其输入为1</em>100的数据，输出为判定结果。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>&emsp;&emsp;这个GAN的的参数设置如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Data params</span></span><br><span class="line">data_mean = <span class="number">4</span></span><br><span class="line">data_stddev = <span class="number">1.25</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Model params</span></span><br><span class="line">g_input_size = <span class="number">1</span>     <span class="comment"># Random noise dimension coming into generator, per output vector</span></span><br><span class="line">g_hidden_size = <span class="number">50</span>   <span class="comment"># Generator complexity</span></span><br><span class="line">g_output_size = <span class="number">1</span>    <span class="comment"># size of generated output vector</span></span><br><span class="line">d_input_size = <span class="number">100</span>   <span class="comment"># Minibatch size - cardinality of distributions</span></span><br><span class="line">d_hidden_size = <span class="number">50</span>   <span class="comment"># Discriminator complexity</span></span><br><span class="line">d_output_size = <span class="number">1</span>    <span class="comment"># Single dimension for 'real' vs. 'fake'</span></span><br><span class="line">minibatch_size = d_input_size</span><br><span class="line"></span><br><span class="line">d_learning_rate = <span class="number">2e-4</span>  </span><br><span class="line">g_learning_rate = <span class="number">2e-4</span></span><br><span class="line">optim_betas = (<span class="number">0.9</span>, <span class="number">0.999</span>)</span><br><span class="line">num_epochs = <span class="number">30000</span></span><br><span class="line">print_interval = <span class="number">200</span></span><br><span class="line">d_steps = <span class="number">1</span>  </span><br><span class="line">g_steps = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;生成器实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Generator</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, hidden_size, output_size)</span>:</span></span><br><span class="line">        super(Generator, self).__init__()</span><br><span class="line">        self.map1 = nn.Linear(input_size, hidden_size)</span><br><span class="line">        self.map2 = nn.Linear(hidden_size, hidden_size)</span><br><span class="line">        self.map3 = nn.Linear(hidden_size, output_size)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = F.elu(self.map1(x))</span><br><span class="line">        x = F.sigmoid(self.map2(x))</span><br><span class="line">        <span class="keyword">return</span> self.map3(x)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;模型输出如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Generator (</span><br><span class="line">  (map1): Linear (1 -&gt; 50)</span><br><span class="line">  (map2): Linear (50 -&gt; 50)</span><br><span class="line">  (map3): Linear (50 -&gt; 1)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;判别器实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Discriminator</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, hidden_size, output_size)</span>:</span></span><br><span class="line">        super(Discriminator, self).__init__()</span><br><span class="line">        self.map1 = nn.Linear(input_size, hidden_size)</span><br><span class="line">        self.map2 = nn.Linear(hidden_size, hidden_size)</span><br><span class="line">        self.map3 = nn.Linear(hidden_size, output_size)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = F.elu(self.map1(x))</span><br><span class="line">        x = F.elu(self.map2(x))</span><br><span class="line">        <span class="keyword">return</span> F.sigmoid(self.map3(x))</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;输出模型如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Discriminator (</span><br><span class="line">  (map1): Linear (200 -&gt; 50)</span><br><span class="line">  (map2): Linear (50 -&gt; 50)</span><br><span class="line">  (map3): Linear (50 -&gt; 1)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;单步训练如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epochs):</span><br><span class="line">    <span class="keyword">for</span> d_index <span class="keyword">in</span> range(d_steps):</span><br><span class="line">        <span class="comment"># 1. Train D on real+fake</span></span><br><span class="line">        D.zero_grad()</span><br><span class="line"></span><br><span class="line">        <span class="comment">#  1A: Train D on real</span></span><br><span class="line">        d_real_data = Variable(d_sampler(d_input_size))</span><br><span class="line">        d_real_decision = D(preprocess(d_real_data))</span><br><span class="line">        d_real_error = criterion(d_real_decision, Variable(torch.ones(<span class="number">1</span>)))  <span class="comment"># ones = true</span></span><br><span class="line">        d_real_error.backward() <span class="comment"># compute/store gradients, but don't change params</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">#  1B: Train D on fake</span></span><br><span class="line">        d_gen_input = Variable(gi_sampler(minibatch_size, g_input_size))</span><br><span class="line">        d_fake_data = G(d_gen_input).detach()  <span class="comment"># detach to avoid training G on these labels</span></span><br><span class="line">        d_fake_decision = D(preprocess(d_fake_data.t()))</span><br><span class="line">        d_fake_error = criterion(d_fake_decision, Variable(torch.zeros(<span class="number">1</span>)))  <span class="comment"># zeros = fake</span></span><br><span class="line">        d_fake_error.backward()</span><br><span class="line">        d_optimizer.step()     <span class="comment"># Only optimizes D's parameters; changes based on stored gradients from backward()</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> g_index <span class="keyword">in</span> range(g_steps):</span><br><span class="line">        <span class="comment"># 2. Train G on D's response (but DO NOT train D on these labels)</span></span><br><span class="line">        G.zero_grad()</span><br><span class="line"></span><br><span class="line">        gen_input = Variable(gi_sampler(minibatch_size, g_input_size))</span><br><span class="line">        g_fake_data = G(gen_input)</span><br><span class="line">        dg_fake_decision = D(preprocess(g_fake_data.t()))</span><br><span class="line">        g_error = criterion(dg_fake_decision, Variable(torch.ones(<span class="number">1</span>)))  <span class="comment"># we want to fool, so pretend it's all genuine</span></span><br><span class="line"></span><br><span class="line">        g_error.backward()</span><br><span class="line">        g_optimizer.step()  <span class="comment"># Only optimizes G's parameters</span></span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;完整代码可以参考github上的的<a href="https://github.com/devnag/pytorch-generative-adversarial-networks" target="_blank" rel="noopener">gan_pytorch</a>。</p>
+<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><p>&emsp;&emsp;代码中设置每200个epoch输出一个一次统计结果，其中200-1000个epoch之后结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">200: D: 0.00214281608351/0.345613867044 G: 1.219622612 (Real: [3.6329677352309226, 1.2743346703142211], Fake: [0.27478053793311119, 0.061389553398676418]) </span><br><span class="line">400: D: 0.0024734903127/0.296345323324 G: 1.15904438496 (Real: [4.0885050618648533, 1.1591927512120153], Fake: [0.076806889995932576, 0.17435286763256208]) </span><br><span class="line">600: D: 0.000299081235426/0.135397613049 G: 2.17891645432 (Real: [3.8815199007093906, 1.358352249087974], Fake: [0.30949043005704879, 0.44819238084500146]) </span><br><span class="line">800: D: 0.00544052384794/0.122047036886 G: 3.39399766922 (Real: [4.0806429767608643, 1.2595771498812962], Fake: [1.2480358286574482, 0.6732695700859147]) </span><br><span class="line">1000: D: 0.199153736234/1.49040198326 G: 0.50436270237 (Real: [4.0617488116025928, 1.1983677948055262], Fake: [3.254411913752556, 1.0292862598070549])</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;可以发现生成器生成的数据的均值由最初的0左右训练到3左右。<br>&emsp;&emsp;22400到23000个epoch时，生成器生成的结果已经比较令人满意了，其结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">22400: D: 0.0718741938472/0.0800286009908 G: 1.94343280792 (Real: [4.236325685083866, 1.20664243159802], Fake: [4.294258806705475, 1.3486204260215457]) </span><br><span class="line">22600: D: 0.180983379483/0.119378611445 G: 2.08759236336 (Real: [3.9757382905483247, 1.3206865382611883], Fake: [4.3551864910125735, 1.2890139727165058]) </span><br><span class="line">22800: D: 0.0731378570199/0.15659108758 G: 1.91181635857 (Real: [3.8459619009494781, 1.2760463424123054], Fake: [4.5980649662017825, 1.3286327698283822]) </span><br><span class="line">23000: D: 0.617322683334/0.0718911290169 G: 1.75618612766 (Real: [4.1258033090829853, 1.2917487711772497], Fake: [4.7274960541725157, 1.1655121586747199])</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;34800到35800的epoch时学习的结果更近一步，结果如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">34800: D: 1.21260821819/0.579729855061 G: 1.19163322449 (Real: [4.1337242549657818, 1.0945158014515735], Fake: [3.9489597564935686, 1.2484162018589191]) </span><br><span class="line">35000: D: 0.595994710922/0.492183923721 G: 0.961775839329 (Real: [4.0887473231554035, 1.2073327110558152], Fake: [4.3758284652233126, 1.227369298261034]) </span><br><span class="line">35200: D: 0.441894412041/0.215708702803 G: 1.49583280087 (Real: [3.7236255550384523, 1.2211940328679571], Fake: [4.0118666481971736, 1.2601506958034965]) </span><br><span class="line">35400: D: 0.0004737903364/0.229784876108 G: 2.48558044434 (Real: [3.9932019078731535, 1.2578601497639903], Fake: [4.0291512513160708, 1.3606264369187477]) </span><br><span class="line">35600: D: 0.126971721649/0.777751982212 G: 0.719469606876 (Real: [4.0348688819259406, 1.2721717771911061], Fake: [4.3053950923681263, 1.157315203477822]) </span><br><span class="line">35800: D: 0.0589950755239/0.277370721102 G: 1.22292232513 (Real: [4.2585669487714766, 1.30765629936759], Fake: [3.9463100868463514, 1.1169550739101126])</span><br></pre></td></tr></table></figure>
+
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;这个GAN虽然比较简单，但是不简陋，实现了GAN的主要功能，让我更好的理解了一下GAN的实现。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/25/PytorchLearning-fileStructure/" rel="next" title="PytorchLearning-fileStructure">
+                <i class="fa fa-chevron-left"></i> PytorchLearning-fileStructure
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/29/SignalsAndSystems-Preparation/" rel="prev" title="SignalsAndSystems-Preparation">
+                SignalsAndSystems-Preparation <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PytorchLearning-testGAN"><span class="nav-number">1.</span> <span class="nav-text">PytorchLearning-testGAN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GAN简介"><span class="nav-number">3.</span> <span class="nav-text">GAN简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GAN实现"><span class="nav-number">4.</span> <span class="nav-text">GAN实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#实现思路"><span class="nav-number">4.1.</span> <span class="nav-text">实现思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码实现"><span class="nav-number">4.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试结果"><span class="nav-number">4.3.</span> <span class="nav-text">测试结果</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

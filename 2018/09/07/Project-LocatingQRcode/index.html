@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Project,ComputerVision,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述&amp;emsp;&amp;emsp;本周的数字图像处理课上，老师简单地提了一下二维码定位的整体思路，其实之前稍微了解过一点二维码的东西，但是对于其细节没有很具体的学习，所以借此机会自己写一遍二维码定位和提取的实现，加深下对其的印象。 相关知识Qrcode&amp;emsp;&amp;emsp;关于二维码的知识学习自网上的博客，与QRcode二维码具体知识点可以从CallMeWhy’s Blog学习，此处仅列举QRcode">
+<meta name="keywords" content="Project,ComputerVision">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Project-LocatingQRcode">
+<meta property="og:url" content="http://yoursite.com/2018/09/07/Project-LocatingQRcode/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="概述&amp;emsp;&amp;emsp;本周的数字图像处理课上，老师简单地提了一下二维码定位的整体思路，其实之前稍微了解过一点二维码的东西，但是对于其细节没有很具体的学习，所以借此机会自己写一遍二维码定位和提取的实现，加深下对其的印象。 相关知识Qrcode&amp;emsp;&amp;emsp;关于二维码的知识学习自网上的博客，与QRcode二维码具体知识点可以从CallMeWhy’s Blog学习，此处仅列举QRcode">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2613397-d67b9d108d176adb.jpeg?imageMogr2/auto-orient/">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_error1.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_error2.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/success_2_PDP.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_success_1.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_success_finish_2.png">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_success_finish_1.png">
+<meta property="og:updated_time" content="2018-09-26T15:56:55.088Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Project-LocatingQRcode">
+<meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;本周的数字图像处理课上，老师简单地提了一下二维码定位的整体思路，其实之前稍微了解过一点二维码的东西，但是对于其细节没有很具体的学习，所以借此机会自己写一遍二维码定位和提取的实现，加深下对其的印象。 相关知识Qrcode&amp;emsp;&amp;emsp;关于二维码的知识学习自网上的博客，与QRcode二维码具体知识点可以从CallMeWhy’s Blog学习，此处仅列举QRcode">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2613397-d67b9d108d176adb.jpeg?imageMogr2/auto-orient/">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/07/Project-LocatingQRcode/">
+
+
+
+
+
+  <title>Project-LocatingQRcode | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/07/Project-LocatingQRcode/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Project-LocatingQRcode</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-07T18:14:28+08:00">
+                2018-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Project/" itemprop="url" rel="index">
+                    <span itemprop="name">Project</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;本周的数字图像处理课上，老师简单地提了一下二维码定位的整体思路，其实之前稍微了解过一点二维码的东西，但是对于其细节没有很具体的学习，所以借此机会自己写一遍二维码定位和提取的实现，加深下对其的印象。</p>
+<h1 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h1><h2 id="Qrcode"><a href="#Qrcode" class="headerlink" title="Qrcode"></a>Qrcode</h2><p>&emsp;&emsp;关于二维码的知识学习自网上的博客，与QRcode二维码具体知识点可以从<a href="https://blog.callmewhy.com/2016/04/23/opencv-find-qrcode-position/" target="_blank" rel="noopener">CallMeWhy’s Blog</a>学习，此处仅列举QRcode的各部分名称，方便思路介绍的时候进行说明。<br>&emsp;&emsp;以一种size的QRcode进行举例说明，各部分名称如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="https://upload-images.jianshu.io/upload_images/2613397-d67b9d108d176adb.jpeg?imageMogr2/auto-orient/" alt="QRcode_img_1"><br>&emsp;&emsp;定位QRcode可以用到的部分包括Position_Detection_Pattern，Separators，Timing_Pattern。其中利用Position_Detection_Pattern可以快速检测二维码位置，Timing_Pattern由于其黑白相间的特性，用于修正坐标系，也可以用来排除图片中可以出现的另外的QRcode的Position_Detection_Pattern部分，保证QRcode定位的正确性。</p>
+<h2 id="contours"><a href="#contours" class="headerlink" title="contours"></a>contours</h2><p>&emsp;&emsp;轮廓（contours）相关的知识涉及到opencv中的具体实现，原文见<a href="https://docs.opencv.org/3.1.0/d9/d8b/tutorial_py_contours_hierarchy.html" target="_blank" rel="noopener">官方文档</a>。</p>
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>&emsp;&emsp;本程序的目的是识别出图像中的QRcode，并且将QRcode从原图像是裁剪出来。假设的情况是图片中仅有一个二维码，旋转角度不超过90度，此二维码完整未损坏，并且图像中不包含其他二维码的Position_Detection_Pattern部分。</p>
+<h2 id="基本步骤"><a href="#基本步骤" class="headerlink" title="基本步骤"></a>基本步骤</h2><p>&emsp;&emsp;基本步骤是先利用Position_Detection_Pattern的特征将其提取出来，然后再利用Position_Detection_Pattern将完整的QRcode区域识别处理；由于照片中的二维码可能出现旋转的情况，因此在定位二维码之后应该计算出二维码偏转的角度，并纠正二维码位置为水平，之后将二维码裁剪出来。</p>
+<h2 id="具体步骤"><a href="#具体步骤" class="headerlink" title="具体步骤"></a>具体步骤</h2><h3 id="Position-Detection-Pattern-定位"><a href="#Position-Detection-Pattern-定位" class="headerlink" title="Position_Detection_Pattern 定位"></a>Position_Detection_Pattern 定位</h3><p>&emsp;&emsp;Position_Detection_Pattern的定位方法首先参考的是<a href="https://blog.callmewhy.com/2016/04/23/opencv-find-qrcode-position/" target="_blank" rel="noopener">CallMeWhy’s Blog</a>中使用的方法，并在其实现基础上进行改进。<br>&emsp;&emsp;第一步是提取图片中的轮廓，步骤是先将图片变为灰度图，之后进行高斯模糊，然后利用Canny算子进行边界检测，然后利用opencv中的findContours函数进行轮廓的查找，照此思路实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># change img into gray</span></span><br><span class="line">gray_img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)</span><br><span class="line"><span class="comment"># Gaussian</span></span><br><span class="line">gb_img = cv2.GaussianBlur(gray_img,(<span class="number">5</span>,<span class="number">5</span>),<span class="number">0</span>)</span><br><span class="line"><span class="comment"># Canny</span></span><br><span class="line">edge_img = cv2.Canny(threshold_img,<span class="number">100</span>,<span class="number">200</span>)</span><br><span class="line"><span class="comment"># ! find Position Detection Pattern</span></span><br><span class="line">img_fc, contours, hierarchy = cv2.findContours(edge_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;第二步是在第一步轮廓提取的基础上，利用Position_Detection_Pattern的性质，既有6层的轮廓，在图片全局范围内进行搜索，找到有6层轮廓的区域的最外层，其为Position_Detection_Pattern，此处对于每个轮廓进行深度判断即可，实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ! find Position Detection Pattern</span></span><br><span class="line">hierarchy = hierarchy[<span class="number">0</span>]</span><br><span class="line">found = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(contours)):</span><br><span class="line">    k = i</span><br><span class="line">    c = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> hierarchy[k][<span class="number">2</span>] != <span class="number">-1</span>:</span><br><span class="line">        k = hierarchy[k][<span class="number">2</span>]</span><br><span class="line">        c = c + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> c &gt;= <span class="number">5</span>:</span><br><span class="line">        found.append(i)</span><br><span class="line">PDP_img = img.copy()</span><br><span class="line">PDP = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> found:</span><br><span class="line">    PDP.append(contours[i])</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;其中PDP即为所搜索的Position_Detection_Pattern最外围轮廓。<br>&emsp;&emsp;这个思路一开始看是没有问题的，并且test2图片的测试样例通过了，但是在测试test1图片中出现，即只找到Position_Detection_Pattern中的两个，没有找到第三个，识别后图像及边缘灰度图如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_error1.png" alt="QRcode_error_1"><br>&emsp;&emsp;观察未识别的Position_Detection_Pattern，发现其未被识别的原因是一个Position_Detection_Pattern中颜色差异过大，不同色块差异明显，因此在边缘提取的时候在一个Position_Detection_Pattern内识别出了其他的边缘曲线，因此改变了其原有的轮廓嵌套关系，导致其识别失败。因此考虑在识别Position_Detection_Pattern的第一步中添加阈值化处理。一开始选择的阈值化方法是单一的THRESH_BINARY阈值化，但是这样做的效果反而更糟了，错误的改变了其他区域的轮廓嵌套关系，使其识别出其他不规则图形，错误识别的结果如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_error2.png" alt="QRcode_error_2"><br>&emsp;&emsp;考虑原因是THRESH_BINARY方法下的阈值参数设置的有问题，但是不同的图像阈值设置显然不能完全一样，所以考虑使用自适应阈值方法，使用阈值化的处理的位置应该在边缘检测之前，实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(T, threshold_img) = cv2.threshold(gb_img, <span class="number">0</span>, <span class="number">255</span>, cv2.THRESH_OTSU+cv2.THRESH_BINARY)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;在添加自适应阈值化之后，Position_Detection_Pattern识别正确，效果如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/success_2_PDP.png" alt="Qrcode_success_PDP"></p>
+<h3 id="QRcode-定位"><a href="#QRcode-定位" class="headerlink" title="QRcode 定位"></a>QRcode 定位</h3><p>&emsp;&emsp;在实现Position_Detection_Pattern的定位之后，可以利用Timing_Pattern进行Position_Detection_Pattern识别的检测，但是考虑到本程序识别的对象不包括很特殊的情况，因此不在利用Timing_Pattern进行检测，而是直接利用Position_Detection_Pattern进行QRcode轮廓的定位。<br>&emsp;&emsp;若不考虑Position_Detection_Pattern的检测，其实找到QRcode外轮廓的方法还是比较简单的，直接找到3个Position_Detection_Pattern的最小包围盒即可实现QRcode的定位，实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">QRcode_location_img = img.copy()</span><br><span class="line">all_PDP = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</span><br><span class="line">    temp_PDP = PDP[i]</span><br><span class="line">    <span class="keyword">for</span> sublist <span class="keyword">in</span> temp_PDP:</span><br><span class="line">        <span class="keyword">for</span> point <span class="keyword">in</span> sublist:</span><br><span class="line">            all_PDP.append(point)</span><br><span class="line"></span><br><span class="line">all_PDP = np.array(all_PDP)</span><br><span class="line">rect = cv2.minAreaRect(all_PDP)</span><br><span class="line">box_QR = cv2.boxPoints(rect)</span><br><span class="line">box_QR = np.array(box_QR)</span><br><span class="line"></span><br><span class="line">cv2.polylines(QRcode_location_img,np.int32([box_QR]),<span class="literal">True</span>,(<span class="number">0</span>,<span class="number">255</span>,<span class="number">0</span>),<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;实现效果如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_success_1.png" alt="QRcode_succcess_1"></p>
+<h3 id="旋转和裁剪"><a href="#旋转和裁剪" class="headerlink" title="旋转和裁剪"></a>旋转和裁剪</h3><p>&emsp;&emsp;实现的思路是先找到偏转的角度进行旋转，然后裁剪即可。<br>&emsp;&emsp;需要旋转的角度即为QRcode边缘矩形的下边缘与水平线之间的夹角。我采用的了下边缘的两个端点进行角度的计算，公式如下：<br>$$ \Theta  = arctan \frac{y_2 - y_1}{x_2 - x_1}$$<br>&emsp;&emsp;计算如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># count the angle which img should rotate</span></span><br><span class="line">left_down_point = location_QR[<span class="number">0</span>]</span><br><span class="line">right_down_point = location_QR[<span class="number">3</span>]</span><br><span class="line">angle_tan = (right_down_point[<span class="number">1</span>] - left_down_point[<span class="number">1</span>]) / (right_down_point[<span class="number">0</span>] - left_down_point[<span class="number">0</span>])</span><br><span class="line">temp_angle = math.atan(angle_tan) * <span class="number">180</span> / math.pi</span><br><span class="line"><span class="keyword">if</span> (abs(temp_angle - angle) &gt; <span class="number">0.01</span>):</span><br><span class="line">    angle = temp_angle</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;利用计算得到的角度进行旋转即可。需要注意的是，为了裁剪时候坐标计算的方法，旋转中心选择为QRcode矩形的中心，这样在旋转过后，直接利用位置不变的旋转中心和二维码轮廓的边长进行图像的裁剪即可，裁剪实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">after_cut_img = after_rotation_img[int(center_y - QRcode_weight/<span class="number">2</span>) : int(center_y + QRcode_weight/<span class="number">2</span>),</span><br><span class="line">                                   int(center_x - QRcode_weight/<span class="number">2</span>) : int(center_x + QRcode_weight/<span class="number">2</span>)]</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;至此QRcode的定位及提取就已经完成了，贴上两个测试用例的结果：<br>&emsp;&emsp;无旋转测试用例：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_success_finish_2.png" alt="QRcode_success_finish_1"><br>&emsp;&emsp;有旋转测试用例：<br>&emsp;<img src="http://p33eqsoxi.bkt.clouddn.com/image/QRcode/QRcode_success_finish_1.png" alt="QRcode_success_finish_2"></p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>&emsp;&emsp;完整的代码实现可以从我的github中找到：<a href="https://github.com/SuperYanyann/Digital_Image_Processing/tree/master/locatingQRcode" target="_blank" rel="noopener">SuperYanyann/locatingQRcode</a></p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;这个小project中没有涉及复杂图像的情况，没有用到其他的检测的方法，并且这个项目中利用到的数学方法也比较简单，所以整体难度不是很大。不过由于这个项目只是实现了QRcode各个流程中的第一步，因此在以后的学习中可以继续对于此项目进行拓展和完善。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1] <a href="https://blog.callmewhy.com/2016/04/23/opencv-find-qrcode-position/" target="_blank" rel="noopener">CallMeWhy’s Blog</a><br>[2] <a href="https://docs.opencv.org/3.1.0/d9/d8b/tutorial_py_contours_hierarchy.html" target="_blank" rel="noopener">opencv官方文档</a><br>[3] <a href="https://blog.csdn.net/on2way/article/details/46812121" target="_blank" rel="noopener">我i智能的博客</a><br>[4] <a href="https://blog.csdn.net/kellen_f/article/details/81667315" target="_blank" rel="noopener">kellen_f的博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Project/" rel="tag"># Project</a>
+          
+            <a href="/tags/ComputerVision/" rel="tag"># ComputerVision</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/04/JD-FashionChallenge/" rel="next" title="JD-FashionChallenge">
+                <i class="fa fa-chevron-left"></i> JD-FashionChallenge
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/14/MachineLearning-CART-XGboost/" rel="prev" title="MachineLearning-CART&XGboost">
+                MachineLearning-CART&XGboost <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关知识"><span class="nav-number">2.</span> <span class="nav-text">相关知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Qrcode"><span class="nav-number">2.1.</span> <span class="nav-text">Qrcode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#contours"><span class="nav-number">2.2.</span> <span class="nav-text">contours</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#思路整理"><span class="nav-number">3.</span> <span class="nav-text">思路整理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">3.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本步骤"><span class="nav-number">3.2.</span> <span class="nav-text">基本步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体步骤"><span class="nav-number">3.3.</span> <span class="nav-text">具体步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Position-Detection-Pattern-定位"><span class="nav-number">3.3.1.</span> <span class="nav-text">Position_Detection_Pattern 定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#QRcode-定位"><span class="nav-number">3.3.2.</span> <span class="nav-text">QRcode 定位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#旋转和裁剪"><span class="nav-number">3.3.3.</span> <span class="nav-text">旋转和裁剪</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">4.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

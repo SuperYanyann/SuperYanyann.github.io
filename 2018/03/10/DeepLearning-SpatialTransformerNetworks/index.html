@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="DeepLearning,Paper,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述&amp;emsp;&amp;emsp;为了熟悉MNIST样本集，学习了pytorch官方文档中的一个Tutorial。它使用的是“空间变换网络”（Spatial-Transform-Networks,STN）。 Paper思路目的&amp;emsp;&amp;emsp;这篇paper的提出是为了改善传统CNN不能很好的学习旋转或者尺度不变性和更一般的仿射变换的不足。  Convolutional Neural Networ">
+<meta name="keywords" content="DeepLearning,Paper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DeepLearning-SpatialTransformerNetworks">
+<meta property="og:url" content="http://yoursite.com/2018/03/10/DeepLearning-SpatialTransformerNetworks/index.html">
+<meta property="og:site_name" content="SuperYanyann&#39;s World">
+<meta property="og:description" content="概述&amp;emsp;&amp;emsp;为了熟悉MNIST样本集，学习了pytorch官方文档中的一个Tutorial。它使用的是“空间变换网络”（Spatial-Transform-Networks,STN）。 Paper思路目的&amp;emsp;&amp;emsp;这篇paper的提出是为了改善传统CNN不能很好的学习旋转或者尺度不变性和更一般的仿射变换的不足。  Convolutional Neural Networ">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/paper/STN.JPG">
+<meta property="og:updated_time" content="2018-03-10T09:10:37.492Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DeepLearning-SpatialTransformerNetworks">
+<meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;为了熟悉MNIST样本集，学习了pytorch官方文档中的一个Tutorial。它使用的是“空间变换网络”（Spatial-Transform-Networks,STN）。 Paper思路目的&amp;emsp;&amp;emsp;这篇paper的提出是为了改善传统CNN不能很好的学习旋转或者尺度不变性和更一般的仿射变换的不足。  Convolutional Neural Networ">
+<meta name="twitter:image" content="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/paper/STN.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/10/DeepLearning-SpatialTransformerNetworks/">
+
+
+
+
+
+  <title>DeepLearning-SpatialTransformerNetworks | SuperYanyann's World</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">SuperYanyann's World</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Don't cry because it is over,smile because it happened</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/10/DeepLearning-SpatialTransformerNetworks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yan Wang">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/../images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="SuperYanyann's World">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DeepLearning-SpatialTransformerNetworks</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-10T17:09:43+08:00">
+                2018-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index">
+                    <span itemprop="name">DeepLearning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;为了熟悉MNIST样本集，学习了pytorch官方文档中的一个Tutorial。它使用的是“空间变换网络”（Spatial-Transform-Networks,STN）。</p>
+<h1 id="Paper思路"><a href="#Paper思路" class="headerlink" title="Paper思路"></a>Paper思路</h1><h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>&emsp;&emsp;这篇paper的提出是为了改善传统CNN不能很好的学习旋转或者尺度不变性和更一般的仿射变换的不足。</p>
+<blockquote>
+<p>Convolutional Neural Networks define an exceptionally powerful class of models,but are still limited by the lack of ability to be spatially invariant to the input data in a computationally and parameter efficient manner. </p>
+</blockquote>
+<p>&emsp;&emsp;采用STN可以帮助model更好的学习到对象在旋转，扭曲等变化。并且STN的优势可以被简便的加入一般的CNN模型中去，从而加强CNN的学习。</p>
+<blockquote>
+<p>We show that the use of spatial transformers results in models which learn invariance to translation, scale, rotation and more generic warping</p>
+</blockquote>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>&emsp;&emsp;STN学习平面思路是实现是学习一个源输入样本到实际训练样本<strong>坐标仿射矩阵</strong>，这样输入CNN的实际样本就是在进行过一次坐标变换后的样本，坐标仿射矩阵调整了样本的平面变化。<br>&emsp;&emsp;<strong>坐标仿射矩阵</strong>输入计算机图形学的研究范畴，利用一个矩阵乘以图片，从而可以使得图片相应的空间变换。论文中所举例的是一个2*3的仿射矩阵，这个矩阵可以实现平面图形的平移，旋转，缩放和裁剪，同时矩阵可以选择其他功能的仿射矩阵。</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>&emsp;&emsp;STN的实现分为三层，分别为Localisation-net,Grid-generator,Sampler其架构如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/DeepLearning/paper/STN.JPG" alt="photo1"><br>&emsp;&emsp;其中Localisation-net的作用是学习到坐标仿射矩阵$\theta$,其中间可以使用全连接层，还有卷积层，最后需要是一个回归层，目的为了得到相应的$\theta$。如图所示Grid-generator的输入上一层学习到的$\theta$，输出为利用$\theta$得到的input到output像素间的映射关系$T_\theta$,定义$(x_i^s,y_i^s)$为input的像素点，$(x_i^t,y_i^t)$为output的像素点，其对应关系为：<br>$$\dbinom{x_i^s}{y_i^s}=T_\theta(G_i)=A_\theta\binom{x_i^t}{y_i^t}$$<br>&emsp;&emsp;Sampler的作用是利用input和学习到的$T_\theta$得到output。需要注意的是在计算output的时候，paper中没有直接使用$T_\theta$，并进行简化操作，计算如下：<br>$$V_i^c = \sum_{n}^H \sum_{m}^W U_nm^c max(0,1-|x_i^s - m|) max(0,1-|y_i^s-n|)$$<br>&emsp;&emsp;对于这一步的计算论文中并没有详细的说明，我并不是很理解这样的目的，此处的理解参考<a href="http://blog.csdn.net/xbinworld" target="_blank" rel="noopener">大饼博士X</a>的博客中的解释：</p>
+<blockquote>
+<p>作者也叫这一步Differentiable-Image-Sampling，是希望通过写成一种形式上可微的图像采样方法，目的是为了让整个网络保持可以端到端反向传播BP训练，用一种比较简洁的形式表示双线性插值的公式：(如上)。和最前面双线性插值的示意图含义是一样的，只是因为在图像中，相邻两个点的坐标差是1，就没有分母部分了。而循环中大部分都没用的，只取相邻的四个点作为一个grid。</p>
+</blockquote>
+<p>&emsp;&emsp;在三层的计算后，可以将output接入CNN中进行训练。</p>
+<h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>&emsp;&emsp;此处STN的实现参考pytorch官方文档的tutorials，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Net, self).__init__()</span><br><span class="line">        self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">10</span>, kernel_size=<span class="number">5</span>)</span><br><span class="line">        self.conv2 = nn.Conv2d(<span class="number">10</span>, <span class="number">20</span>, kernel_size=<span class="number">5</span>)</span><br><span class="line">        self.conv2_drop = nn.Dropout2d()</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">320</span>, <span class="number">50</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">50</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Spatial transformer localization-network</span></span><br><span class="line">        self.localization = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">1</span>, <span class="number">8</span>, kernel_size=<span class="number">7</span>),</span><br><span class="line">            nn.MaxPool2d(<span class="number">2</span>, stride=<span class="number">2</span>),</span><br><span class="line">            nn.ReLU(<span class="literal">True</span>),</span><br><span class="line">            nn.Conv2d(<span class="number">8</span>, <span class="number">10</span>, kernel_size=<span class="number">5</span>),</span><br><span class="line">            nn.MaxPool2d(<span class="number">2</span>, stride=<span class="number">2</span>),</span><br><span class="line">            nn.ReLU(<span class="literal">True</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Regressor for the 3 * 2 affine matrix</span></span><br><span class="line">        self.fc_loc = nn.Sequential(</span><br><span class="line">            nn.Linear(<span class="number">10</span> * <span class="number">3</span> * <span class="number">3</span>, <span class="number">32</span>),</span><br><span class="line">            nn.ReLU(<span class="literal">True</span>),</span><br><span class="line">            nn.Linear(<span class="number">32</span>, <span class="number">3</span> * <span class="number">2</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Initialize the weights/bias with identity transformation</span></span><br><span class="line">        self.fc_loc[<span class="number">2</span>].weight.data.fill_(<span class="number">0</span>)</span><br><span class="line">        self.fc_loc[<span class="number">2</span>].bias.data = torch.FloatTensor([<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Spatial transformer network forward function</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">stn</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        xs = self.localization(x)</span><br><span class="line">        xs = xs.view(<span class="number">-1</span>, <span class="number">10</span> * <span class="number">3</span> * <span class="number">3</span>)</span><br><span class="line">        theta = self.fc_loc(xs)</span><br><span class="line">        theta = theta.view(<span class="number">-1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line"></span><br><span class="line">        grid = F.affine_grid(theta, x.size())</span><br><span class="line">        x = F.grid_sample(x, grid)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        <span class="comment"># transform the input</span></span><br><span class="line">        x = self.stn(x)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Perform the usual forward pass</span></span><br><span class="line">        x = F.relu(F.max_pool2d(self.conv1(x), <span class="number">2</span>))</span><br><span class="line">        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), <span class="number">2</span>))</span><br><span class="line">        x = x.view(<span class="number">-1</span>, <span class="number">320</span>)</span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        x = F.dropout(x, training=self.training)</span><br><span class="line">        x = self.fc2(x)</span><br><span class="line">        <span class="keyword">return</span> F.log_softmax(x, dim=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">model = Net()</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;部分输出结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Train Epoch: 1 [0/60000 (0%)]   Loss: 2.300508</span><br><span class="line">Train Epoch: 1 [32000/60000 (53%)]      Loss: 0.767615</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.2152, Accuracy: 9371/10000 (94%)</span><br><span class="line"></span><br><span class="line">Train Epoch: 2 [0/60000 (0%)]   Loss: 0.700020</span><br><span class="line">Train Epoch: 2 [32000/60000 (53%)]      Loss: 0.425037</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.1289, Accuracy: 9608/10000 (96%)</span><br><span class="line"></span><br><span class="line">Train Epoch: 3 [0/60000 (0%)]   Loss: 0.434035</span><br><span class="line">Train Epoch: 3 [32000/60000 (53%)]      Loss: 0.499640</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.1010, Accuracy: 9695/10000 (97%)</span><br><span class="line"></span><br><span class="line">Train Epoch: 4 [0/60000 (0%)]   Loss: 0.188138</span><br><span class="line">Train Epoch: 4 [32000/60000 (53%)]      Loss: 0.146955</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0812, Accuracy: 9757/10000 (98%)</span><br><span class="line"></span><br><span class="line">Train Epoch: 5 [0/60000 (0%)]   Loss: 0.235111</span><br><span class="line">Train Epoch: 5 [32000/60000 (53%)]      Loss: 0.300617</span><br><span class="line"></span><br><span class="line">Test set: Average loss: 0.0642, Accuracy: 9792/10000 (98%)</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;通过认真研读这段，有助于理解论文中STN的实现方法。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;这次的目的主要是熟悉这MNIST这个样本集。本篇论文略写了公式的推导过程，并且有些地方描述的并不是很详细，再加上阅读论文经验的不足，所以文中的有些地方可能还没有很好的理解。感觉相关的论文还是应该多读多理解，才能积累更多的经验。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1] <a href="https://arxiv.org/pdf/1506.02025.pdf" target="_blank" rel="noopener">Max Jaderberg,Karen Simonyan,Andrew Zisserman,Koray Kavukcuoglu.Spatial Transformer Networks.Google DeepMind.2016</a><br>[2] <a href="http://blog.csdn.net/xbinworld/article/details/69049680" target="_blank" rel="noopener">大饼博士X的博客</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DeepLearning/" rel="tag"># DeepLearning</a>
+          
+            <a href="/tags/Paper/" rel="tag"># Paper</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/06/DeepLearning-BadNeuralNetwork/" rel="next" title="DeepLearning-BadNeuralNetwork">
+                <i class="fa fa-chevron-left"></i> DeepLearning-BadNeuralNetwork
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/11/DeepLearning-CharacterLevelRNN/" rel="prev" title="DeepLearning-CharacterLevelRNN">
+                DeepLearning-CharacterLevelRNN <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/../images/avatar.jpg" alt="Yan Wang">
+            
+              <p class="site-author-name" itemprop="name">Yan Wang</p>
+              <p class="site-description motion-element" itemprop="description">progressive</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Paper思路"><span class="nav-number">2.</span> <span class="nav-text">Paper思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#目的"><span class="nav-number">2.1.</span> <span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思路"><span class="nav-number">2.2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">2.3.</span> <span class="nav-text">实现</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码实现"><span class="nav-number">3.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yan Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
