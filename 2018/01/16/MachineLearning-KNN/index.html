@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -128,7 +128,7 @@
 
 
 
-  <title>MachineLearning-KNN | SuperYanyann's World</title>
+  <title>MachineLearning-KNN | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -147,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -360,16 +360,9 @@
 <h2 id="算法思路"><a href="#算法思路" class="headerlink" title="算法思路"></a>算法思路</h2><p>&emsp;&emsp;KNN的工作机制非常简单，其工作原理是：存在一个样本数据集合（训练样本集），样本集中每个数据都存在标签，即我们知道样本集合每一数据与所属分类的对应关系。对于需要分类处理的新样本，我们将新数据的N维特征与样本集中的对应的N维特征进行比较，基于某种距离量找出训练集中与其最近的k个训练样本，然后基于这k个样本的标签进行预测。预测的通常方法是选择k个样本中样本中出现最多的类别标记作为预测结果；在回归任务中，可使用“平均法”，即将k个样本的实值输出标记的平均值作为预测结果；还可以基于距离远近进行加权平均或加权投票。<br>&emsp;&emsp;需要注意的是，KNN没有显式的训练过程，是“LazyLearning”的代表，此类学习算法仅仅是把样本保存起来，训练时间开销为零，待收到测试样本后再进行处理；而“EagerLearning”则是在训练阶段就对样本进行学习和处理。<br>&emsp;&emsp;最邻近分类器作为KNN的特例，虽然简单，但是其泛化错误率并没有超过贝叶斯最优分类器的错误率的两倍。此部分的简化证明见西瓜书，更严格的证明参阅[cover and hart,1967]。</p>
 <h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><p>&emsp;&emsp;KNN算法的实现参考《Machine Learning in Action》.<br>&emsp;&emsp;核心算法分为三步进行处理，首先计算新样本点到各样本集点的距离，然后选择距离最小的k个点，并选择出k个点中标签个数最多的点作为新样本的标签。本文的KNN是基于特征数N=2的样本集实现的，采用了欧式距离，计算两个向量点之间的距离，并采用k=3进行处理。<br>&emsp;&emsp;书中的实现代码使用了几个技巧进行数据的处理。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">diffMat = tile(inX,(dataSetSize,<span class="number">1</span>)) - dataSet</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;&emsp;此处使用了”tile( )”函数对新样本进行扩充处理。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sortedClassCount = sorted(classCount.iteritems(),key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;&emsp;此处使用operator.itemgetter函数定义了一个函数，通过该函数作用到对象上才能获取值。对于operator.itemgetter(m,n)，其作用是获取对象的第m个域和第n个的值。sorted函数的函数原型是:<br>sorted(iterable[, cmp[, key[, reverse]]])<br>&emsp;&emsp;第一个参数iterable指定要排序的list或者iterable；<br>&emsp;&emsp;第二个参数cmp为函数，指定排序时进行比较的函数，可以指定一个函数或者lambda函数<br>&emsp;&emsp;key为函数，指定取待排序元素的哪一项进行排序，函数用上面的例子来说明<br>&emsp;&emsp;reverse参数是一个bool变量，表示升序还是降序排列，默认为false（升序排列）<br>&emsp;&emsp;具体核心代码如下:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classify</span><span class="params">(inX,dataSet,labels,k)</span>:</span></span><br><span class="line">    dataSetSize = dataSet.shape[<span class="number">0</span>]</span><br><span class="line">    diffMat = tile(inX,(dataSetSize,<span class="number">1</span>)) - dataSet   <span class="comment"># add one row</span></span><br><span class="line">    sqDiffMAt = diffMat ** <span class="number">2</span></span><br><span class="line">    sqDistance = sqDiffMAt.sum(axis=<span class="number">1</span>)</span><br><span class="line">    distance = sqDistance ** <span class="number">0.5</span></span><br><span class="line">    sortedDistIndicies = distance.argsort()</span><br><span class="line">    classCount=&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(k):</span><br><span class="line">        voteIlabel = labels[sortedDistIndicies[i]]</span><br><span class="line">        classCount[voteIlabel] = classCount.get(voteIlabel,<span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">    sortedClassCount = sorted(classCount.iteritems(),</span><br><span class="line">     key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> sortedClassCount[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;检验代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> KNN_1</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">group,labers=KNN_1.creatDataSet()</span><br><span class="line">test = array([<span class="number">0.8</span>,<span class="number">0.5</span>])</span><br><span class="line">aimLaber=KNN_1.classify(test,group,labers,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> aimLaber</span><br><span class="line">plt.plot(group[:,<span class="number">0</span>],group[:,<span class="number">1</span>],<span class="string">'ro'</span>)</span><br><span class="line">plt.plot(test[<span class="number">0</span>],test[<span class="number">1</span>],<span class="string">'bo'</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
+<p>&emsp;&emsp;&emsp;此处使用了”tile( )”函数对新样本进行扩充处理。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sortedClassCount = sorted(classCount.iteritems(),key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;&emsp;此处使用operator.itemgetter函数定义了一个函数，通过该函数作用到对象上才能获取值。对于operator.itemgetter(m,n)，其作用是获取对象的第m个域和第n个的值。sorted函数的函数原型是:<br>sorted(iterable[, cmp[, key[, reverse]]])<br>&emsp;&emsp;第一个参数iterable指定要排序的list或者iterable；<br>&emsp;&emsp;第二个参数cmp为函数，指定排序时进行比较的函数，可以指定一个函数或者lambda函数<br>&emsp;&emsp;key为函数，指定取待排序元素的哪一项进行排序，函数用上面的例子来说明<br>&emsp;&emsp;reverse参数是一个bool变量，表示升序还是降序排列，默认为false（升序排列）<br>&emsp;&emsp;具体核心代码如下:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">classify</span><span class="params">(inX,dataSet,labels,k)</span>:</span></span><br><span class="line">    dataSetSize = dataSet.shape[<span class="number">0</span>]</span><br><span class="line">    diffMat = tile(inX,(dataSetSize,<span class="number">1</span>)) - dataSet   <span class="comment"># add one row</span></span><br><span class="line">    sqDiffMAt = diffMat ** <span class="number">2</span></span><br><span class="line">    sqDistance = sqDiffMAt.sum(axis=<span class="number">1</span>)</span><br><span class="line">    distance = sqDistance ** <span class="number">0.5</span></span><br><span class="line">    sortedDistIndicies = distance.argsort()</span><br><span class="line">    classCount=&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(k):</span><br><span class="line">        voteIlabel = labels[sortedDistIndicies[i]]</span><br><span class="line">        classCount[voteIlabel] = classCount.get(voteIlabel,<span class="number">0</span>) + <span class="number">1</span></span><br><span class="line">    sortedClassCount = sorted(classCount.iteritems(),</span><br><span class="line">     key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> sortedClassCount[<span class="number">0</span>][<span class="number">0</span>]</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;检验代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> KNN_1</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">group,labers=KNN_1.creatDataSet()</span><br><span class="line">test = array([<span class="number">0.8</span>,<span class="number">0.5</span>])</span><br><span class="line">aimLaber=KNN_1.classify(test,group,labers,<span class="number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">print</span> aimLaber</span><br><span class="line">plt.plot(group[:,<span class="number">0</span>],group[:,<span class="number">1</span>],<span class="string">'ro'</span>)</span><br><span class="line">plt.plot(test[<span class="number">0</span>],test[<span class="number">1</span>],<span class="string">'bo'</span>)</span><br><span class="line">plt.axis([<span class="number">0</span>, <span class="number">2</span>, <span class="number">0</span>, <span class="number">2</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure></p>
 <p>得到输出标签为A，显示图像如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/KNN.png" alt="images"></p>
 <h2 id="算法应用"><a href="#算法应用" class="headerlink" title="算法应用"></a>算法应用</h2><p>&emsp;&emsp;在应用KNN时，由于数据的各维度之间的取值范围有一定的差别，如果直接使用，则可能可能出现某些属性对于距离计算有很大的影响，从而使得预测结果不准确，为了防止此类问题的发生，应该对于各属性进行离散化处理之后在进行合适距离的计算。<br>&emsp;&emsp;《Machine Learning in Action》中对于KNN的进阶算法是利用其进行手写识别，实现方法是将32<em>32的图像转化为1</em>1024的向量进行计算，书中样例的错误率为1.2%.但是同时说明，实现此算法的执行效率并不高，因为数据属性的维度高达1024，并且需要较大的储存空间储存样本。</p>
 <h2 id="算法小结"><a href="#算法小结" class="headerlink" title="算法小结"></a>算法小结</h2><p>&emsp;&emsp;KNN是分类数据最简单最有效的算法，是基于实例的学习，使用是必须有接近实际数据的训练样本数据。此外必须对数据集中的每个数据计算距离值，如果样本属性的维度本来就很高，则会非常耗时；其另一个缺陷是无法给出任何数据的基础结构信息，因此我们也无法知道平均实例样本和典型实例样本具有的特征。</p>
@@ -698,7 +691,24 @@
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

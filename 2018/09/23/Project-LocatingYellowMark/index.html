@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -129,7 +129,7 @@
 
 
 
-  <title>Project-LocatingYellowMark | SuperYanyann's World</title>
+  <title>Project-LocatingYellowMark | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -148,7 +148,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -357,15 +357,9 @@
       
         <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;这个项目是本周数字图像处理课程的一个project。因为杨老师主要做的是无人机及遥感方向的研究，所以这是一个与无人机控制相关的识别标记任务，原项目是识别无人机摄像头采集到视频数据中出现的黄色标记，并利用黄色标记的位置实现精准降落以及飞行高度的控制；本次作业是其中的一小部分，即识别视频文件中的黄色标记牌，并标记其边缘。我主要是利用的HSV颜色空间以及标记牌的边缘嵌套关系进行的识别与定位。</p>
 <h1 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h1><h2 id="HSV颜色空间"><a href="#HSV颜色空间" class="headerlink" title="HSV颜色空间"></a>HSV颜色空间</h2><p>&emsp;&emsp;我们通常使用的RGB颜色空间是利用的三原色进行颜色的标识，但是HSV颜色空间与之不同，这个模型中颜色的参数分别是：色调（H），饱和度（S），明度（V）。<br>&emsp;&emsp;更详细的介绍可以参考：wiki：<a href="https://en.wikipedia.org/wiki/HSL_and_HSV" target="_blank" rel="noopener">HSL and HSV</a>。<br>&emsp;&emsp;关于HSV中详细的色彩划分区间，可以参考：<a href="https://www.cnblogs.com/wangyblzu/p/5710715.html" target="_blank" rel="noopener">OpenCV中HSV颜色模型及颜色分量范围</a>。</p>
-<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>&emsp;&emsp;此项目的处理对象是视频，我们可以先从视频中有特点的几帧开始测试处理。因此我先观察了一遍视频，然后截取视频中的几张比较有代表性的情况，用来进行初始的测试。其中包含一般情况下标记牌，在旋转过程中边境较为模糊的标记牌，以及由于相机角度偏转标志牌变为非规则矩形的情况。其中一张如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/YellowMark/test5.png" alt="photo1">。<br>&emsp;&emsp;我的思路整体是将RGB图像转变为HSV图像，然后利用色相进行限制，提取出黄色部分；然后利用标记牌即中间数字的嵌套关系，进行除标记牌以外黄色部分的剔除；最后标记除黄色标记牌边缘即可。<br>&emsp;&emsp;首先利用HSV的黄色色相限制筛选的范围：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lower = np.array([<span class="number">26</span>, <span class="number">43</span>, <span class="number">20</span>])</span><br><span class="line">upper = np.array([<span class="number">34</span>, <span class="number">255</span>, <span class="number">255</span>])</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;然后进行RGB到HSV空间的转换，并进行筛选：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># change the photo to hsv model</span></span><br><span class="line">img_HSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)</span><br><span class="line"><span class="comment"># use upper and lower to locate the yellow in the photo</span></span><br><span class="line">img_mask = cv2.inRange(img_HSV, lower, upper)</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;但是这样操作之后发现，由于桌子即地板均为黄色，所以这样筛选出出来的区域较大，难以进行标志牌的分割。此时观察到标记牌和桌子虽然都是黄色，但是标记牌的饱和度明显高于其他位置黄色，所以逐步调制范围上界的饱和度数值，只到将饱和度上界上升到160的时候，经过筛选的部分仅仅包括标记牌和少部分杂物。之后进行后续操作。即利用标记牌的轮廓嵌套关系进行其余杂物的剔除：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get the contours and the hierarchy of contours</span></span><br><span class="line">img_fc, contours, hierarchy = cv2.findContours(edge_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)</span><br><span class="line"><span class="comment"># use the nested models to locate the yellow mark</span></span><br><span class="line">hierarchy = hierarchy[<span class="number">0</span>]</span><br><span class="line">found = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(contours)):</span><br><span class="line">    k = i</span><br><span class="line">    c = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> hierarchy[k][<span class="number">2</span>] != <span class="number">-1</span>:</span><br><span class="line">        k = hierarchy[k][<span class="number">2</span>]</span><br><span class="line">        c = c + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> c &gt;= <span class="number">2</span>:</span><br><span class="line">        found.append(i)</span><br></pre></td></tr></table></figure>
-
+<h1 id="思路整理"><a href="#思路整理" class="headerlink" title="思路整理"></a>思路整理</h1><p>&emsp;&emsp;此项目的处理对象是视频，我们可以先从视频中有特点的几帧开始测试处理。因此我先观察了一遍视频，然后截取视频中的几张比较有代表性的情况，用来进行初始的测试。其中包含一般情况下标记牌，在旋转过程中边境较为模糊的标记牌，以及由于相机角度偏转标志牌变为非规则矩形的情况。其中一张如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/YellowMark/test5.png" alt="photo1">。<br>&emsp;&emsp;我的思路整体是将RGB图像转变为HSV图像，然后利用色相进行限制，提取出黄色部分；然后利用标记牌即中间数字的嵌套关系，进行除标记牌以外黄色部分的剔除；最后标记除黄色标记牌边缘即可。<br>&emsp;&emsp;首先利用HSV的黄色色相限制筛选的范围：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lower = np.array([<span class="number">26</span>, <span class="number">43</span>, <span class="number">20</span>])</span><br><span class="line">upper = np.array([<span class="number">34</span>, <span class="number">255</span>, <span class="number">255</span>])</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;然后进行RGB到HSV空间的转换，并进行筛选：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># change the photo to hsv model</span></span><br><span class="line">img_HSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)</span><br><span class="line"><span class="comment"># use upper and lower to locate the yellow in the photo</span></span><br><span class="line">img_mask = cv2.inRange(img_HSV, lower, upper)</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;但是这样操作之后发现，由于桌子即地板均为黄色，所以这样筛选出出来的区域较大，难以进行标志牌的分割。此时观察到标记牌和桌子虽然都是黄色，但是标记牌的饱和度明显高于其他位置黄色，所以逐步调制范围上界的饱和度数值，只到将饱和度上界上升到160的时候，经过筛选的部分仅仅包括标记牌和少部分杂物。之后进行后续操作。即利用标记牌的轮廓嵌套关系进行其余杂物的剔除：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get the contours and the hierarchy of contours</span></span><br><span class="line">img_fc, contours, hierarchy = cv2.findContours(edge_img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)</span><br><span class="line"><span class="comment"># use the nested models to locate the yellow mark</span></span><br><span class="line">hierarchy = hierarchy[<span class="number">0</span>]</span><br><span class="line">found = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(contours)):</span><br><span class="line">    k = i</span><br><span class="line">    c = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> hierarchy[k][<span class="number">2</span>] != <span class="number">-1</span>:</span><br><span class="line">        k = hierarchy[k][<span class="number">2</span>]</span><br><span class="line">        c = c + <span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> c &gt;= <span class="number">2</span>:</span><br><span class="line">        found.append(i)</span><br></pre></td></tr></table></figure></p>
 <p>&emsp;&emsp;此时将标记牌完全筛选出，然后提取边缘即可，结果如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/YellowMark/test6_output.png" alt="photo2"><br>&emsp;&emsp;这样就完成了一帧的操作，之后在完成视频的读取和写入操作即可。</p>
 <h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>&emsp;&emsp;代码完整实现参考我的github：<a href="https://github.com/SuperYanyann/Digital_Image_Processing/tree/master/locatingYellowMark" target="_blank" rel="noopener">SuperYanyann/locatingYellowMark</a>。包括了单张图片的和视频的标记牌的提取。</p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;将测试视频输入，输出处理后视频后观察发现，绝大部分帧的操作效果较好，但是有少部分帧由于视频旋转较快，标记牌边界的嵌套关系发生细微的变化，所以有些偏差，整体效果尚可。总的来说，本次的任务主要是根据标记牌色相和饱和度的特征进行筛选操作，难度不大。</p>
@@ -767,7 +761,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

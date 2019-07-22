@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -126,7 +126,7 @@
 
 
 
-  <title>Configuring-Pytorch&CUDA | SuperYanyann's World</title>
+  <title>Configuring-Pytorch&CUDA | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -145,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -372,39 +372,21 @@
 <li>torch-0.3.0.post4-cp36-cp36m-linux_x86_64.whl</li>
 <li>torchvision-0.1.8-py2.py3-none-any.whl</li>
 </ul>
-<h3 id="CUDA安装"><a href="#CUDA安装" class="headerlink" title="CUDA安装"></a>CUDA安装</h3><p>&emsp;&emsp;使用deb安装方式（PS：之前有人和我说过deb安装方法有Bug，当时我就不太相信，实际在本次安装中确实没有出现CUDA上大的问题），过程如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i cuda-repo-ubuntu1604-9-0-local_9.0.176-1_amd64.deb</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install cuda</span><br></pre></td></tr></table></figure>
-
-<h3 id="cuDNN安装"><a href="#cuDNN安装" class="headerlink" title="cuDNN安装"></a>cuDNN安装</h3><p>&emsp;&emsp;在下载好tgz压缩文件后，先进行解压，得到cuda文件夹，进入文件夹中，执行如下命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo cp include/cudnn.h /usr/local/cuda/include/</span><br><span class="line">sudo cp lib64/lib* /usr/local/cuda/lib64/</span><br><span class="line">sudo chmod a+r /usr/local/cuda/include/cudnn.h</span><br><span class="line">sudo chmod a+r /usr/local/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;然后打开配置文件，将cuda加入环境变量</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit ~/.bashrc</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;在末尾添加上如下内容：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/usr/local/cuda/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=&quot;$LD_LIBRARY_PATH:/usr/local/cuda/lib64&quot;</span><br><span class="line">export CUDA_HOME=/usr/local/cuda</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;使环境变量生效</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;再多说一下cuDNN卸载的方法，当你使用GPU加速的时候，若是报错cuDNN版本和pytorch的编译版本不同的时候，先删除原来的cuDNN，再找到对应的版本安装一下即可，删除的方式如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -rf /usr/local/cuda/include/cudnn.h</span><br><span class="line">sudo rm -rf /usr/local/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure>
-
-<h3 id="Pytorch安装"><a href="#Pytorch安装" class="headerlink" title="Pytorch安装"></a>Pytorch安装</h3><p>&emsp;&emsp;很简单，pip安装一下即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install torch-0.3.0.post4-cp36-cp36m-linux_x86_64.whl</span><br><span class="line">pip install torchvision-0.1.8-py2.py3-none-any.whl</span><br></pre></td></tr></table></figure>
-
+<h3 id="CUDA安装"><a href="#CUDA安装" class="headerlink" title="CUDA安装"></a>CUDA安装</h3><p>&emsp;&emsp;使用deb安装方式（PS：之前有人和我说过deb安装方法有Bug，当时我就不太相信，实际在本次安装中确实没有出现CUDA上大的问题），过程如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo dpkg -i cuda-repo-ubuntu1604-9-0-local_9.0.176-1_amd64.deb</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install cuda</span><br></pre></td></tr></table></figure></p>
+<h3 id="cuDNN安装"><a href="#cuDNN安装" class="headerlink" title="cuDNN安装"></a>cuDNN安装</h3><p>&emsp;&emsp;在下载好tgz压缩文件后，先进行解压，得到cuda文件夹，进入文件夹中，执行如下命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo cp include/cudnn.h /usr/local/cuda/include/</span><br><span class="line">sudo cp lib64/lib* /usr/local/cuda/lib64/</span><br><span class="line">sudo chmod a+r /usr/local/cuda/include/cudnn.h</span><br><span class="line">sudo chmod a+r /usr/local/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;然后打开配置文件，将cuda加入环境变量<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit ~/.bashrc</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;在末尾添加上如下内容：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/usr/local/cuda/bin:$PATH</span><br><span class="line">export LD_LIBRARY_PATH=&quot;$LD_LIBRARY_PATH:/usr/local/cuda/lib64&quot;</span><br><span class="line">export CUDA_HOME=/usr/local/cuda</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;使环境变量生效<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;再多说一下cuDNN卸载的方法，当你使用GPU加速的时候，若是报错cuDNN版本和pytorch的编译版本不同的时候，先删除原来的cuDNN，再找到对应的版本安装一下即可，删除的方式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rm -rf /usr/local/cuda/include/cudnn.h</span><br><span class="line">sudo rm -rf /usr/local/cuda/lib64/libcudnn*</span><br></pre></td></tr></table></figure></p>
+<h3 id="Pytorch安装"><a href="#Pytorch安装" class="headerlink" title="Pytorch安装"></a>Pytorch安装</h3><p>&emsp;&emsp;很简单，pip安装一下即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install torch-0.3.0.post4-cp36-cp36m-linux_x86_64.whl</span><br><span class="line">pip install torchvision-0.1.8-py2.py3-none-any.whl</span><br></pre></td></tr></table></figure></p>
 <p>&emsp;&emsp;至此，安装完成。</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>&emsp;&emsp;如果在没有报错的情况下，你依然想测试下GPU使用是否正常，可以运行一个使用GPU的程序，然后5s间隔刷新一遍GPU使用情况</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">watch -n 5 nvidia-smi</span><br></pre></td></tr></table></figure>
-
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>&emsp;&emsp;如果在没有报错的情况下，你依然想测试下GPU使用是否正常，可以运行一个使用GPU的程序，然后5s间隔刷新一遍GPU使用情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">watch -n 5 nvidia-smi</span><br></pre></td></tr></table></figure></p>
 <p>&emsp;&emsp;若GPU中有python程序占用了部分内存，说明GPU使用正常，否则应该是GG了。</p>
 <h2 id="留意的坑"><a href="#留意的坑" class="headerlink" title="留意的坑"></a>留意的坑</h2><h3 id="OS版本问题"><a href="#OS版本问题" class="headerlink" title="OS版本问题"></a>OS版本问题</h3><p>&emsp;&emsp;一开始电脑装的是16.10,然后尝试安装的时候，出现了各种问题。然后重作16.04的系统，基本一路畅通无阻。</p>
-<h3 id="cuDNN版本问题"><a href="#cuDNN版本问题" class="headerlink" title="cuDNN版本问题"></a>cuDNN版本问题</h3><p>&emsp;&emsp;一开始安装的cuDNN版本为7104,本来以为pytorch的7004可以兼容的，然后就报错了…</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RuntimeError: cuDNN version mismatch: PyTorch was compiled against 7004 but linked against 7104</span><br></pre></td></tr></table></figure>
-
+<h3 id="cuDNN版本问题"><a href="#cuDNN版本问题" class="headerlink" title="cuDNN版本问题"></a>cuDNN版本问题</h3><p>&emsp;&emsp;一开始安装的cuDNN版本为7104,本来以为pytorch的7004可以兼容的，然后就报错了…<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RuntimeError: cuDNN version mismatch: PyTorch was compiled against 7004 but linked against 7104</span><br></pre></td></tr></table></figure></p>
 <p>&emsp;&emsp;重新下载了v7版本，非v7.1版本的cuDNN，问题得以解决。</p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;总的来说，使用deb安装cuda，并且注意OS和安装文件版本的话，安装还是挺简单的，起码我在安装的时候并没有出现听说的黑屏的现象，可能是我采用了deb方法的原因。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1] SaoYan 的学习笔记：Tensorflow–1</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1] SaoYan 的学习笔记：Tensorflow—1</p>
 
       
     </div>
@@ -802,7 +784,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

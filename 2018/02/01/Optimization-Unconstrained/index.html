@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -126,7 +126,7 @@
 
 
 
-  <title>Optimization-Unconstrained | SuperYanyann's World</title>
+  <title>Optimization-Unconstrained | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -145,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -355,11 +355,16 @@
         <h1 id="Optimization-Unconstrained"><a href="#Optimization-Unconstrained" class="headerlink" title="Optimization-Unconstrained"></a>Optimization-Unconstrained</h1><p>标签： Optimization Math</p>
 <hr>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;在学习机器学习的过程中经常用到几种优化方法，因此对于优化问题产生了一些兴趣，所以想借此机会总结下常用的优化方法。本次先总结下常用的由于无约束优化问题(Unconstrained-Optimization)的方法。首先做一下整体的介绍，具体的分析和实现在下面几篇文章中介绍。</p>
-<h1 id="理论准备"><a href="#理论准备" class="headerlink" title="理论准备"></a>理论准备</h1><p>&emsp;&emsp;本次介绍的方法的主要对象是单目标优化。对于单目标优化我之前一直理解的不太正确，正确的理解应该是只有一个目标函数的优化问题，与之区别的是多目标优化问题，即不只一个目标函数。需要注意的是，单目标优化不一定只有一个变量，可能是有多个变量存在，或者说变量是多维的，在实现过程中区别主要是求导数和求偏导的不同，迭代的思路是一样的。<br>&emsp;&emsp;对于约束问题的一般形式，有一条重要的定理，即<strong>一阶必要条件</strong>，描述如下：<br>&emsp;&emsp;<strong>一阶必要条件</strong>：多元实值函数$f$在约束集$\Omega$上一阶连续可微，即$f \in C^1$,约束集$\Omega$是$R^n$的子集。如果$x^<em>$是函数$f$在$\Omega$上的局部极小值点，则对于$x^</em>$处的任意可行方向，都有$$d^\top\nabla f(x^<em>)\geqslant0$$成立。<br>&emsp;&emsp;在此定理基础上，可以得出常用的极小值点的一条推理：<br>&emsp;&emsp;<strong>局部极小点位于约束集内部时的一阶必要条件</strong>：多元实值函数$f$在约束集$\Omega$上一阶连续可微，即$f\in C^1$,约束集$\Omega$是$R^n$的子集。如果$x^</em>$是函数$f$在$\Omega$上的局部极小值点，且是$\Omega$的内点，则有$$\nabla f(x^<em>)=0$$成立。<br>&emsp;&emsp;在一阶条件的基础上，进一步可以得到*</em>局部极小点的二阶必要条件<strong>和</strong>局部极小点位于约束集内部时的二阶必要条件<strong>，以及</strong>局部极小点位于约束集内部时的二阶充分条件**。以下方法的根基均为以上定理和推理，具体证明过程请参考《最优化导论》一书。<br>&emsp;&emsp;需要说明的是，对于以上所说的约束集，如果其为目标函数的定义域，即此优化问题即为无约束优化问题。</p>
+<h1 id="理论准备"><a href="#理论准备" class="headerlink" title="理论准备"></a>理论准备</h1><p>&emsp;&emsp;本次介绍的方法的主要对象是单目标优化。对于单目标优化我之前一直理解的不太正确，正确的理解应该是只有一个目标函数的优化问题，与之区别的是多目标优化问题，即不只一个目标函数。需要注意的是，单目标优化不一定只有一个变量，可能是有多个变量存在，或者说变量是多维的，在实现过程中区别主要是求导数和求偏导的不同，迭代的思路是一样的。<br>&emsp;&emsp;对于约束问题的一般形式，有一条重要的定理，即<strong>一阶必要条件</strong>，描述如下：<br>&emsp;&emsp;<strong>一阶必要条件</strong>：多元实值函数$f$在约束集$\Omega$上一阶连续可微，即$f \in C^1$,约束集$\Omega$是$R^n$的子集。如果$x^<em>$是函数$f$在$\Omega$上的局部极小值点，则对于$x^</em>$处的任意可行方向，都有<script type="math/tex">d^\top\nabla f(x^*)\geqslant0</script>成立。<br>&emsp;&emsp;在此定理基础上，可以得出常用的极小值点的一条推理：<br>&emsp;&emsp;<strong>局部极小点位于约束集内部时的一阶必要条件</strong>：多元实值函数$f$在约束集$\Omega$上一阶连续可微，即$f\in C^1$,约束集$\Omega$是$R^n$的子集。如果$x^<em>$是函数$f$在$\Omega$上的局部极小值点，且是$\Omega$的内点，则有$$\nabla f(x^</em>)=0$$成立。<br>&emsp;&emsp;在一阶条件的基础上，进一步可以得到<strong>局部极小点的二阶必要条件</strong>和<strong>局部极小点位于约束集内部时的二阶必要条件</strong>，以及<strong>局部极小点位于约束集内部时的二阶充分条件</strong>。以下方法的根基均为以上定理和推理，具体证明过程请参考《最优化导论》一书。<br>&emsp;&emsp;需要说明的是，对于以上所说的约束集，如果其为目标函数的定义域，即此优化问题即为无约束优化问题。</p>
 <h1 id="算法介绍"><a href="#算法介绍" class="headerlink" title="算法介绍"></a>算法介绍</h1><h2 id="下降方法"><a href="#下降方法" class="headerlink" title="下降方法"></a>下降方法</h2><p>&emsp;&emsp;在了解具体的算法之前，我们首先了解一下将要描述算法的基本模型，即为<strong>下降方法</strong>，其一般框架如下：<br>&emsp;&emsp;&emsp;<strong>给定</strong>初始点$x \in domf$<br>&emsp;&emsp;&emsp;<strong>重复进行</strong><br>&emsp;&emsp;&emsp;&emsp;1.确定下降方向$\triangle x$<br>&emsp;&emsp;&emsp;&emsp;2.<strong>直线搜索</strong>，选择步长$t&gt;0$.<br>&emsp;&emsp;&emsp;&emsp;3.<strong>修改</strong>,$x:=x+t\triangle x$<br>&emsp;&emsp;之所以称之为基本模型，是因为以下的方法是在此基础上选择了不同的方法来寻找下降方法和步长，其迭代的方式的一样的。</p>
 <h2 id="梯度下降方法"><a href="#梯度下降方法" class="headerlink" title="梯度下降方法"></a>梯度下降方法</h2><p>&emsp;&emsp;梯度下降方法顾名思义，其采用负梯度作为搜索方向，算法如下：<br>&emsp;&emsp;&emsp;<strong>给定</strong>初始点$x \in domf$<br>&emsp;&emsp;&emsp;<strong>重复进行</strong><br>&emsp;&emsp;&emsp;&emsp;1.$\triangle x:= -\nabla f(x)$<br>&emsp;&emsp;&emsp;&emsp;2.<strong>直线搜索</strong>，经过精确回溯直线搜索确定步长$t$.<br>&emsp;&emsp;&emsp;&emsp;3.<strong>修改</strong>,$x:=x+t\triangle x$<br>&emsp;&emsp;&emsp;<strong>直到</strong> 满足停止准则<br>&emsp;&emsp;停止准则通常采用$||\nabla f(x)||_2\leqslant\eta$，$\eta$为一个小正数。<br>&emsp;&emsp;回溯直线搜索实现的是从单位步长开始，步长按比例缩小，具体描述如下：<br>&emsp;&emsp;&emsp;<strong>给定</strong> $f$在$x \in domf$处的下降方向$ \triangle x$,参数$\alpha \in (0,0.5)$，参数$\beta \in (0,1)$<br>&emsp;&emsp;&emsp;<strong>如果</strong>$f(x+\triangle x)&gt;f(x)+\alpha t\nabla f(x)^T\triangle x$，令$t:=\beta t$<br>&emsp;&emsp;直到满足停止条件，只要$t$足够小，则一定会停止搜索。可以证明，梯度下降方法是线性收敛的。<br>&emsp;&emsp;对于凸优化问题，梯度下降法得到的一定是最优解，但是对于非凸优化问题，此方法可能陷入局部极小值点；此算法的另一个缺点是在接近目标点时，由于步长不合适的原因，可能会“之”字形下降。</p>
-<h2 id="Newton方法"><a href="#Newton方法" class="headerlink" title="Newton方法"></a>Newton方法</h2><p>&emsp;&emsp;其在通用下降方法的基础上定义了Newton步径和减量，用步径作为搜索方向，用减量定义停止条件，其实现如下：<br>&emsp;&emsp;&emsp;<strong>给定</strong>初始点$x \in domf$<br>&emsp;&emsp;&emsp;<strong>重复进行</strong><br>&emsp;&emsp;&emsp;&emsp;1.计算Newton步径和减量。<br>$$\triangle x_{nt}:=-\nabla^2 f(x)^{-1}\nabla f(x)<br>\\lambda^2:=\nabla f(x)^T\nabla^2f(x)^{-1}\nabla f(x)$$<br>&emsp;&emsp;&emsp;&emsp;2.<strong>停止准则</strong>如果$\lambda^2/2\leqslant\varepsilon$,退出<br>&emsp;&emsp;&emsp;&emsp;3.<strong>直线搜索</strong>，经过精确回溯直线搜索确定步长$t$.<br>&emsp;&emsp;&emsp;&emsp;4.<strong>修改</strong>,$x:=x+t\triangle x_{nt}$<br>&emsp;&emsp;其与通用下降方法唯一的出入是停止循环的检测在计算搜索方向之后进行，而不是在改进迭代点之后，并且可以证明其为二阶收敛，故其优势是收敛速度很快，但是计算相对而言比较复杂。<br>&emsp;&emsp;Newton方法是一种具有较高实用性的优化问题求解方法，但是当目标函数为一般性的非线性函数时，其不能保证能够从任意起点收敛到函数的极小值点，即如果初始点不足够接近极小值，那么牛顿法可能不具有下降特征。<br>&emsp;&emsp;拟牛顿法在牛顿方法的基础上进行改进，其的本质思想是改善牛顿法每次需要求解黑塞矩阵的逆矩阵的缺点，它使用正定矩阵来近似Hessian矩阵的逆，从而简化了运算的复杂度。</p>
-<h2 id="共轭方法法"><a href="#共轭方法法" class="headerlink" title="共轭方法法"></a>共轭方法法</h2><p>&emsp;&emsp;一般情况下，共轭方向法的性能优于梯度下降方法，但是不如牛顿方法。对于目标函数$$f(x)=\frac{1}{2}x^\top Qx-x^\top  b$$<br>&emsp;&emsp;基本的共轭方向算法是在给定初始点$x^{(0)}$和一组关于$Q$共轭的方向的基础上，有迭代公式：<br>$$g^{(k)}=\nabla f(x^{(k)})=Qx^{(k)}-b<br>\ \alpha_k=-\frac{g^{(k)\top} d^{(k)}}{d^{(k)\top}Qd^{(k)}}<br>\ x^{(k+1)}=x^{(k)}+\alpha _kd^{(k)}<br>$$<br>&emsp;&emsp;其优势是对于任意初始点，基本的共轭方向算法都可以在一定次数之后收敛到唯一的全局最小点。证明可以参考《最优化导论》。<br>&emsp;&emsp;在基本共轭方向算法的基础上，衍生出共轭梯度法和非二次型问题中的共轭梯度法。</p>
+<h2 id="Newton方法"><a href="#Newton方法" class="headerlink" title="Newton方法"></a>Newton方法</h2><p>&emsp;&emsp;其在通用下降方法的基础上定义了Newton步径和减量，用步径作为搜索方向，用减量定义停止条件，其实现如下：<br>&emsp;&emsp;&emsp;<strong>给定</strong>初始点$x \in domf$<br>&emsp;&emsp;&emsp;<strong>重复进行</strong><br>&emsp;&emsp;&emsp;&emsp;1.计算Newton步径和减量。</p>
+<script type="math/tex; mode=display">\triangle x_{nt}:=-\nabla^2 f(x)^{-1}\nabla f(x)
+\\\lambda^2:=\nabla f(x)^T\nabla^2f(x)^{-1}\nabla f(x)</script><p>&emsp;&emsp;&emsp;&emsp;2.<strong>停止准则</strong>如果$\lambda^2/2\leqslant\varepsilon$,退出<br>&emsp;&emsp;&emsp;&emsp;3.<strong>直线搜索</strong>，经过精确回溯直线搜索确定步长$t$.<br>&emsp;&emsp;&emsp;&emsp;4.<strong>修改</strong>,$x:=x+t\triangle x_{nt}$<br>&emsp;&emsp;其与通用下降方法唯一的出入是停止循环的检测在计算搜索方向之后进行，而不是在改进迭代点之后，并且可以证明其为二阶收敛，故其优势是收敛速度很快，但是计算相对而言比较复杂。<br>&emsp;&emsp;Newton方法是一种具有较高实用性的优化问题求解方法，但是当目标函数为一般性的非线性函数时，其不能保证能够从任意起点收敛到函数的极小值点，即如果初始点不足够接近极小值，那么牛顿法可能不具有下降特征。<br>&emsp;&emsp;拟牛顿法在牛顿方法的基础上进行改进，其的本质思想是改善牛顿法每次需要求解黑塞矩阵的逆矩阵的缺点，它使用正定矩阵来近似Hessian矩阵的逆，从而简化了运算的复杂度。</p>
+<h2 id="共轭方法法"><a href="#共轭方法法" class="headerlink" title="共轭方法法"></a>共轭方法法</h2><p>&emsp;&emsp;一般情况下，共轭方向法的性能优于梯度下降方法，但是不如牛顿方法。对于目标函数<script type="math/tex">f(x)=\frac{1}{2}x^\top Qx-x^\top  b</script><br>&emsp;&emsp;基本的共轭方向算法是在给定初始点$x^{(0)}$和一组关于$Q$共轭的方向的基础上，有迭代公式：</p>
+<script type="math/tex; mode=display">g^{(k)}=\nabla f(x^{(k)})=Qx^{(k)}-b
+\\ \alpha_k=-\frac{g^{(k)\top} d^{(k)}}{d^{(k)\top}Qd^{(k)}}
+\\ x^{(k+1)}=x^{(k)}+\alpha _kd^{(k)}</script><p>&emsp;&emsp;其优势是对于任意初始点，基本的共轭方向算法都可以在一定次数之后收敛到唯一的全局最小点。证明可以参考《最优化导论》。<br>&emsp;&emsp;在基本共轭方向算法的基础上，衍生出共轭梯度法和非二次型问题中的共轭梯度法。</p>
 <h2 id="全局搜索算法"><a href="#全局搜索算法" class="headerlink" title="全局搜索算法"></a>全局搜索算法</h2><p>&emsp;&emsp;由于以上算法在非凸优化问题中，从初始点出发，产生迭代序列之后，往往只能收敛到一个局部的极小值点，为了减小收敛到局部极小值点的概率，提出了全局搜索算法，即一开始就是在一个可行集中开展搜索，以找到极小点，这些方法一般而言只需要计算目标函数值，而不需要对目标函数进行求导。在某些情况下，这些方法产生的解可以作为以上算法的较好的初始点。<br>&emsp;&emsp;这些算法包含了许多我们称之为智能算法的优化方法，包括模拟退火算法，粒子群优化算法，遗传算法，此处不再做详细的介绍。</p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;对于智能算法，我觉得它的意义在于当函数比较复杂，常规算法无法奏效的时候，给我们提供一种思路。这些算法的思路往往没有它们的名字那么吓人，因此也不必要过分的神话，但是要把它们用好也不是易事，当然有一些算法我也还没有实现，所以这只是我目前的一些想法。我们还是应该在掌握好基础优化算法的基础上，再更进一步了解其他智能 算法。</p>
 
@@ -759,7 +764,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="Optimization-Lagrange标签： Optimization Math  概述&amp;emsp;&amp;emsp;Lagrange对偶函数是解决有约束优化问题的重要途径，在机器学习中，求解SVM的方法就是Lagrange方法，下面我们来简单的梳理一下Lagrange的相关知识点。 Lagrange&amp;emsp;&amp;emsp;我们知道标准形式的优化问题应该如下：$$minimize\ f_0(x)\">
+<meta name="description" content="Optimization-Lagrange标签： Optimization Math  概述&amp;emsp;&amp;emsp;Lagrange对偶函数是解决有约束优化问题的重要途径，在机器学习中，求解SVM的方法就是Lagrange方法，下面我们来简单的梳理一下Lagrange的相关知识点。 Lagrange&amp;emsp;&amp;emsp;我们知道标准形式的优化问题应该如下： minimize\ f_0(x) \\">
 <meta name="keywords" content="Math,Optimization">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Optimization-Lagrange">
 <meta property="og:url" content="http://yoursite.com/2018/02/01/Optimization-Lagrange/index.html">
 <meta property="og:site_name" content="SuperYanyann&#39;s World">
-<meta property="og:description" content="Optimization-Lagrange标签： Optimization Math  概述&amp;emsp;&amp;emsp;Lagrange对偶函数是解决有约束优化问题的重要途径，在机器学习中，求解SVM的方法就是Lagrange方法，下面我们来简单的梳理一下Lagrange的相关知识点。 Lagrange&amp;emsp;&amp;emsp;我们知道标准形式的优化问题应该如下：$$minimize\ f_0(x)\">
+<meta property="og:description" content="Optimization-Lagrange标签： Optimization Math  概述&amp;emsp;&amp;emsp;Lagrange对偶函数是解决有约束优化问题的重要途径，在机器学习中，求解SVM的方法就是Lagrange方法，下面我们来简单的梳理一下Lagrange的相关知识点。 Lagrange&amp;emsp;&amp;emsp;我们知道标准形式的优化问题应该如下： minimize\ f_0(x) \\">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-02-01T05:29:01.221Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Optimization-Lagrange">
-<meta name="twitter:description" content="Optimization-Lagrange标签： Optimization Math  概述&amp;emsp;&amp;emsp;Lagrange对偶函数是解决有约束优化问题的重要途径，在机器学习中，求解SVM的方法就是Lagrange方法，下面我们来简单的梳理一下Lagrange的相关知识点。 Lagrange&amp;emsp;&amp;emsp;我们知道标准形式的优化问题应该如下：$$minimize\ f_0(x)\">
+<meta name="twitter:description" content="Optimization-Lagrange标签： Optimization Math  概述&amp;emsp;&amp;emsp;Lagrange对偶函数是解决有约束优化问题的重要途径，在机器学习中，求解SVM的方法就是Lagrange方法，下面我们来简单的梳理一下Lagrange的相关知识点。 Lagrange&amp;emsp;&amp;emsp;我们知道标准形式的优化问题应该如下： minimize\ f_0(x) \\">
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>Optimization-Lagrange | SuperYanyann's World</title>
+  <title>Optimization-Lagrange | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -145,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -355,9 +355,24 @@
         <h1 id="Optimization-Lagrange"><a href="#Optimization-Lagrange" class="headerlink" title="Optimization-Lagrange"></a>Optimization-Lagrange</h1><p>标签： Optimization Math</p>
 <hr>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;Lagrange对偶函数是解决有约束优化问题的重要途径，在机器学习中，求解SVM的方法就是Lagrange方法，下面我们来简单的梳理一下Lagrange的相关知识点。</p>
-<h1 id="Lagrange"><a href="#Lagrange" class="headerlink" title="Lagrange"></a>Lagrange</h1><p>&emsp;&emsp;我们知道标准形式的优化问题应该如下：<br>$$minimize\ f_0(x)<br>\ subject\ to\ f_i(x)\leqslant0<br>\subject\ to\ h_i(x)=0<br>$$<br>&emsp;&emsp;如果没有约束条件的话，我们可以利用之前无约束的方法进行求解，但是由于这里多了约束条件，没法至今利用无约束优化的方法，因此我们应该想办法将约束条件整合到目标方程中，这样就可以被我们解决了，这就是Lagrange乘子：<br>$$L(x,\lambda,v)=f_0(x)+\sum_{i=0}^m\lambda <em>if_i(x) + \sum</em>{i=0}^pv_ih_i(x)$$<br>&emsp;&emsp;这个时候我们如下如下函数$\theta_p(x)$可以表示目标函数$f_0(x)$和它的约束条件：<br>$$\theta_p(x)=\max_{\lambda ,x:\lambda\geqslant0}L(x,\geqslant,v)$$<br>&emsp;&emsp;因为当$x$满足约束条件时，$\theta_P(x)=f_0(x)$，而当$x$不满足约束条件时，则有$\theta_p(x)$,趋近于无穷。随意我们可以将原始的优化问题变为：<br>$$\min_{x} \theta_p(x)=\min_{x}\max_{\lambda,x:\lambda\geqslant0}L(x,\geqslant,v)$$<br>&emsp;&emsp;我们用$p^<em>$表示原始问题的最优解：<br>$$p^</em>=\min_{x} \theta_p(x)$$</p>
-<h1 id="Lagrange对偶"><a href="#Lagrange对偶" class="headerlink" title="Lagrange对偶"></a>Lagrange对偶</h1><p>&emsp;&emsp;极小值的对偶问题就是求极大值。<br>&emsp;&emsp;首先我们定义原始问题关于两个参数的函数$\theta_D(\lambda,v)$:<br>$$\theta_D(\lambda,v)=\min_{x}L(x,\geqslant,v)$$<br>&emsp;&emsp;然后定义原始问题的对偶问题为：<br>$$\max_{\lambda,x:\lambda\geqslant0}\theta_D(\lambda,v)=\max_{\lambda,x:\lambda\geqslant0}\min_{x}L(x,\geqslant,v)$$<br>&emsp;&emsp;可以发现的是，原始问题是先固定$x$，再优化两个参数，最后再优化$x$，而对偶问题则是先固定两个参数，再优化$x$,最后再确定两个参数。<br>&emsp;&emsp;我们用$d^<em>$表示对偶问题的最优解：<br>$$d^</em>=\max_{\lambda,x:\lambda\geqslant0}\theta_D(\lambda,v)$$</p>
-<h1 id="KKT条件"><a href="#KKT条件" class="headerlink" title="KKT条件"></a>KKT条件</h1><p>&emsp;&emsp;由于$d^<em>$是原始问题最优解$p^</em>$的最好下界，因此我们可以得到：<br>$$d^<em>\leqslant p^</em>$$<br>&emsp;&emsp;但是即使不是凸优化问题，上述不等式依然成立，所以这个性质成为弱对偶性，弱对偶不等式可以给出原问题最优解的一个下界，并且在很多情况下$d^<em>$可以进行有效的求解，如果等式：<br>$$d^</em>= p^<em>$$<br>&emsp;&emsp;成立，我们称其为强对偶性成立，此时Lagrange对偶函数给出的解是原始问题的最好下界，这样我们就可以利用可以求得的对偶问题的解去近似不好求的原始问题的解，那么什么条件下强对偶性成立呢？这就是引出了KKT条件，即：<br>$$f_i(x^</em>)\leqslant 0<br>\ h_i(x^<em>)=0<br>\ \lambda_i^<em>\geqslant0<br>\ \lambda_i^</em>f_i(x^</em>)=0<br>\ \bigtriangledown f_0(x^<em>)+\sum_{i=0}^m\lambda _i^*\bigtriangledown f_i(x^</em>) +\sum_{i=0}^pv_i^* \bigtriangledown h_i(x^*)=0<br>$$<br>&emsp;&emsp;对于目标函数和约束函数可微的任意优化问题，如果强对偶性成立，那么任意一对原始问题最优解和对偶问题最优解必须满足KKT条件。</p>
+<h1 id="Lagrange"><a href="#Lagrange" class="headerlink" title="Lagrange"></a>Lagrange</h1><p>&emsp;&emsp;我们知道标准形式的优化问题应该如下：</p>
+<script type="math/tex; mode=display">minimize\ f_0(x)
+\\ subject\ to\ f_i(x)\leqslant0
+\\subject\ to\ h_i(x)=0</script><p>&emsp;&emsp;如果没有约束条件的话，我们可以利用之前无约束的方法进行求解，但是由于这里多了约束条件，没法至今利用无约束优化的方法，因此我们应该想办法将约束条件整合到目标方程中，这样就可以被我们解决了，这就是Lagrange乘子：</p>
+<script type="math/tex; mode=display">L(x,\lambda,v)=f_0(x)+\sum_{i=0}^m\lambda _if_i(x) + \sum_{i=0}^pv_ih_i(x)</script><p>&emsp;&emsp;这个时候我们如下如下函数$\theta_p(x)$可以表示目标函数$f_0(x)$和它的约束条件：</p>
+<script type="math/tex; mode=display">\theta_p(x)=\max_{\lambda ,x:\lambda\geqslant0}L(x,\geqslant,v)</script><p>&emsp;&emsp;因为当$x$满足约束条件时，$\theta_P(x)=f_0(x)$，而当$x$不满足约束条件时，则有$\theta_p(x)$,趋近于无穷。随意我们可以将原始的优化问题变为：</p>
+<script type="math/tex; mode=display">\min_{x} \theta_p(x)=\min_{x}\max_{\lambda,x:\lambda\geqslant0}L(x,\geqslant,v)</script><p>&emsp;&emsp;我们用$p^*$表示原始问题的最优解：</p>
+<script type="math/tex; mode=display">p^*=\min_{x} \theta_p(x)</script><h1 id="Lagrange对偶"><a href="#Lagrange对偶" class="headerlink" title="Lagrange对偶"></a>Lagrange对偶</h1><p>&emsp;&emsp;极小值的对偶问题就是求极大值。<br>&emsp;&emsp;首先我们定义原始问题关于两个参数的函数$\theta_D(\lambda,v)$:</p>
+<script type="math/tex; mode=display">\theta_D(\lambda,v)=\min_{x}L(x,\geqslant,v)</script><p>&emsp;&emsp;然后定义原始问题的对偶问题为：</p>
+<script type="math/tex; mode=display">\max_{\lambda,x:\lambda\geqslant0}\theta_D(\lambda,v)=\max_{\lambda,x:\lambda\geqslant0}\min_{x}L(x,\geqslant,v)</script><p>&emsp;&emsp;可以发现的是，原始问题是先固定$x$，再优化两个参数，最后再优化$x$，而对偶问题则是先固定两个参数，再优化$x$,最后再确定两个参数。<br>&emsp;&emsp;我们用$d^*$表示对偶问题的最优解：</p>
+<script type="math/tex; mode=display">d^*=\max_{\lambda,x:\lambda\geqslant0}\theta_D(\lambda,v)</script><h1 id="KKT条件"><a href="#KKT条件" class="headerlink" title="KKT条件"></a>KKT条件</h1><p>&emsp;&emsp;由于$d^<em>$是原始问题最优解$p^</em>$的最好下界，因此我们可以得到：</p>
+<script type="math/tex; mode=display">d^*\leqslant p^*</script><p>&emsp;&emsp;但是即使不是凸优化问题，上述不等式依然成立，所以这个性质成为弱对偶性，弱对偶不等式可以给出原问题最优解的一个下界，并且在很多情况下$d^*$可以进行有效的求解，如果等式：</p>
+<script type="math/tex; mode=display">d^*= p^*</script><p>&emsp;&emsp;成立，我们称其为强对偶性成立，此时Lagrange对偶函数给出的解是原始问题的最好下界，这样我们就可以利用可以求得的对偶问题的解去近似不好求的原始问题的解，那么什么条件下强对偶性成立呢？这就是引出了KKT条件，即：</p>
+<script type="math/tex; mode=display">f_i(x^*)\leqslant 0
+\\ h_i(x^*)=0
+\\ \lambda_i^*\geqslant0
+\\ \lambda_i^*f_i(x^*)=0
+\\ \bigtriangledown f_0(x^*)+\sum_{i=0}^m\lambda _i^*\bigtriangledown f_i(x^*) +\sum_{i=0}^pv_i^* \bigtriangledown h_i(x^*)=0</script><p>&emsp;&emsp;对于目标函数和约束函数可微的任意优化问题，如果强对偶性成立，那么任意一对原始问题最优解和对偶问题最优解必须满足KKT条件。</p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;以上为Lagrange对偶和KKT条件的一个简单的整理。</p>
 
       
@@ -756,7 +771,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

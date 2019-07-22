@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -131,7 +131,7 @@
 
 
 
-  <title>MachineLearning-PCA | SuperYanyann's World</title>
+  <title>MachineLearning-PCA | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -150,7 +150,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -361,24 +361,12 @@
 <hr>
 <h2 id="算法概述"><a href="#算法概述" class="headerlink" title="算法概述"></a>算法概述</h2><p>&emsp;&emsp;主成分分析(PrincipalComponentsAnalysis)是最常用的一种降维方法。其优势是减低数据的复杂性，并且可以依靠排序协方差矩阵的特征值识别最重要的多个特征，但是有可能损失有用的信息。</p>
 <h2 id="算法思路"><a href="#算法思路" class="headerlink" title="算法思路"></a>算法思路</h2><p>&emsp;&emsp;对于正交属性空间中的样本点，如果用一个超平面（直线的高维推广）对所有样本进行恰当的表达，则它应该有如下性质：<br>&emsp;&emsp;&emsp;<strong>最近重构性</strong>：样本点到这个超平面的距离都足够近；<br>&emsp;&emsp;&emsp;<strong>最大可分性</strong>：样本点在这个超平面上的投影能够尽可能分开<br>&emsp;&emsp;基于这两个性质，可以得到主成分分析的两种推导。<br>&emsp;&emsp;基于最近重构性的思路是：假定样本进行中心化；再假定投影变化后得到的新坐标系{w1,w2,w3…wd}中wi为标准正交基向量。若丢弃新坐标系中的部分坐标，即将维度降低到d’&lt; d，则样本点xi在低维坐标系中的投影是zi=(zi_1,zi_2…zi_d’)其中zi_j为xi在低维坐标系下的第j维的坐标。以原样本点与基于投影重构的样本点之间的距离之和为优化目标，找到合适的参数使得其最小。<br>&emsp;&emsp;基于最大可分性的解释则较为直观，我们知道样本点在新空间中超平面上的投影，若所有样本点尽可能的分开，则可以使该投影后样本点的方差最大化，即找到合适的单位方向向量可以最大化投影方差：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://i2.bvimg.com/628197/77c48e166cfac96es.png" alt="Markdown"><br>&emsp;&emsp;发现最优结果为如下矩阵的主特征向量：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="http://i2.bvimg.com/628197/2585aacdf807589cs.png" alt="Markdown"><br>&emsp;&emsp;更详细的推导可以参考CS229的课件。<br>&emsp;&emsp;基于以上的理论，以二维样本为例，我们可以得到算法的具体流程如下：<br>&emsp;&emsp;&emsp;1.分别求x和y的平均值，然后对于所有的样例，都减去对应的均值<br>&emsp;&emsp;&emsp;2.求特征协方差矩阵<br>&emsp;&emsp;&emsp;3.求协方差的特征值和特征向量<br>&emsp;&emsp;&emsp;4.将特征值按照从大到小的顺序排序，选择其中最大的k个，然后将其对应的k个特征向量分别作为列向量组成特征向量矩阵<br>&emsp;&emsp;&emsp;5.将样本点投影到选取的特征向量上<br>&emsp;&emsp;基于以上步骤，则可以得到投影到新空间内的原坐标。</p>
-<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><p>&emsp;&emsp;算法的实现应用了numpy中的linalg模块进行特征向量和特征值的计算。实现核心代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pca</span><span class="params">(dataMat,topNfeat = <span class="number">9999999</span>)</span>:</span></span><br><span class="line">    meanVals = mean(dataMat,axis=<span class="number">0</span>)</span><br><span class="line">    meanRemoved = dataMat - meanVals</span><br><span class="line">    covMat = cov(meanRemoved,rowvar = <span class="number">0</span>)</span><br><span class="line">    eigVals,eigVects = linalg.eig(mat(covMat))</span><br><span class="line">    eigValInd = argsort(eigVals)</span><br><span class="line">    eigValInd = eigValInd[:-(topNfeat+<span class="number">1</span>):<span class="number">-1</span>]</span><br><span class="line">    redEigVects = eigVects[:,eigValInd]</span><br><span class="line">    lowDDataMat = meanRemoved * redEigVects</span><br><span class="line">    reconMat = (lowDDataMat * redEigVects.T) + meanVals</span><br><span class="line">    <span class="keyword">return</span> lowDDataMat,reconMat</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;其中输出lowDataMat为降维后的样本集，而reconMat为转换到新空间的样本集<br>&emsp;&emsp;测试代码如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pca</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">dataMat = pca.loadDataSet(<span class="string">'testSet.txt'</span>)</span><br><span class="line">lowDMat,reconMat = pca.pca(dataMat,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">fig = plt.figure()</span><br><span class="line">ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">ax.scatter(dataMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>],dataMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],marker=<span class="string">'^'</span>,s=<span class="number">90</span>)</span><br><span class="line">ax.scatter(reconMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>],reconMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],marker=<span class="string">'o'</span>,s=<span class="number">50</span>,c=<span class="string">'red'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;当测试用参数为1，即保留一个特征，即：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lowDMat,reconMat = pca.pca(dataMat,1)</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;测试“lowDMat”输出如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">python run.py </span><br><span class="line">[[ -2.51033597e+00]</span><br><span class="line"> [ -2.86915379e+00]</span><br><span class="line"> [  9.74108510e-02]</span><br><span class="line"> ..., </span><br><span class="line"> [ -5.01662249e-01]</span><br><span class="line"> [ -5.89871235e-02]</span><br><span class="line"> [ -1.89787138e-01]]</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;测试“reconMat”输出如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/PCA1.png" alt="Markdown"><br>&emsp;&emsp;当测试用参数为2，即保留二维特征：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lowDMat,reconMat = pca.pca(dataMat,2)</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;测试“lowDMat”输出如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">python run.py </span><br><span class="line">[[<span class="number">-2.51033597</span>  <span class="number">0.15840394</span>]</span><br><span class="line"> [<span class="number">-2.86915379</span>  <span class="number">0.5092619</span> ]</span><br><span class="line"> [ <span class="number">0.09741085</span> <span class="number">-0.20728318</span>]</span><br><span class="line"> ..., </span><br><span class="line"> [<span class="number">-0.50166225</span> <span class="number">-0.62056456</span>]</span><br><span class="line"> [<span class="number">-0.05898712</span> <span class="number">-0.02335614</span>]</span><br><span class="line"> [<span class="number">-0.18978714</span> <span class="number">-1.37276015</span>]]</span><br></pre></td></tr></table></figure>
-
+<h2 id="算法实现"><a href="#算法实现" class="headerlink" title="算法实现"></a>算法实现</h2><p>&emsp;&emsp;算法的实现应用了numpy中的linalg模块进行特征向量和特征值的计算。实现核心代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pca</span><span class="params">(dataMat,topNfeat = <span class="number">9999999</span>)</span>:</span></span><br><span class="line">    meanVals = mean(dataMat,axis=<span class="number">0</span>)</span><br><span class="line">    meanRemoved = dataMat - meanVals</span><br><span class="line">    covMat = cov(meanRemoved,rowvar = <span class="number">0</span>)</span><br><span class="line">    eigVals,eigVects = linalg.eig(mat(covMat))</span><br><span class="line">    eigValInd = argsort(eigVals)</span><br><span class="line">    eigValInd = eigValInd[:-(topNfeat+<span class="number">1</span>):<span class="number">-1</span>]</span><br><span class="line">    redEigVects = eigVects[:,eigValInd]</span><br><span class="line">    lowDDataMat = meanRemoved * redEigVects</span><br><span class="line">    reconMat = (lowDDataMat * redEigVects.T) + meanVals</span><br><span class="line">    <span class="keyword">return</span> lowDDataMat,reconMat</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;其中输出lowDataMat为降维后的样本集，而reconMat为转换到新空间的样本集<br>&emsp;&emsp;测试代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pca</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">dataMat = pca.loadDataSet(<span class="string">'testSet.txt'</span>)</span><br><span class="line">lowDMat,reconMat = pca.pca(dataMat,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">fig = plt.figure()</span><br><span class="line">ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">ax.scatter(dataMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>],dataMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],marker=<span class="string">'^'</span>,s=<span class="number">90</span>)</span><br><span class="line">ax.scatter(reconMat[:,<span class="number">0</span>].flatten().A[<span class="number">0</span>],reconMat[:,<span class="number">1</span>].flatten().A[<span class="number">0</span>],marker=<span class="string">'o'</span>,s=<span class="number">50</span>,c=<span class="string">'red'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;当测试用参数为1，即保留一个特征，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lowDMat,reconMat = pca.pca(dataMat,1)</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;测试“lowDMat”输出如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">python run.py </span><br><span class="line">[[ -2.51033597e+00]</span><br><span class="line"> [ -2.86915379e+00]</span><br><span class="line"> [  9.74108510e-02]</span><br><span class="line"> ..., </span><br><span class="line"> [ -5.01662249e-01]</span><br><span class="line"> [ -5.89871235e-02]</span><br><span class="line"> [ -1.89787138e-01]]</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;测试“reconMat”输出如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/PCA1.png" alt="Markdown"><br>&emsp;&emsp;当测试用参数为2，即保留二维特征：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lowDMat,reconMat = pca.pca(dataMat,2)</span><br></pre></td></tr></table></figure></p>
+<p>&emsp;&emsp;测试“lowDMat”输出如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">python run.py </span><br><span class="line">[[<span class="number">-2.51033597</span>  <span class="number">0.15840394</span>]</span><br><span class="line"> [<span class="number">-2.86915379</span>  <span class="number">0.5092619</span> ]</span><br><span class="line"> [ <span class="number">0.09741085</span> <span class="number">-0.20728318</span>]</span><br><span class="line"> ..., </span><br><span class="line"> [<span class="number">-0.50166225</span> <span class="number">-0.62056456</span>]</span><br><span class="line"> [<span class="number">-0.05898712</span> <span class="number">-0.02335614</span>]</span><br><span class="line"> [<span class="number">-0.18978714</span> <span class="number">-1.37276015</span>]]</span><br></pre></td></tr></table></figure></p>
 <p>&emsp;&emsp;测试“reconMat”输出如下：<br><img src="http://p33eqsoxi.bkt.clouddn.com/image/machineLearning/PCA2.png" alt="Markdown"></p>
 <h2 id="算法应用"><a href="#算法应用" class="headerlink" title="算法应用"></a>算法应用</h2><p>&emsp;&emsp;主成分分析方法有许多应用，最直接的用法就是降低数据集的维度进行可视化；另一个常用应用则是在进行监督学习之前对于样本进行预处理；另一方面，当数据收受到噪声影响时，最小的特征值所对应的特征向量往往与噪声有关，将其舍去可以在一定程度上起到去噪的作用。</p>
 
@@ -706,7 +694,24 @@
   
 
 
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
 
 
 

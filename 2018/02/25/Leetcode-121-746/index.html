@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="前言&amp;emsp;&amp;emsp;由于之前算法相关的题目刷的比较少，但是算法题目是目前评价程序员的指标之一，所以接下来要好好练习算法的题目。并且为了熟悉java，因此之后一段时间会用java来写。 Leetcode 121题目&amp;emsp;&amp;emsp;原题描述如下如下：    Say you have an array for which the ith element is the price of a">
+<meta name="description" content="前言&amp;emsp;&amp;emsp;由于之前算法相关的题目刷的比较少，但是算法题目是目前评价程序员的指标之一，所以接下来要好好练习算法的题目。并且为了熟悉java，因此之后一段时间会用java来写。 Leetcode 121题目&amp;emsp;&amp;emsp;原题描述如下如下：   Say you have an array for which the ith element is the price of a">
 <meta name="keywords" content="Programming,Leetcode,Array">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Leetcode-121&amp;746">
 <meta property="og:url" content="http://yoursite.com/2018/02/25/Leetcode-121-746/index.html">
 <meta property="og:site_name" content="SuperYanyann&#39;s World">
-<meta property="og:description" content="前言&amp;emsp;&amp;emsp;由于之前算法相关的题目刷的比较少，但是算法题目是目前评价程序员的指标之一，所以接下来要好好练习算法的题目。并且为了熟悉java，因此之后一段时间会用java来写。 Leetcode 121题目&amp;emsp;&amp;emsp;原题描述如下如下：    Say you have an array for which the ith element is the price of a">
+<meta property="og:description" content="前言&amp;emsp;&amp;emsp;由于之前算法相关的题目刷的比较少，但是算法题目是目前评价程序员的指标之一，所以接下来要好好练习算法的题目。并且为了熟悉java，因此之后一段时间会用java来写。 Leetcode 121题目&amp;emsp;&amp;emsp;原题描述如下如下：   Say you have an array for which the ith element is the price of a">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-02-25T06:35:46.625Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Leetcode-121&amp;746">
-<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;由于之前算法相关的题目刷的比较少，但是算法题目是目前评价程序员的指标之一，所以接下来要好好练习算法的题目。并且为了熟悉java，因此之后一段时间会用java来写。 Leetcode 121题目&amp;emsp;&amp;emsp;原题描述如下如下：    Say you have an array for which the ith element is the price of a">
+<meta name="twitter:description" content="前言&amp;emsp;&amp;emsp;由于之前算法相关的题目刷的比较少，但是算法题目是目前评价程序员的指标之一，所以接下来要好好练习算法的题目。并且为了熟悉java，因此之后一段时间会用java来写。 Leetcode 121题目&amp;emsp;&amp;emsp;原题描述如下如下：   Say you have an array for which the ith element is the price of a">
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>Leetcode-121&746 | SuperYanyann's World</title>
+  <title>Leetcode-121&746 | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -145,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -355,16 +355,14 @@
         <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>&emsp;&emsp;由于之前算法相关的题目刷的比较少，但是算法题目是目前评价程序员的指标之一，所以接下来要好好练习算法的题目。并且为了熟悉java，因此之后一段时间会用java来写。</p>
 <h1 id="Leetcode-121"><a href="#Leetcode-121" class="headerlink" title="Leetcode 121"></a>Leetcode 121</h1><h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>&emsp;&emsp;原题描述如下如下：</p>
 <blockquote>
-</blockquote>
 <ul>
 <li>Say you have an array for which the ith element is the price of a given stock on day i.<br>If you were only permitted to complete at most one transaction (ie, buy one and sell one share of the stock), design an algorithm to find the maximum profit.</li>
 <li>Example 1:<br>Input: [7, 1, 5, 3, 6, 4]<br>Output: 5<br>max. difference = 6-1 = 5 (not 7-1 = 6, as selling price needs to be larger than buying price)</li>
 <li>Example 2:<br>Input: [7, 6, 4, 3, 1]<br>Output: 0<br>In this case, no transaction is done, i.e. max profit = 0.</li>
 </ul>
+</blockquote>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>&emsp;&emsp;这道题目我一开始的思路错误。<strong>错误的思路</strong>的是先遍历一遍找到最小值，然后在最小值之后的点中找到最大值，两者做差为最大利润。错误的原因在于最大利润可能出现在最小值点之前，例如当cost为[2,3,7,1,2]时，最大利润为(7-2)，在“1”之前。</p>
-<h2 id="求解"><a href="#求解" class="headerlink" title="求解"></a>求解</h2><p>&emsp;&emsp;实现参考“Solution”的思路。分别记录当前的最小价格值和最大利润值。先进行最小价格值的记录，然后进行最大利润值的记录，这样在更新最下价格值之后仍然记录了之前的最大利润值，只有当在当前最小价格之后出现更大的利润之后才能更新。<br>&emsp;&emsp;代码实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span> prices[])</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> minprice = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">int</span> maxprofit = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; prices.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (prices[i] &lt; minprice)</span><br><span class="line">                minprice = prices[i];</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (prices[i] - minprice &gt; maxprofit)</span><br><span class="line">                maxprofit = prices[i] - minprice;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxprofit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h2 id="求解"><a href="#求解" class="headerlink" title="求解"></a>求解</h2><p>&emsp;&emsp;实现参考“Solution”的思路。分别记录当前的最小价格值和最大利润值。先进行最小价格值的记录，然后进行最大利润值的记录，这样在更新最下价格值之后仍然记录了之前的最大利润值，只有当在当前最小价格之后出现更大的利润之后才能更新。<br>&emsp;&emsp;代码实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span> prices[])</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> minprice = Integer.MAX_VALUE;</span><br><span class="line">        <span class="keyword">int</span> maxprofit = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; prices.length; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (prices[i] &lt; minprice)</span><br><span class="line">                minprice = prices[i];</span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span> (prices[i] - minprice &gt; maxprofit)</span><br><span class="line">                maxprofit = prices[i] - minprice;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> maxprofit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>&emsp;&emsp;Complexity Analysis：<br>&emsp;&emsp;&emsp;Time complexity : $O(n)$<br>&emsp;&emsp;&emsp;Space complexity : $O(1)$</p>
 <h1 id="Leetcode-746"><a href="#Leetcode-746" class="headerlink" title="Leetcode 746"></a>Leetcode 746</h1><h2 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h2><p>&emsp;&emsp;原题描述如下：</p>
 <blockquote>
@@ -374,9 +372,7 @@
 <li>Example 2:<br>Input: cost = [1, 100, 1, 1, 1, 100, 1, 1, 100, 1]<br>Output: 6<br>Explanation: Cheapest is start on cost[0], and only step on 1s, skipping cost[3].</li>
 </ul>
 </blockquote>
-<h2 id="求解-1"><a href="#求解-1" class="headerlink" title="求解"></a>求解</h2><p>&emsp;&emsp;求解思路参考“Solution”。这是一个动态规划问题。既然是动态规划问题，应该考虑的是发现它的重叠子问题，并且寻找状态以及状态转移方程。在参考解决代码之后，还原其求解思路如下：<br>&emsp;&emsp;以Example 2为例，数组为[1,100,1,1,1,100,1,1,100,1],从反向来考虑，要解决这个问题，其最小子问题是只有最后一位的情况，即[1],然后是只有最后两位的情况[100,1]，以此类推。问题的状态就是到第i步时最小的值，只不过是从后向前进行的，而新的问题最小值f[i]是在f[i+1]和f[i+2]已知的情况下要求求解的，所以有f[i] = cost[i] + min(f[i+1],f[i+2])，这样就得到了状态转移方程。<br>&emsp;&emsp;实现的时候定义f1和f2分别记录f[i+1]和f[i+2],然后用f0作为每轮更新的f[i]，之后只需要三者逐次更替即可。<br>&emsp;&emsp;代码实现如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minCostClimbingStairs</span><span class="params">(<span class="keyword">int</span>[] cost)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> f1 = <span class="number">0</span>, f2 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = cost.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">            <span class="keyword">int</span> f0 = cost[i] + Math.min(f1, f2);</span><br><span class="line">            f2 = f1;</span><br><span class="line">            f1 = f0;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Math.min(f1, f2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h2 id="求解-1"><a href="#求解-1" class="headerlink" title="求解"></a>求解</h2><p>&emsp;&emsp;求解思路参考“Solution”。这是一个动态规划问题。既然是动态规划问题，应该考虑的是发现它的重叠子问题，并且寻找状态以及状态转移方程。在参考解决代码之后，还原其求解思路如下：<br>&emsp;&emsp;以Example 2为例，数组为[1,100,1,1,1,100,1,1,100,1],从反向来考虑，要解决这个问题，其最小子问题是只有最后一位的情况，即[1],然后是只有最后两位的情况[100,1]，以此类推。问题的状态就是到第i步时最小的值，只不过是从后向前进行的，而新的问题最小值f[i]是在f[i+1]和f[i+2]已知的情况下要求求解的，所以有f[i] = cost[i] + min(f[i+1],f[i+2])，这样就得到了状态转移方程。<br>&emsp;&emsp;实现的时候定义f1和f2分别记录f[i+1]和f[i+2],然后用f0作为每轮更新的f[i]，之后只需要三者逐次更替即可。<br>&emsp;&emsp;代码实现如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">minCostClimbingStairs</span><span class="params">(<span class="keyword">int</span>[] cost)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> f1 = <span class="number">0</span>, f2 = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = cost.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">            <span class="keyword">int</span> f0 = cost[i] + Math.min(f1, f2);</span><br><span class="line">            f2 = f1;</span><br><span class="line">            f1 = f0;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> Math.min(f1, f2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>&emsp;&emsp;Complexity Analysis：<br>&emsp;&emsp;&emsp;Time complexity : $O(n)$<br>&emsp;&emsp;&emsp;Space complexity : $O(1)$</p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;121和746是Array中两个easy的题目，但是做起来还是有点困难，看来练习是很必要的。</p>
 
@@ -778,7 +774,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

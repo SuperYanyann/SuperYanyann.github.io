@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="#Optimization-Constrained  标签： Optimization Math  概述&amp;emsp;&amp;emsp;约束优化问题(Constrained-Optimization)在实际应用中很常用，之前在参加数学建模竞赛的时候也处理过一些约束优化问题，但是一直没有一个比较系统的整理，所以这几天稍微整理了下约束优化问题的一些知识点。 分类问题分类&amp;emsp;&amp;emsp;单目标的约束优化">
+<meta name="description" content="Optimization-Constrained标签： Optimization Math  概述&amp;emsp;&amp;emsp;约束优化问题(Constrained-Optimization)在实际应用中很常用，之前在参加数学建模竞赛的时候也处理过一些约束优化问题，但是一直没有一个比较系统的整理，所以这几天稍微整理了下约束优化问题的一些知识点。 分类问题分类&amp;emsp;&amp;emsp;单目标的约束优化问题可">
 <meta name="keywords" content="Math,Optimization">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Optimization-Constrained">
 <meta property="og:url" content="http://yoursite.com/2018/02/02/Optimization-Constrained/index.html">
 <meta property="og:site_name" content="SuperYanyann&#39;s World">
-<meta property="og:description" content="#Optimization-Constrained  标签： Optimization Math  概述&amp;emsp;&amp;emsp;约束优化问题(Constrained-Optimization)在实际应用中很常用，之前在参加数学建模竞赛的时候也处理过一些约束优化问题，但是一直没有一个比较系统的整理，所以这几天稍微整理了下约束优化问题的一些知识点。 分类问题分类&amp;emsp;&amp;emsp;单目标的约束优化">
+<meta property="og:description" content="Optimization-Constrained标签： Optimization Math  概述&amp;emsp;&amp;emsp;约束优化问题(Constrained-Optimization)在实际应用中很常用，之前在参加数学建模竞赛的时候也处理过一些约束优化问题，但是一直没有一个比较系统的整理，所以这几天稍微整理了下约束优化问题的一些知识点。 分类问题分类&amp;emsp;&amp;emsp;单目标的约束优化问题可">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2018-02-02T00:53:07.605Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Optimization-Constrained">
-<meta name="twitter:description" content="#Optimization-Constrained  标签： Optimization Math  概述&amp;emsp;&amp;emsp;约束优化问题(Constrained-Optimization)在实际应用中很常用，之前在参加数学建模竞赛的时候也处理过一些约束优化问题，但是一直没有一个比较系统的整理，所以这几天稍微整理了下约束优化问题的一些知识点。 分类问题分类&amp;emsp;&amp;emsp;单目标的约束优化">
+<meta name="twitter:description" content="Optimization-Constrained标签： Optimization Math  概述&amp;emsp;&amp;emsp;约束优化问题(Constrained-Optimization)在实际应用中很常用，之前在参加数学建模竞赛的时候也处理过一些约束优化问题，但是一直没有一个比较系统的整理，所以这几天稍微整理了下约束优化问题的一些知识点。 分类问题分类&amp;emsp;&amp;emsp;单目标的约束优化问题可">
 
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>Optimization-Constrained | SuperYanyann's World</title>
+  <title>Optimization-Constrained | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -145,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -352,8 +352,7 @@
       
 
       
-        <p>#Optimization-Constrained </p>
-<p>标签： Optimization Math</p>
+        <h1 id="Optimization-Constrained"><a href="#Optimization-Constrained" class="headerlink" title="Optimization-Constrained"></a>Optimization-Constrained</h1><p>标签： Optimization Math</p>
 <hr>
 <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;约束优化问题(Constrained-Optimization)在实际应用中很常用，之前在参加数学建模竞赛的时候也处理过一些约束优化问题，但是一直没有一个比较系统的整理，所以这几天稍微整理了下约束优化问题的一些知识点。</p>
 <h1 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h1><h2 id="问题分类"><a href="#问题分类" class="headerlink" title="问题分类"></a>问题分类</h2><p>&emsp;&emsp;单目标的约束优化问题可以分为三类：<br>&emsp;&emsp;&emsp;1.仅有等式约束的优化问题(IP)<br>&emsp;&emsp;&emsp;2.仅有不等式约束的优化问题(EP)<br>&emsp;&emsp;&emsp;3.一般约束优化问题(GP)<br>&emsp;&emsp;其中一般优化问题的约束条件包含了等式和不等式。</p>
@@ -361,8 +360,16 @@
 <h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><p>&emsp;&emsp;下面我们来熟悉下几个比较常见的约束优化方法的具体思路。</p>
 <h2 id="可行方向法"><a href="#可行方向法" class="headerlink" title="可行方向法"></a>可行方向法</h2><p>&emsp;&emsp;其基本思路是在可行域内选择一个初始点，然后开始迭代；每次迭代的过程中选择合适的搜索方向和步长，知道目标函数收敛。需要满足的条件是每次的迭代点都应该在可行域之内，并且无特殊情况下应该使目标函数得到优化。<br>&emsp;&emsp;可行方向法只是一个类似于下降方法的一般框架，其具体的实现应该选择合适的寻找搜索方向和步长的方法。举一个例子来说，就是等式约束的Newton方法，其初始点给定一个可行域内的点，之后的迭代过程与无约束问题下的Newton方法的迭代过程完全一样，原因是Newton在初始点可行的条件下，每次的迭代点都是可行的，这个性质可以进行证明。<br>&emsp;&emsp;有些资料上说可行方方向方法仅适用于不等式约束的优化问题，但是并没有给出详细的原因，个人认为这种说法是错误的，因为等式约束下的Newton方法是可行的。</p>
 <h2 id="复合形法"><a href="#复合形法" class="headerlink" title="复合形法"></a>复合形法</h2><p>&emsp;&emsp;复合行的定义是在$n$维空间中，由$k\geqslant n+1$个点组成的多面体。<br>&emsp;&emsp;其实现的思路是在可行域内构造一个$k$个顶点的初始复合形，比较复合形的各顶点值，并去掉坏点，然后根据一定法则求出目标函数值优化的新点，用新点代替坏点，构成新的复合形，优化一步；之后重复此步骤直到逼近最优点。<br>&emsp;&emsp;复合形法是单纯形法的一种发展，具体实现中，新点的选择方法包括映射法，收缩法，扩张法等。</p>
-<h2 id="罚函数法"><a href="#罚函数法" class="headerlink" title="罚函数法"></a>罚函数法</h2><p>&emsp;&emsp;罚函数法考虑一般形式的约束优化问题：<br>$$ minimize\  f(x)<br>\ subject\ to\ x\in \Omega$$<br>&emsp;&emsp;其思路是将约束优化问题近似处理为如下的无约束优化：<br>$$minimize\ f(x)+\gamma P(x)$$<br>&emsp;&emsp;其中$\gamma$称为惩罚因子，$P(x)$称为罚函数，罚函数的定义为：<br>&emsp;&emsp;&emsp;对于上述有约束优化问题，如果满足下列3个条件，则称函数$P$为罚函数：<br>&emsp;&emsp;&emsp;&emsp;1.$P$是连续的<br>&emsp;&emsp;&emsp;&emsp;2.对所有的$x\in R^n$，$P(x) \geqslant 0$成立<br>&emsp;&emsp;&emsp;&emsp;3.$P(x)=0$当且仅当$x$是可行点<br>&emsp;&emsp;在这样的定义下，我们可以发现当$x$在可行域内时，罚函数为0，当$x$在可行域外时，因为$\gamma$的作用，$\gamma P(x)$会为一个较大的值，因此近似处理后目标方程不会选择可行域外的点。为了使得无约束化问题能够更好地近似约束优化，需要选择合适的罚函数。<br>&emsp;&emsp;常用的发函数法包括外点法和内点法，外点法的迭代初期是在可行域之外进行的，内点法的迭代则是严格在可行域内进行。</p>
-<h2 id="拉格朗日法"><a href="#拉格朗日法" class="headerlink" title="拉格朗日法"></a>拉格朗日法</h2><p>&emsp;&emsp;这里的拉格朗日法是基于拉格朗日函数的求解方法，其基本思路是利用梯度法更新参数并同时更新拉格朗日乘子。<br>&emsp;&emsp;拉格朗日乘子一般表示如下，其中$h(x)$为等式约束,$g(x)$为不等式约束：<br>$$l(x,\lambda,\mu)=f(x)+\lambda^\top h(x)+\mu^\top g(x)$$<br>&emsp;&emsp;对于仅包含等式约束的拉格朗日法迭代如下：<br>$$x^{(k+1)}=x^{(k)}-\alpha <em>k(\nabla f(x^{(k)})+Dh(x^{(k)})^\top \lambda^{(k)})<br>\\lambda^{(k+1)}=\lambda^{(k)}+\beta_k h(x^{(k)})$$<br>&emsp;&emsp;对于仅包含不等式约束的拉格朗日法迭代如下：<br>$$x^{(k+1)}=x^{(k)}-\alpha _k(\nabla f(x^{(k)})+Dg(x^{(k)})^\top \mu^{(k)})<br>\\mu^{(k+1)}=[\mu^{(k)}+\beta_k g(x^{(k)})]</em>+$$<br>&emsp;&emsp;其中$[\cdot]_+ = max{\cdot , 0}$。该方法的详细介绍可以参考《最优化导论》一书。</p>
+<h2 id="罚函数法"><a href="#罚函数法" class="headerlink" title="罚函数法"></a>罚函数法</h2><p>&emsp;&emsp;罚函数法考虑一般形式的约束优化问题：</p>
+<script type="math/tex; mode=display">minimize\  f(x)
+\\ subject\ to\ x\in \Omega</script><p>&emsp;&emsp;其思路是将约束优化问题近似处理为如下的无约束优化：</p>
+<script type="math/tex; mode=display">minimize\ f(x)+\gamma P(x)</script><p>&emsp;&emsp;其中$\gamma$称为惩罚因子，$P(x)$称为罚函数，罚函数的定义为：<br>&emsp;&emsp;&emsp;对于上述有约束优化问题，如果满足下列3个条件，则称函数$P$为罚函数：<br>&emsp;&emsp;&emsp;&emsp;1.$P$是连续的<br>&emsp;&emsp;&emsp;&emsp;2.对所有的$x\in R^n$，$P(x) \geqslant 0$成立<br>&emsp;&emsp;&emsp;&emsp;3.$P(x)=0$当且仅当$x$是可行点<br>&emsp;&emsp;在这样的定义下，我们可以发现当$x$在可行域内时，罚函数为0，当$x$在可行域外时，因为$\gamma$的作用，$\gamma P(x)$会为一个较大的值，因此近似处理后目标方程不会选择可行域外的点。为了使得无约束化问题能够更好地近似约束优化，需要选择合适的罚函数。<br>&emsp;&emsp;常用的发函数法包括外点法和内点法，外点法的迭代初期是在可行域之外进行的，内点法的迭代则是严格在可行域内进行。</p>
+<h2 id="拉格朗日法"><a href="#拉格朗日法" class="headerlink" title="拉格朗日法"></a>拉格朗日法</h2><p>&emsp;&emsp;这里的拉格朗日法是基于拉格朗日函数的求解方法，其基本思路是利用梯度法更新参数并同时更新拉格朗日乘子。<br>&emsp;&emsp;拉格朗日乘子一般表示如下，其中$h(x)$为等式约束,$g(x)$为不等式约束：</p>
+<script type="math/tex; mode=display">l(x,\lambda,\mu)=f(x)+\lambda^\top h(x)+\mu^\top g(x)</script><p>&emsp;&emsp;对于仅包含等式约束的拉格朗日法迭代如下：</p>
+<script type="math/tex; mode=display">x^{(k+1)}=x^{(k)}-\alpha _k(\nabla f(x^{(k)})+Dh(x^{(k)})^\top \lambda^{(k)})
+\\\lambda^{(k+1)}=\lambda^{(k)}+\beta_k h(x^{(k)})</script><p>&emsp;&emsp;对于仅包含不等式约束的拉格朗日法迭代如下：</p>
+<script type="math/tex; mode=display">x^{(k+1)}=x^{(k)}-\alpha _k(\nabla f(x^{(k)})+Dg(x^{(k)})^\top \mu^{(k)})
+\\\mu^{(k+1)}=[\mu^{(k)}+\beta_k g(x^{(k)})]_+</script><p>&emsp;&emsp;其中$[\cdot]_+ = max\{\cdot , 0\}$。该方法的详细介绍可以参考《最优化导论》一书。</p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;本次只是熟悉了下约束优化的整体思路。</p>
 
       
@@ -542,7 +549,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分类"><span class="nav-number">2.</span> <span class="nav-text">分类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题分类"><span class="nav-number">2.1.</span> <span class="nav-text">问题分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法分类"><span class="nav-number">2.2.</span> <span class="nav-text">方法分类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">3.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可行方向法"><span class="nav-number">3.1.</span> <span class="nav-text">可行方向法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复合形法"><span class="nav-number">3.2.</span> <span class="nav-text">复合形法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#罚函数法"><span class="nav-number">3.3.</span> <span class="nav-text">罚函数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日法"><span class="nav-number">3.4.</span> <span class="nav-text">拉格朗日法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Optimization-Constrained"><span class="nav-number">1.</span> <span class="nav-text">Optimization-Constrained</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分类"><span class="nav-number">3.</span> <span class="nav-text">分类</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题分类"><span class="nav-number">3.1.</span> <span class="nav-text">问题分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法分类"><span class="nav-number">3.2.</span> <span class="nav-text">方法分类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">4.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#可行方向法"><span class="nav-number">4.1.</span> <span class="nav-text">可行方向法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复合形法"><span class="nav-number">4.2.</span> <span class="nav-text">复合形法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#罚函数法"><span class="nav-number">4.3.</span> <span class="nav-text">罚函数法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拉格朗日法"><span class="nav-number">4.4.</span> <span class="nav-text">拉格朗日法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>
@@ -761,7 +768,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 

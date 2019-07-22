@@ -7,7 +7,7 @@
 
 <html class="theme-next muse use-motion" lang="zh-Hans">
 <head><meta name="generator" content="Hexo 3.9.0">
-  <meta charset="UTF-8">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="theme-color" content="#222">
@@ -128,7 +128,7 @@
 
 
 
-  <title>MachineLearning-CART&XGboost | SuperYanyann's World</title>
+  <title>MachineLearning-CART&XGboost | SuperYanyann's World</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -147,7 +147,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -355,14 +355,27 @@
 
       
         <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>&emsp;&emsp;前几天参加的一个天池的比赛中，尝试使用了XGboost的方法进行回归预测，效果尚可，单模型当日提交的排名为第二。但是当时对于XGboost的原理还不是很了解，因此利用这几天的时间学习了一下相关的概念和推导,并进行了汇总的工作，用以悉决策树和XGboost。</p>
-<h1 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h1><h2 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h2><p>&emsp;&emsp;决策树算法是利用样本点的特征属性对样本进行分类或者回归分析，其方式是选择样本的特征属性作为树的节点来构成树，目的是希望决策树的分支节点所包含的样本尽可能属于同一类别，即使节点的纯度越来越高。<br>&emsp;&emsp;决策树可以分为分类决策书和回归决策树。回归树与分类树的思路类似，但叶节点的数据类型不是离散型，而是连续型。需要注意的是，回归树节点虽然返回的是非离散的值，但是返回的是“一团”数据的均值，而不是具体的、连续的预测值（即训练数据的标签值虽然是连续的，但回归树的预测值却只能是离散的）。从预测值连续这个意义上严格来说，回归树不能称之为“回归算法”。所以回归树其实也可以算为“分类”算法。详细可见<a href="https://blog.csdn.net/suipingsp/article/details/42264413" target="_blank" rel="noopener">suipingsp:机器学习经典算法详解及Python实现–CART分类决策树、回归树和模型树</a>。<br>&emsp;&emsp;与决策书相关的操作还有预防过拟合的剪枝操作，包括预剪枝和后剪枝，相关介绍详见周志华老师的西瓜书。</p>
+<h1 id="相关知识"><a href="#相关知识" class="headerlink" title="相关知识"></a>相关知识</h1><h2 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h2><p>&emsp;&emsp;决策树算法是利用样本点的特征属性对样本进行分类或者回归分析，其方式是选择样本的特征属性作为树的节点来构成树，目的是希望决策树的分支节点所包含的样本尽可能属于同一类别，即使节点的纯度越来越高。<br>&emsp;&emsp;决策树可以分为分类决策书和回归决策树。回归树与分类树的思路类似，但叶节点的数据类型不是离散型，而是连续型。需要注意的是，回归树节点虽然返回的是非离散的值，但是返回的是“一团”数据的均值，而不是具体的、连续的预测值（即训练数据的标签值虽然是连续的，但回归树的预测值却只能是离散的）。从预测值连续这个意义上严格来说，回归树不能称之为“回归算法”。所以回归树其实也可以算为“分类”算法。详细可见<a href="https://blog.csdn.net/suipingsp/article/details/42264413" target="_blank" rel="noopener">suipingsp:机器学习经典算法详解及Python实现—CART分类决策树、回归树和模型树</a>。<br>&emsp;&emsp;与决策书相关的操作还有预防过拟合的剪枝操作，包括预剪枝和后剪枝，相关介绍详见周志华老师的西瓜书。</p>
 <h2 id="集成学习"><a href="#集成学习" class="headerlink" title="集成学习"></a>集成学习</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>&emsp;&emsp;集成学习（ensemble learning）通过构建并结合多个学习器来完成学习任务，有时被称为多分类器系统。其一般结构是先产生一组“个体学习器”，然后再利用一定的策略将它们结合起来。个体学习器通常由现有的学习算法从训练数据中产生。若集成中仅包含同种类型的个体学习器，这样的集成称为“同质”的，个体学习器称为“基学习算法”；若集成中包含不同类型的个体学习器，这样的集成称为“异质”的，个体学习器称为“组件学习器”。如何产生并结合“好而不同”的个体学习器是集成学习的核心。根据个体学习器的生成方式，目前的集成学习方法大致分为两大类，即个体学习器之间存在强依赖关系的Boosting，和个体学习器之间不存在强依赖关系的Bagging和“随机森林”(Random Forest)。</p>
 <h3 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h3><p>&emsp;&emsp;Boosting是一族可将弱学习器提升为强学习器的算法，其工作机制为：先从初始训练集训练出一个基学习器，在根据学习器的表现对训练样本分布进行调整，使得先前基学习器做错的训练样本在后续受到更多的关注，后基于调整后的样本分布训练出下一个基学习器。最终将所得到的基学习器进行加权结合。Boosting算法最著名的代表是AdaBoost，相关介绍详见西瓜书。需要指出的是，本文所涉及的GBDT算法和XGboost算法都是属于Boosting的。</p>
 <h3 id="Bagging和随机森林"><a href="#Bagging和随机森林" class="headerlink" title="Bagging和随机森林"></a>Bagging和随机森林</h3><p>&emsp;&emsp;Bagging直接基于自助采样法。它从给定的m个样本的数据集中，进行m次随机采样，得到一个样本容量为m的样本集，进行训练。重复此方法T次，从而得到T个基学习器，再进行结合。Bagging对于分类问题采用的方法通常为简单投票法，对于回归问题使用的通常为简单平均法。从偏差-方差的角度来看，Bagging主要关注的问题是减低模型的方差，因此在不剪枝的决策树等易收到样本扰动的学习器上效果更为明显。<br>&emsp;&emsp;随机森林是Bagging的一个扩展。随机森林在Bagging的基础上，进一步在训练的过程中引入了随机属性选择。即从该节点的属性中随机选择出一个包含k个属性的子集，然后从这个子集中选择出一个最优的属性用于划分。其在样本扰动的基础上增加属性扰动，使得最终集成的泛化性能通过个体学习器之间的差异度的增加而进一步增加。</p>
-<h1 id="From-CART-to-XGboost"><a href="#From-CART-to-XGboost" class="headerlink" title="From CART to XGboost"></a>From CART to XGboost</h1><h2 id="ID3-amp-C4-5"><a href="#ID3-amp-C4-5" class="headerlink" title="ID3&amp;C4.5"></a>ID3&amp;C4.5</h2><p>&emsp;&emsp;在介绍CART之前先用两个常见的分类决策树模型来熟悉一下。之前说过，决策树的目的是提升树的结点的“纯度”。我们知道在一个物理系统中，熵用来度量这个系统的混乱程度。“信息熵”则是用来度量样本集合纯度的常用指标。其值越小，则样本集的纯度越高。假定当前样本集合$D$中第$k$类样本所占的比例为$p_k$，则有$D$的信息熵为：<br>$$ Ent(D) = -\sum\limits^{|Y|}<em>{k=1}p_k log_2 p_k $$<br>&emsp;&emsp;为了使得我们模型的结点的纯度最高，选择合适的样本特征作为树的结点就是一个很重要的工作。<br>&emsp;&emsp;ID3决策树算法使用的特征属性选择的标准是“信息增益”，其值越大则证明使用此属性划分所获得的纯度提升越大。属性a对样本集D进行划分所获得的“信息增益”为<br>$$ Gain(D,a) = Ent(D) - \sum\limits^{V}</em>{v=1} \frac{|D^v|}{|D|} Ent(D^v) $$<br>&emsp;&emsp;进行决策树每层结点属性选择的时候，分别计算该属性对样本进行划分的Gain值，然后选择值最大的属性作为结点划分的属性。但是这样做有一个缺点，就是信息增益准侧对于可取数目较多的属性有多偏好。<br>&emsp;&emsp;C4.5决策树模型所使用的增益率对信息增益进行的改进，并利用增益率进行属性的选择，其定义为<br>$$ Gain_raion(D,a) = \frac{Gain(D,a)}{IV(a)}<br>\ IV(a) = - \sum\limits^{V}_{v=1} \frac{|D^v|}{|D|} log_2 \frac{|D^v|}{|D|}$$<br>&emsp;&emsp;需要注意的是，增益率对于可取数目较少的属性有所偏好，因此C4.5不是直接选择增益率最大的候选划分属性，而是使用了一个启发式的策略：先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择信息率最高的属性作为结点属性。</p>
+<h1 id="From-CART-to-XGboost"><a href="#From-CART-to-XGboost" class="headerlink" title="From CART to XGboost"></a>From CART to XGboost</h1><h2 id="ID3-amp-C4-5"><a href="#ID3-amp-C4-5" class="headerlink" title="ID3&amp;C4.5"></a>ID3&amp;C4.5</h2><p>&emsp;&emsp;在介绍CART之前先用两个常见的分类决策树模型来熟悉一下。之前说过，决策树的目的是提升树的结点的“纯度”。我们知道在一个物理系统中，熵用来度量这个系统的混乱程度。“信息熵”则是用来度量样本集合纯度的常用指标。其值越小，则样本集的纯度越高。假定当前样本集合$D$中第$k$类样本所占的比例为$p_k$，则有$D$的信息熵为：</p>
+<script type="math/tex; mode=display">Ent(D) = -\sum\limits^{|Y|}_{k=1}p_k log_2 p_k</script><p>&emsp;&emsp;为了使得我们模型的结点的纯度最高，选择合适的样本特征作为树的结点就是一个很重要的工作。<br>&emsp;&emsp;ID3决策树算法使用的特征属性选择的标准是“信息增益”，其值越大则证明使用此属性划分所获得的纯度提升越大。属性a对样本集D进行划分所获得的“信息增益”为</p>
+<script type="math/tex; mode=display">Gain(D,a) = Ent(D) - \sum\limits^{V}_{v=1} \frac{|D^v|}{|D|} Ent(D^v)</script><p>&emsp;&emsp;进行决策树每层结点属性选择的时候，分别计算该属性对样本进行划分的Gain值，然后选择值最大的属性作为结点划分的属性。但是这样做有一个缺点，就是信息增益准侧对于可取数目较多的属性有多偏好。<br>&emsp;&emsp;C4.5决策树模型所使用的增益率对信息增益进行的改进，并利用增益率进行属性的选择，其定义为</p>
+<script type="math/tex; mode=display">Gain\_raion(D,a) = \frac{Gain(D,a)}{IV(a)}
+\\ IV(a) = - \sum\limits^{V}_{v=1} \frac{|D^v|}{|D|} log_2 \frac{|D^v|}{|D|}</script><p>&emsp;&emsp;需要注意的是，增益率对于可取数目较少的属性有所偏好，因此C4.5不是直接选择增益率最大的候选划分属性，而是使用了一个启发式的策略：先从候选划分属性中找出信息增益高于平均水平的属性，再从中选择信息率最高的属性作为结点属性。</p>
 <h2 id="CART"><a href="#CART" class="headerlink" title="CART"></a>CART</h2><p>&emsp;&emsp;CART决策树可以生成回归树或分类树。</p>
-<h3 id="分类树"><a href="#分类树" class="headerlink" title="分类树"></a>分类树</h3><p>&emsp;&emsp;CART生成分类树的思路与ID3和C4.5相似，只是使用了不同的选择结点属性的判定指标，即基尼指数。对于数据集D，其纯度可用基尼值来度量：<br>$$ Gini(D) = \sum\limits^{|y|}<em>{k=1} \sum\limits</em>{ k’ \neq k} p_k p_{k’} = 1 - \sum\limits^{|y|}<em>{k=1}p_k^2 $$<br>&emsp;&emsp;$Gini(D)$反映了从数据集D中随机抽取两个样本，其类别标记不一致的概率。因此$Gini(D)$越小，则数据集D的纯度越高。属性a对于数据集D的基尼指数定义为：<br>$$ Gini_index(D,a) = \sum\limits</em>{v = 1}^{V} \frac{|D^v|}{|D|} Gini(D^v) $$<br>&emsp;&emsp;我们在候选属性集合A中，选择划分后基尼指数最小的属性作为最优划分属性。</p>
-<h3 id="回归树"><a href="#回归树" class="headerlink" title="回归树"></a>回归树</h3><p>&emsp;&emsp;一个回归树对应着输入空间的一个划分以及在划分的单元上的输出值。假设已将输入空间化为M个单元$R_1,R_2,…R_M$，并且在每个单元$R_m$上有一个固定的输出值$c_m$，于是回归树模型可以表示为：<br>$$ f(x) = \sum\limits^{M}<em>{m=1} c_m I (x \in R_m) $$<br>&emsp;&emsp;用平方误差来表示回归树对于训练数据的预测误差，用平方误差最小的准则求解每个单元上的最优输出值。可以得到单元$R_m$上的$\widehat c_m$的最优值是$R_m$上的所有输入实例$x_i$对应的输出$y_i$的均值，即：<br>$$ \widehat c_m = ave(y_i | x_i \in R_m) $$<br>&emsp;&emsp;现在问题的关键是如何对于输入空间进行划分。这里采用的是启发式的方法。选择第$j$个变量$x^{(j)}$和它的取值$s$，作为切分变量和切分点，并定义两个区域：<br>$$ R_1(j,s) = {x | x^{(j)} \leqslant s }<br>\ R_2(j,s) = {x | x^{(j)} \gt s  }$$<br>&emsp;&emsp;然后寻找最优的切分变量$j$和最优的切分点$s$,即求解：<br>$$ \min</em>{j,s} [ \min_{c_1} \sum\limits_{x_i \in R_1 (j,s)} (y_i - c_1)^2 +  \min_{c_2} \sum\limits_{x_i \in R_2 (j,s)} (y_i - c_2)^2] $$<br>&emsp;&emsp;对固定输入变量$j$ 可以找到最优的切分点$s$:<br>$$ \widehat c_1 = ave(y_i | x_i \in R_1(j,s))<br>\ \widehat c_2 = ave(y_i | x_i \in R_2(j,s))$$<br>&emsp;&emsp;遍历所有的输入变量，从而找到最优的切分变量$j$,构成$(j,s)$。依次将输入空间划分为两个区域。之后对于每个区域重复上述划分过程，直到满足停止条件位置，从而构成回归树，这样构成的回归树称为最小二乘回归树。整理后的算法伪代码可以参考李航的《统计学习方法》。</p>
+<h3 id="分类树"><a href="#分类树" class="headerlink" title="分类树"></a>分类树</h3><p>&emsp;&emsp;CART生成分类树的思路与ID3和C4.5相似，只是使用了不同的选择结点属性的判定指标，即基尼指数。对于数据集D，其纯度可用基尼值来度量：</p>
+<script type="math/tex; mode=display">Gini(D) = \sum\limits^{|y|}_{k=1} \sum\limits_{ k' \neq k} p_k p_{k'} = 1 - \sum\limits^{|y|}_{k=1}p_k^2</script><p>&emsp;&emsp;$Gini(D)$反映了从数据集D中随机抽取两个样本，其类别标记不一致的概率。因此$Gini(D)$越小，则数据集D的纯度越高。属性a对于数据集D的基尼指数定义为：</p>
+<script type="math/tex; mode=display">Gini\_index(D,a) = \sum\limits_{v = 1}^{V} \frac{|D^v|}{|D|} Gini(D^v)</script><p>&emsp;&emsp;我们在候选属性集合A中，选择划分后基尼指数最小的属性作为最优划分属性。</p>
+<h3 id="回归树"><a href="#回归树" class="headerlink" title="回归树"></a>回归树</h3><p>&emsp;&emsp;一个回归树对应着输入空间的一个划分以及在划分的单元上的输出值。假设已将输入空间化为M个单元$R_1,R_2,…R_M$，并且在每个单元$R_m$上有一个固定的输出值$c_m$，于是回归树模型可以表示为：</p>
+<script type="math/tex; mode=display">f(x) = \sum\limits^{M}_{m=1} c_m I (x \in R_m)</script><p>&emsp;&emsp;用平方误差来表示回归树对于训练数据的预测误差，用平方误差最小的准则求解每个单元上的最优输出值。可以得到单元$R_m$上的$\widehat c_m$的最优值是$R_m$上的所有输入实例$x_i$对应的输出$y_i$的均值，即：</p>
+<script type="math/tex; mode=display">\widehat c_m = ave(y_i | x_i \in R_m)</script><p>&emsp;&emsp;现在问题的关键是如何对于输入空间进行划分。这里采用的是启发式的方法。选择第$j$个变量$x^{(j)}$和它的取值$s$，作为切分变量和切分点，并定义两个区域：</p>
+<script type="math/tex; mode=display">R_1(j,s) = \{x | x^{(j)} \leqslant s \}
+\\ R_2(j,s) = \{x | x^{(j)} \gt s  \}</script><p>&emsp;&emsp;然后寻找最优的切分变量$j$和最优的切分点$s$,即求解：</p>
+<script type="math/tex; mode=display">\min_{j,s} [ \min_{c_1} \sum\limits_{x_i \in R_1 (j,s)} (y_i - c_1)^2 +  \min_{c_2} \sum\limits_{x_i \in R_2 (j,s)} (y_i - c_2)^2]</script><p>&emsp;&emsp;对固定输入变量$j$ 可以找到最优的切分点$s$:</p>
+<script type="math/tex; mode=display">\widehat c_1 = ave(y_i | x_i \in R_1(j,s)) 
+\\ \widehat c_2 = ave(y_i | x_i \in R_2(j,s))</script><p>&emsp;&emsp;遍历所有的输入变量，从而找到最优的切分变量$j$,构成$(j,s)$。依次将输入空间划分为两个区域。之后对于每个区域重复上述划分过程，直到满足停止条件位置，从而构成回归树，这样构成的回归树称为最小二乘回归树。整理后的算法伪代码可以参考李航的《统计学习方法》。</p>
 <h2 id="Boosting-Decision-Tree"><a href="#Boosting-Decision-Tree" class="headerlink" title="Boosting Decision Tree"></a>Boosting Decision Tree</h2><p>&emsp;&emsp; 提升树通常以决策树作为基学习器，对分类问题决策树是二叉分类树，回归问题就是二叉回归树。提升树是迭代多棵决策树来共同决策。当采用平方误差损失函数时，每一棵回归树学习的是之前所有树的结论和残差，拟合得到一个当前的残差回归树，残差的意义如公式：残差 = 真实值 - 预测值 。提升树即是整个迭代过程生成的回归树的累加。<br>&emsp;&emsp;提升树利用加法模型和前向分步算法实现学习的优化过程。关于加法模型和前向分步算法可以参考 <a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">ScorpioLu : GBDT原理详解</a>，此处不再过多描述。</p>
 <h2 id="Gradient-Boosting-Decision-Tree"><a href="#Gradient-Boosting-Decision-Tree" class="headerlink" title="Gradient Boosting Decision Tree"></a>Gradient Boosting Decision Tree</h2><p>&emsp;&emsp;在处理具体问题时，单一的回归树无法满足准确度。因此利用boosting方法，对回归树进行集成，得到的新模型就是提升树（Boosting Decision Tree），再进一步，可以得到梯度提升树（Gradient Boosting Decision Tree，GBDT）。<br>&emsp;&emsp;提升树使用的优化方法对于平方损失和指数损失函数，每一步的优化很简单。但对于一般的损失函数，往往每一步优化没那么容易。针对这一问题，Freidman提出了梯度提升算法：利用最速下降的近似方法，即利用损失函数的负梯度在当前模型的值，作为回归问题中提升树算法的残差的近似值，拟合一个回归树。<br>&emsp;&emsp;算法描述如下：<br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;<img src="https://upload-images.jianshu.io/upload_images/967544-37a15b71dc6f6ca3.png?imageMogr2/auto-orient/" alt="photo1"><br>&emsp;&emsp;算法过程推导见：<a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">ScorpioLu : GBDT原理详解</a>。</p>
 <h2 id="XGboost"><a href="#XGboost" class="headerlink" title="XGboost"></a>XGboost</h2><p>&emsp;&emsp;XGboost是对于GBDT的改良算法。首先，XGBoost在目标函数里加入了正则项，用于控制模型的复杂度；其次，传统的GBDT在优化时只用到一阶导数，XGBoost则对目标函数进行了二阶泰勒展开，同时用到了一阶和二阶导数。从这两点出发进行推导，推导过程见<a href="https://blog.csdn.net/legendavid/article/details/78904353" target="_blank" rel="noopener">legendavid : GBDT和XGboost介绍</a>。<br>&emsp;&emsp;对于XGboost和GBDT的区别，参考<a href="https://www.zhihu.com/question/41354392/answer/98658997" target="_blank" rel="noopener">wepon的回答</a>：</p>
@@ -393,7 +406,7 @@
 </blockquote>
 <h1 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h1><p>&emsp;&emsp;关于未集成的单一决策树代码实现可以参考<a href="https://www.manning.com/books/machine-learning-in-action" target="_blank" rel="noopener">Machine Leaning in Action</a>中第3章和第9章的代码实现。<br>&emsp;&emsp;关于XGboost包的使用，可以参考<a href="http://xgboost.apachecn.org/cn/latest/tutorials/index.html" target="_blank" rel="noopener">XGBoost 教程</a>。</p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>&emsp;&emsp;此篇文章主要是为了梳理从单一决策树到XGboost算法的关系及过程，关于GBDT和XGboost算法的推导以学习现有文章为主。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1] 周志华.机器学习<br>[2] 李航.统计学习方法<br>[3] Peter Harrington. Machine Leaning in Action<br>[4] 王超，陈帅华. xgboost导读和实战<br>[5] <a href="https://blog.csdn.net/suipingsp/article/details/42264413" target="_blank" rel="noopener">suipingsp : 机器学习经典算法详解及Python实现–CART分类决策树、回归树和模型树</a><br>[6] <a href="https://blog.csdn.net/weixin_40604987/article/details/79296427" target="_blank" rel="noopener">一个拉风的名字 : Regression Tree 回归树</a><br>[7] <a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">ScorpioLu : GBDT原理详解</a><br>[8] <a href="https://blog.csdn.net/legendavid/article/details/78904353" target="_blank" rel="noopener">legendavid : GBDT和XGboost介绍</a><br>[9] <a href="https://www.jianshu.com/p/005a4e6ac775" target="_blank" rel="noopener">SiyueLin : GBDT 梯度提升决策树</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>[1] 周志华.机器学习<br>[2] 李航.统计学习方法<br>[3] Peter Harrington. Machine Leaning in Action<br>[4] 王超，陈帅华. xgboost导读和实战<br>[5] <a href="https://blog.csdn.net/suipingsp/article/details/42264413" target="_blank" rel="noopener">suipingsp : 机器学习经典算法详解及Python实现—CART分类决策树、回归树和模型树</a><br>[6] <a href="https://blog.csdn.net/weixin_40604987/article/details/79296427" target="_blank" rel="noopener">一个拉风的名字 : Regression Tree 回归树</a><br>[7] <a href="https://www.cnblogs.com/ScorpioLu/p/8296994.html" target="_blank" rel="noopener">ScorpioLu : GBDT原理详解</a><br>[8] <a href="https://blog.csdn.net/legendavid/article/details/78904353" target="_blank" rel="noopener">legendavid : GBDT和XGboost介绍</a><br>[9] <a href="https://www.jianshu.com/p/005a4e6ac775" target="_blank" rel="noopener">SiyueLin : GBDT 梯度提升决策树</a></p>
 
       
     </div>
@@ -789,7 +802,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 
