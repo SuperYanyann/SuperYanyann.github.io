@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="SuperYanyann&#39;s World">
 <meta property="og:description" content="概述&amp;emsp;&amp;emsp;概率密度函数的估计是统计推断中一项重要的内容，而概率密度函数的估计方法分为两大类，即参数估计和非参数估计。我们简单的梳理下两种方法的思路和区别，并分别介绍两种思路下的几个具体的方法，并以介绍参数估计为主。 基本概念参数估计和非参数估计&amp;emsp;&amp;emsp;所谓参数估计方法和非参数估计方法都是针对概率密度函数的估计而言的。&amp;emsp;&amp;emsp;参数估计是指已知概率密度">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-22T02:36:01.620Z">
+<meta property="og:updated_time" content="2019-07-22T02:57:49.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MachineLearning-ParametricEstimation&amp;NonparametricEstimation">
 <meta name="twitter:description" content="概述&amp;emsp;&amp;emsp;概率密度函数的估计是统计推断中一项重要的内容，而概率密度函数的估计方法分为两大类，即参数估计和非参数估计。我们简单的梳理下两种方法的思路和区别，并分别介绍两种思路下的几个具体的方法，并以介绍参数估计为主。 基本概念参数估计和非参数估计&amp;emsp;&amp;emsp;所谓参数估计方法和非参数估计方法都是针对概率密度函数的估计而言的。&amp;emsp;&amp;emsp;参数估计是指已知概率密度">
@@ -376,7 +376,7 @@
 <script type="math/tex; mode=display">\nabla _ \theta = [ \frac{\partial}{\partial \theta _1} , \frac{\partial}{\partial \theta _2},...\frac{\partial}{\partial \theta _s} ]^T</script><p>&emsp;&emsp;然后利用：</p>
 <script type="math/tex; mode=display">\nabla _ \theta l(\theta) = 0</script><p>&emsp;&emsp;可以得到$s$个方程，方程组的解为对数似然函数的极值点。当有多个极值点的时候，需要比较极值的大小才能确定最大似然估计。<br>&emsp;&emsp;需要注意的是，这种求解方法并不适合与所有的概率密度形式，例如当随机变量$x$服从均匀分布的时候，则只能解出无穷大，是无意义的。</p>
 <h3 id="正态分布下的最大似然估计"><a href="#正态分布下的最大似然估计" class="headerlink" title="正态分布下的最大似然估计"></a>正态分布下的最大似然估计</h3><p>&emsp;&emsp;对于单变量正态分布函数，有两个位置参数即均值和方差，固有$\theta=[\theta_1,\theta_2]^T=[\mu,\sigma^2]$，我们利用以上思路进行分析，可以得到如下方程组：</p>
-<script type="math/tex; mode=display">\sum_{k=1}^{N} \frac{1}{\hat{\theta}_2}(x_k - \hat{\theta}_1) = 0 \sum_{k=1}^{N}\frac{1}{\hat{\theta}_2} + \sum_{k=1}^{N} \frac{(x_k - \hat{\theta}_1)^2}{\hat{\theta}_2^2} = 0</script><p>&emsp;&emsp;可以解得：</p>
+<script type="math/tex; mode=display">\sum_{k=1}^{N} \frac{1}{\hat{\theta}_2}(x_k - \hat{\theta}_1) = 0</script><script type="math/tex; mode=display">\sum_{k=1}^{N}\frac{1}{\hat{\theta}_2} + \sum_{k=1}^{N} \frac{(x_k - \hat{\theta}_1)^2}{\hat{\theta}_2^2} = 0</script><p>&emsp;&emsp;可以解得：</p>
 <script type="math/tex; mode=display">\hat{\mu} = \hat{\theta}_1 = \frac{1}{N} \sum_{k=1}^{N}x_k</script><script type="math/tex; mode=display">\hat{\sigma}^2 = \hat{\theta}_2 = \frac{1}{N} \sum_{k=1}^{N} (x_k - \hat{\mu})^2</script><p>&emsp;&emsp;多元正态分布的解与上解基本相同，只不过样本即参数为向量形式。</p>
 <h2 id="贝叶斯估计"><a href="#贝叶斯估计" class="headerlink" title="贝叶斯估计"></a>贝叶斯估计</h2><h3 id="贝叶斯估计与贝叶斯决策"><a href="#贝叶斯估计与贝叶斯决策" class="headerlink" title="贝叶斯估计与贝叶斯决策"></a>贝叶斯估计与贝叶斯决策</h3><p>&emsp;&emsp;首先需要区分一下的两个概念是贝叶斯估计与贝叶斯决策。<br>&emsp;&emsp;贝叶斯决策是我们之前学习的统计决策理论总的方法，其目的是对于待测样本进行决策，得到样本的分类结果。而贝叶斯估计则是利用样本值来计算概率密度函数模型的参数的方法，其目的是得到参数的估计量$\hat{\theta}$.<br>&emsp;&emsp;我们通常使用方法是先估计概率密度函数，然后利用统计决策方法进行判断，即所谓的基于样本的两步贝叶斯决策，所以可以理解为贝叶斯估计和贝叶斯决策是两步贝叶斯决策中的第一步和第二步，是一个先后的关系。</p>
 <h3 id="风险函数"><a href="#风险函数" class="headerlink" title="风险函数"></a>风险函数</h3><p>&emsp;&emsp;在贝叶斯决策中我们有最小错误率和最小风险，同样的，在贝叶斯估计中我们也可以定义损失函数$\lambda(\hat{\theta},\theta)$，我们可以定义样本$x$下的条件风险为</p>
@@ -518,7 +518,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
